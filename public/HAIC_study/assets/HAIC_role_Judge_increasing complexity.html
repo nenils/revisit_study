@@ -27,8 +27,6 @@
   #sendToJudgeBtn { background:#059669; color:white; border:none; font-size:15px; padding:10px 20px; }
   #sendToJudgeBtn:hover { background:#047857; }
   #sendToJudgeBtn:disabled { background:#94a3b8; cursor:not-allowed; }
-  #applyJudgeBtn { background:#f59e0b; color:white; border:none; font-size:14px; padding:8px 16px; display:none; }
-  #applyJudgeBtn:hover { background:#d97706; }
 
   .chat { margin:20px auto 0 auto; max-width:760px; height:380px;
           border-radius:10px; overflow:hidden;
@@ -63,7 +61,7 @@
     2️⃣ You have two choices:<br>
     &nbsp;&nbsp;&nbsp;• <b>"Submit Directly"</b> — submit your guess as-is to the game.<br>
     &nbsp;&nbsp;&nbsp;• <b>"Send to AI"</b> — the AI reviews your guess, may adapt it, and proposes a revised version.<br>
-    3️⃣ If the AI proposes changes, click <b>"Apply AI guess"</b> to load it onto the board, then adjust if needed.<br>
+    3️⃣ Use the AI review as advice, then adjust your own guess manually if needed.<br>
     4️⃣ Chat with the AI to discuss strategy.<br>
     5️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
@@ -79,7 +77,6 @@
   <div class="controls">
     <button id="guessBtn" type="button" disabled>✅ Submit Directly</button>
     <button id="sendToJudgeBtn" type="button" disabled>⚖️ Send to AI</button>
-    <button id="applyJudgeBtn" type="button">📥 Apply AI guess</button>
   </div>
 </div>
 
@@ -107,7 +104,7 @@ var stepCount = 0;
 var totalAttemptCount = 0;
 var selectedColor = null;
 var gameOver = false;
-var currentJudgeGuess = null;
+var currentAIGuess = null;
 var conversationMessages = [];
 
 var guessHistory = {};
@@ -253,7 +250,7 @@ function startRound() {
   guessHistory = {};
   feedbackHistory = {};
   gameOver = false;
-  currentJudgeGuess = null;
+  currentAIGuess = null;
   conversationMessages = [];
 
   logProv('roundStarted', 'system', { round: currentRound, availableColors: availableColors, secretCode: secret, timestamp: new Date().toISOString() });
@@ -261,7 +258,6 @@ function startRound() {
   renderPalette();
   addRow();
   updateButtons();
-  document.getElementById("applyJudgeBtn").style.display = "none";
 
   addMsg("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
 }
@@ -308,17 +304,6 @@ function getCurrentGuessFromBoard() {
   return guess;
 }
 
-function applyGuessToBoard(guess) {
-  var pegs = currentRow.querySelectorAll(".peg");
-  for (var i = 0; i < CODE_LENGTH; i++) {
-    if (guess[i]) {
-      pegs[i].style.background = colorCss(guess[i]);
-      pegs[i].dataset.color = guess[i];
-    }
-  }
-  updateButtons();
-}
-
 function getFeedback(guess) {
   var black = 0, white = 0;
   var s = secret.slice(), g = guess.slice();
@@ -349,20 +334,19 @@ function submitGuess(source) {
   guessHistory[stepCount] = guess.slice();
   feedbackHistory[stepCount] = fb;
 
-  var usedJudge = false;
-  if (currentJudgeGuess) {
-    usedJudge = true;
+  var matchedAIReview = false;
+  if (currentAIGuess) {
+    matchedAIReview = true;
     for (var j = 0; j < CODE_LENGTH; j++) {
-      if (guess[j] !== currentJudgeGuess[j]) { usedJudge = false; break; }
+      if (guess[j] !== currentAIGuess[j]) { matchedAIReview = false; break; }
     }
   }
 
-  logProv('guessSubmitted', 'click', { round: currentRound, attempt: stepCount, guess: guess, feedback: fb, submittedVia: source || "direct", usedJudgeAdaptation: usedJudge, timestamp: new Date().toISOString() });
+  logProv('guessSubmitted', 'click', { round: currentRound, attempt: stepCount, guess: guess, feedback: fb, submittedVia: source || "direct", matchedAIReview: matchedAIReview, timestamp: new Date().toISOString() });
   showFeedbackOnRow(fb);
   currentRow.classList.add("locked");
   updateUI();
-  document.getElementById("applyJudgeBtn").style.display = "none";
-  currentJudgeGuess = null;
+  currentAIGuess = null;
 
   var fbMsg = "[GAME FEEDBACK] Attempt " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
   conversationMessages.push({ role: "user", content: fbMsg });
@@ -550,9 +534,8 @@ function sendToJudge(userMsg, humanGuess) {
       if (!parsed) parsed = parseColorsFromText(reply);
 
       if (parsed) {
-        currentJudgeGuess = parsed;
-        document.getElementById("applyJudgeBtn").style.display = "inline-block";
-        addMsg("⚖️ AI proposes: [" + parsed.join(", ") + "]\nClick 'Apply AI guess' to load it, or keep your own and Submit Directly.", "system");
+        currentAIGuess = parsed;
+        addMsg("⚖️ AI proposes: [" + parsed.join(", ") + "]\nUse this as advice, adjust the board manually if needed, then Submit Directly.", "system");
       }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
@@ -582,13 +565,6 @@ document.addEventListener("DOMContentLoaded", function() {
     addMsg("📤 Sending your guess [" + guess.join(", ") + "] to the AI for review...", "system");
     logProv('sentToJudge', 'click', { guess: guess, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
     sendToJudge(null, guess);
-  });
-
-  document.getElementById("applyJudgeBtn").addEventListener("click", function() {
-    if (gameOver || !currentJudgeGuess) return;
-    applyGuessToBoard(currentJudgeGuess);
-    logProv('judgeGuessApplied', 'click', { guess: currentJudgeGuess, round: currentRound, timestamp: new Date().toISOString() });
-    addMsg("📥 AI guess applied to the board. Adjust any peg if needed, then Submit Directly.", "system");
   });
 
   document.getElementById("sendBtn").addEventListener("click", function() {
