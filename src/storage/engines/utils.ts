@@ -1,7 +1,12 @@
+import SHA256 from 'crypto-js/sha256';
 import { ParticipantData } from '../types';
 import type { CloudStorageEngine, StorageEngine } from './types';
 
 export async function hash(input: string) {
+  if (!crypto.subtle) {
+    return SHA256(input).toString();
+  }
+
   const msgUint8 = new TextEncoder().encode(input);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
