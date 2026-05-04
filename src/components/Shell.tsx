@@ -33,6 +33,22 @@ import { encryptIndex } from '../utils/encryptDecryptIndex';
 import { parseStudyConfig } from '../parser/parser';
 import { hash } from '../storage/engines/utils';
 
+async function fetchParticipantIp() {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 1500);
+
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json', {
+      signal: controller.signal,
+    });
+    return await ipRes.json() as { ip: string };
+  } catch (_) {
+    return { ip: '' };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
 export function Shell({ globalConfig }: { globalConfig: GlobalConfig }) {
   // Pull study config
   const studyId = useStudyId();
@@ -98,10 +114,7 @@ export function Shell({ globalConfig }: { globalConfig: GlobalConfig }) {
         : undefined;
       const searchParamsObject = Object.fromEntries(searchParams.entries());
 
-      const ipRes = await fetch('https://api.ipify.org?format=json').catch(
-        (_) => '',
-      );
-      const ip: { ip: string } = ipRes instanceof Response ? await ipRes.json() : { ip: '' };
+      const ip = await fetchParticipantIp();
 
       const metadata: ParticipantMetadata = {
         language: navigator.language,
