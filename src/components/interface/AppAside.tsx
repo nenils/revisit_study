@@ -24,6 +24,7 @@ import { getNewParticipant } from '../../utils/nextParticipant';
 import { useStorageEngine } from '../../storage/storageEngineHooks';
 import { addPathToComponentBlock } from '../../utils/getSequenceFlatMap';
 import { useIsAnalysis } from '../../store/hooks/useIsAnalysis';
+import { sameOriginHref } from '../../utils/Prefix';
 
 function InfoHover({ text }: { text: string }) {
   return (
@@ -41,7 +42,7 @@ export function AppAside() {
   const dispatch = useStoreDispatch();
 
   const studyId = useStudyId();
-  const studyHref = useHref(`/${studyId}`);
+  const studyHref = sameOriginHref(useHref(`/${studyId}`));
 
   const { storageEngine } = useStorageEngine();
 

@@ -30,7 +30,7 @@ import {
   useStoreDispatch, useStoreSelector, useStoreActions, useFlatSequence,
 } from '../../store/store';
 import { useStorageEngine } from '../../storage/storageEngineHooks';
-import { PREFIX } from '../../utils/Prefix';
+import { PREFIX, sameOriginHref } from '../../utils/Prefix';
 import { getNewParticipant } from '../../utils/nextParticipant';
 import { RecordingAudioWaveform } from './RecordingAudioWaveform';
 import { studyComponentToIndividualComponent } from '../../utils/handleComponentInheritance';
@@ -76,7 +76,7 @@ export function AppHeader({
   const showTitle = useMemo(() => componentConfig.showTitle ?? studyConfig.uiConfig.showTitle ?? true, [componentConfig, studyConfig]);
 
   const studyId = useStudyId();
-  const studyHref = useHref(`/${studyId}`);
+  const studyHref = sameOriginHref(useHref(`/${studyId}`));
 
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -189,7 +189,7 @@ export function AppHeader({
                   <Menu.Item
                     leftSection={<IconChartHistogram size={14} />}
                     component="a"
-                    href={`${PREFIX}analysis/stats/${studyId}`}
+                    href={sameOriginHref(`${PREFIX}analysis/stats/${studyId}`)}
                   >
                     Analyze & Manage
                   </Menu.Item>
