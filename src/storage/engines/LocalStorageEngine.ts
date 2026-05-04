@@ -6,6 +6,7 @@ import {
 export class LocalStorageEngine extends StorageEngine {
   private studyDatabase = localforage.createInstance({
     name: 'revisit',
+    driver: localforage.LOCALSTORAGE,
   });
 
   constructor(testing: boolean = false) {

@@ -87,6 +87,7 @@ export abstract class StorageEngine {
 
   protected localForage = localforage.createInstance({
     name: 'revisit',
+    driver: localforage.LOCALSTORAGE,
   });
 
   protected collectionPrefix = import.meta.env.DEV ? 'dev-' : 'prod-';

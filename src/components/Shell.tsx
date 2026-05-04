@@ -53,6 +53,7 @@ export function Shell({ globalConfig }: { globalConfig: GlobalConfig }) {
   // Pull study config
   const studyId = useStudyId();
   const [activeConfig, setActiveConfig] = useState<ParsedConfig<StudyConfig> | null>(null);
+  const [startupError, setStartupError] = useState<string | null>(null);
   const isValidStudyId = globalConfig.configsList.includes(studyId) || studyId === '__revisit-widget';
 
   useEffect(() => {
@@ -96,98 +97,105 @@ export function Shell({ globalConfig }: { globalConfig: GlobalConfig }) {
       // Check that we have a storage engine and active config (studyId is set for config, but typescript complains)
       if (!storageEngine || !activeConfig || !studyId) return;
 
-      // Make sure that we have a study database and that the study database has a sequence array
-      await storageEngine.initializeStudyDb(studyId);
-      await storageEngine.saveConfig(activeConfig);
+      try {
+        setStartupError(null);
 
-      const sequenceArray = await storageEngine.getSequenceArray();
-      if (!sequenceArray) {
-        await storageEngine.setSequenceArray(
-          await generateSequenceArray(activeConfig),
+        // Make sure that we have a study database and that the study database has a sequence array
+        await storageEngine.initializeStudyDb(studyId);
+        await storageEngine.saveConfig(activeConfig);
+
+        const sequenceArray = await storageEngine.getSequenceArray();
+        if (!sequenceArray) {
+          await storageEngine.setSequenceArray(
+            await generateSequenceArray(activeConfig),
+          );
+        }
+
+        // Get or generate participant session
+        const urlParticipantId = activeConfig.uiConfig.urlParticipantIdParam
+          ? searchParams.get(activeConfig.uiConfig.urlParticipantIdParam)
+            || undefined
+          : undefined;
+        const searchParamsObject = Object.fromEntries(searchParams.entries());
+
+        const ip = await fetchParticipantIp();
+
+        const metadata: ParticipantMetadata = {
+          language: navigator.language,
+          userAgent: navigator.userAgent,
+          resolution: {
+            width: window.screen.width,
+            height: window.screen.height,
+            availHeight: window.screen.availHeight,
+            availWidth: window.screen.availWidth,
+            colorDepth: window.screen.colorDepth,
+            orientation: window.screen.orientation.type,
+            pixelDepth: window.screen.pixelDepth,
+          },
+          ip: ip.ip,
+        };
+
+        const participantSession = await storageEngine.initializeParticipantSession(
+          searchParamsObject,
+          activeConfig,
+          metadata,
+          participantId || urlParticipantId,
         );
+
+        const modes = await storageEngine.getModes(studyId);
+        const activeHash = await hash(JSON.stringify(activeConfig));
+
+        let participantConfig = activeConfig;
+
+        if (participantSession.participantConfigHash !== activeHash) {
+          participantConfig = (await storageEngine.getAllConfigsFromHash([participantSession.participantConfigHash], studyId))[participantSession.participantConfigHash] as ParsedConfig<StudyConfig>;
+        }
+
+        // Initialize the redux stores
+        const newStore = await studyStoreCreator(
+          studyId,
+          participantConfig,
+          participantSession.sequence,
+          metadata,
+          participantSession.answers,
+          modes,
+          participantSession.participantId,
+        );
+        setStore(newStore);
+
+        // Initialize the routing
+        setRoutes([
+          {
+            element: <StepRenderer />,
+            children: [
+              {
+                path: '/',
+                element: <NavigateWithParams to={encryptIndex(0)} replace />,
+              },
+              {
+                path: '/:index/:funcIndex?',
+                element:
+                  activeConfig.errors.length > 0 ? (
+                    <>
+                      <Title order={2} mb={8}>
+                        Error loading config
+                      </Title>
+                      <ErrorLoadingConfig
+                        issues={activeConfig.errors}
+                        type="error"
+                      />
+                    </>
+                  ) : (
+                    <ComponentController />
+                  ),
+              },
+            ],
+          },
+        ]);
+      } catch (error) {
+        console.error('Error initializing study route', error);
+        setStartupError(error instanceof Error ? error.message : String(error));
       }
-
-      // Get or generate participant session
-      const urlParticipantId = activeConfig.uiConfig.urlParticipantIdParam
-        ? searchParams.get(activeConfig.uiConfig.urlParticipantIdParam)
-          || undefined
-        : undefined;
-      const searchParamsObject = Object.fromEntries(searchParams.entries());
-
-      const ip = await fetchParticipantIp();
-
-      const metadata: ParticipantMetadata = {
-        language: navigator.language,
-        userAgent: navigator.userAgent,
-        resolution: {
-          width: window.screen.width,
-          height: window.screen.height,
-          availHeight: window.screen.availHeight,
-          availWidth: window.screen.availWidth,
-          colorDepth: window.screen.colorDepth,
-          orientation: window.screen.orientation.type,
-          pixelDepth: window.screen.pixelDepth,
-        },
-        ip: ip.ip,
-      };
-
-      const participantSession = await storageEngine.initializeParticipantSession(
-        searchParamsObject,
-        activeConfig,
-        metadata,
-        participantId || urlParticipantId,
-      );
-
-      const modes = await storageEngine.getModes(studyId);
-      const activeHash = await hash(JSON.stringify(activeConfig));
-
-      let participantConfig = activeConfig;
-
-      if (participantSession.participantConfigHash !== activeHash) {
-        participantConfig = (await storageEngine.getAllConfigsFromHash([participantSession.participantConfigHash], studyId))[participantSession.participantConfigHash] as ParsedConfig<StudyConfig>;
-      }
-
-      // Initialize the redux stores
-      const newStore = await studyStoreCreator(
-        studyId,
-        participantConfig,
-        participantSession.sequence,
-        metadata,
-        participantSession.answers,
-        modes,
-        participantSession.participantId,
-      );
-      setStore(newStore);
-
-      // Initialize the routing
-      setRoutes([
-        {
-          element: <StepRenderer />,
-          children: [
-            {
-              path: '/',
-              element: <NavigateWithParams to={encryptIndex(0)} replace />,
-            },
-            {
-              path: '/:index/:funcIndex?',
-              element:
-                activeConfig.errors.length > 0 ? (
-                  <>
-                    <Title order={2} mb={8}>
-                      Error loading config
-                    </Title>
-                    <ErrorLoadingConfig
-                      issues={activeConfig.errors}
-                      type="error"
-                    />
-                  </>
-                ) : (
-                  <ComponentController />
-                ),
-            },
-          ],
-        },
-      ]);
     }
     initializeUserStoreRouting();
   }, [storageEngine, activeConfig, studyId, searchParams, participantId]);
@@ -199,6 +207,13 @@ export function Shell({ globalConfig }: { globalConfig: GlobalConfig }) {
   // Definitely a 404
   if (!isValidStudyId) {
     toRender = <ResourceNotFound />;
+  } else if (startupError) {
+    toRender = (
+      <div style={{ padding: 24 }}>
+        <Title order={2} mb={8}>Error starting study</Title>
+        <p>{startupError}</p>
+      </div>
+    );
   } else if (routes.length === 0) {
     toRender = <LoadingOverlay visible />;
   } else {
