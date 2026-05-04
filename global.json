@@ -46,7 +46,8 @@
     "test-parser-errors",
     "test-randomization",
     "test-skip-logic",
-    "test-step-logic"
+    "test-step-logic",
+    "HAIC_study"
   ],
   "configs": {
     "tutorial": {
@@ -210,6 +211,9 @@
     "example-VLAT-adaptive": {
       "path": "example-VLAT-adaptive/config.json",
       "test": true
+    },
+    "HAIC_study": {
+      "path": "HAIC_study/assets/config.json"
     }
   }
 }
