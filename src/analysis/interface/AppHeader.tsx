@@ -5,7 +5,7 @@ import {
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { IconListCheck, IconSettings } from '@tabler/icons-react';
-import { PREFIX } from '../../utils/Prefix';
+import { PREFIX, sameOriginHref } from '../../utils/Prefix';
 
 export function AppHeader({ studyIds }: { studyIds: string[] }) {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export function AppHeader({ studyIds }: { studyIds: string[] }) {
                   onChange={(value) => navigate(`/analysis/stats/${value}`)}
                   mr={16}
                 />
-                <Button component="a" href={`${PREFIX}${studyId}`} target="_blank" leftSection={<IconListCheck />} mr="sm">
+                <Button component="a" href={sameOriginHref(`${PREFIX}${studyId}`)} target="_blank" leftSection={<IconListCheck />} mr="sm">
                   Go to Study
                 </Button>
               </>

@@ -11,7 +11,7 @@ import {
   GlobalConfig, ParsedConfig, StudyConfig,
 } from '../parser/types';
 import { sanitizeStringForUrl } from '../utils/sanitizeStringForUrl';
-import { PREFIX } from '../utils/Prefix';
+import { PREFIX, sameOriginHref } from '../utils/Prefix';
 import { ErrorLoadingConfig } from './ErrorLoadingConfig';
 import { ParticipantStatusBadges } from '../analysis/interface/ParticipantStatusBadges';
 import { useStorageEngine } from '../storage/storageEngineHooks';
@@ -171,14 +171,14 @@ function StudyCard({ configName, config, url }: { configName: string; config: Pa
                 style={{ marginLeft: 'auto' }}
                 variant="default"
                 component="a"
-                href={`${PREFIX}analysis/stats/${url}`}
+                href={sameOriginHref(`${PREFIX}analysis/stats/${url}`)}
               >
                 Analyze & Manage Study
               </Button>
               <Button
                 leftSection={<IconListCheck />}
                 component="a"
-                href={`${PREFIX}${url}`}
+                href={sameOriginHref(`${PREFIX}${url}`)}
               >
                 Go to Study
               </Button>
