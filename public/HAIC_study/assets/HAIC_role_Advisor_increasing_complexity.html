@@ -24,8 +24,6 @@
   #guessBtn { background:#2563eb; color:white; border:none; font-size:15px; padding:10px 20px; }
   #guessBtn:hover { background:#1d4ed8; }
   #guessBtn:disabled { background:#94a3b8; cursor:not-allowed; }
-  #requestGuessBtn { background:#059669; color:white; border:none; font-size:14px; padding:8px 16px; }
-  #requestGuessBtn:hover { background:#047857; }
   #applyAdvisorBtn { background:#f59e0b; color:white; border:none; font-size:14px; padding:8px 16px; display:none; }
   #applyAdvisorBtn:hover { background:#d97706; }
 
@@ -59,11 +57,10 @@
   <div class="instructions" id="instructionsBox">
     <b>How it works (low cognitive responsibility; high AI autonomy):</b><br>
     1️⃣ The AI Advisor proactively requests a trained Mastermind RL model's next guess and explains the rationale.<br>
-    2️⃣ Click <b>"Apply"</b> to load the AI's prediction onto the board, or use <b>"Ask Advisor"</b> to refresh it.<br>
-    3️⃣ You can <b>manually adjust</b> any peg before submitting (select a color, then click a peg).<br>
-    4️⃣ Click <b>"Submit Guess"</b> when you're satisfied.<br>
-    5️⃣ Chat with the advisor for strategy discussion.<br>
-    6️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
+    2️⃣ Click <b>"Apply AI suggestion"</b> to load the AI's prediction and submit it immediately.<br>
+    3️⃣ You can also build and submit your own guess manually.<br>
+    4️⃣ Chat with the advisor for strategy discussion.<br>
+    5️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     <span id="colorListDisplay"><b>Available colors:</b> Blue</span>
   </div>
@@ -76,8 +73,7 @@
   <div class="palette" id="colorPalette"></div>
   <div class="controls">
     <button id="guessBtn" type="button" disabled>✅ Submit Guess</button>
-    <button id="requestGuessBtn" type="button">🤖 Ask Advisor</button>
-    <button id="applyAdvisorBtn" type="button">📥 Apply Advisor's Prediction</button>
+    <button id="applyAdvisorBtn" type="button">📥 Apply AI suggestion</button>
   </div>
 </div>
 
@@ -309,7 +305,8 @@ function applyAdvisorGuessToRow() {
   }
   logProv('advisorGuessApplied', 'click', { guess: currentAdvisorGuess, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
   updateGuessBtn();
-  addMsg("📥 Advisor's prediction applied to the board. Adjust any peg if needed, then Submit Guess.", "system");
+  addMsg("📥 AI suggestion applied and submitted.", "system");
+  submitGuess("aiSuggestion");
 }
 
 function getFeedback(guess) {
@@ -618,7 +615,7 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion) {
       if (parsed) {
         currentAdvisorGuess = parsed;
         document.getElementById("applyAdvisorBtn").style.display = "inline-block";
-        addMsg("🤖 Advisor suggests: [" + parsed.join(", ") + "]\nClick 'Apply Advisor's Prediction' to load it, or keep your own guess.", "system");
+        addMsg("🤖 Advisor suggests: [" + parsed.join(", ") + "]\nClick 'Apply AI suggestion' to load and submit it, or keep your own guess.", "system");
       }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
@@ -637,13 +634,8 @@ document.addEventListener("DOMContentLoaded", function() {
   document.addEventListener("keydown", trackKeyboard);
   document.addEventListener("keyup", trackKeyboard);
 
-  document.getElementById("guessBtn").addEventListener("click", submitGuess);
-
-  document.getElementById("requestGuessBtn").addEventListener("click", function() {
-    if (gameOver) return;
-    addMsg("🤖 Requesting the RL model's next guess and Advisor explanation...", "system");
-    logProv('advisorRequested', 'click', { round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
-    requestAdvisorPrediction("manual advisor refresh", true);
+  document.getElementById("guessBtn").addEventListener("click", function() {
+    submitGuess("direct");
   });
 
   document.getElementById("applyAdvisorBtn").addEventListener("click", function() {
