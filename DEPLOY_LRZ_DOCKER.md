@@ -57,15 +57,36 @@ If you open a browser directly on the VM, then `http://localhost:8080` is also c
 
 If you use a reverse proxy or LRZ-provided HTTPS endpoint, point it to port `8080` and set `STUDY_PUBLIC_URL` to the public HTTPS URL.
 
-## 4. Dummy RL model
+## 4. Mastermind RL model
 
-The dummy model lives in:
+The low cognitive responsibility Advisor condition calls this endpoint once per Advisor iteration:
+
+```text
+/api/rl/predict
+```
+
+The endpoint is implemented in:
 
 ```text
 services/haic_api/app.py
+services/haic_api/rl_model.py
 ```
 
-Replace `dummy_rl_guess(...)` with your trained Mastermind RL model inference. The frontend sends:
+Put your trained model artifact here:
+
+```text
+services/haic_api/models/mastermind_rl_model.pt
+```
+
+Then add this to `.env.docker`:
+
+```bash
+RL_MODEL_PATH=/app/models/mastermind_rl_model.pt
+```
+
+If `RL_MODEL_PATH` is not set or the model cannot be loaded, the API uses the bundled dummy consistency-filter model. This keeps the study runnable for testing.
+
+The frontend sends:
 
 ```json
 {
@@ -83,6 +104,8 @@ Return:
 ```json
 { "guess": ["Green", "Blue", "Blue", "Red"] }
 ```
+
+The loaded model should either be callable or expose `predict(state_dict)`. The `state_dict` contains `round`, `codeLength`, `availableColors`, `attempt`, `guessHistory`, and `feedbackHistory`.
 
 ## 5. Useful commands
 

@@ -2,12 +2,13 @@ import json
 import os
 import urllib.error
 import urllib.request
-from itertools import product
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+
+from rl_model import MastermindRLModel
 
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
@@ -17,6 +18,8 @@ OPENROUTER_BASE_URL = os.getenv(
     "https://openrouter.ai/api/v1/chat/completions",
 )
 STUDY_PUBLIC_URL = os.getenv("STUDY_PUBLIC_URL", "http://localhost:8080")
+RL_MODEL_PATH = os.getenv("RL_MODEL_PATH", "").strip()
+RL_MODEL = MastermindRLModel(RL_MODEL_PATH or None)
 
 app = FastAPI(title="HAIC Study API", version="1.0.0")
 app.add_middleware(
@@ -41,55 +44,6 @@ class RLState(BaseModel):
 class ChatPayload(BaseModel):
     model: str | None = None
     messages: list[dict[str, Any]]
-
-
-def score_feedback(secret: list[str], guess: list[str]) -> dict[str, int]:
-    black = 0
-    white = 0
-    secret_work = secret[:]
-    guess_work = guess[:]
-
-    for idx, color in enumerate(guess_work):
-        if color == secret_work[idx]:
-            black += 1
-            secret_work[idx] = None
-            guess_work[idx] = None
-
-    for idx, color in enumerate(guess_work):
-        if color is None:
-            continue
-        try:
-            match_idx = secret_work.index(color)
-        except ValueError:
-            continue
-        white += 1
-        secret_work[match_idx] = None
-
-    return {"black": black, "white": white}
-
-
-def dummy_rl_guess(state: RLState) -> list[str]:
-    colors = state.availableColors or ["Blue"]
-    code_length = state.codeLength or 4
-    candidates = [list(candidate) for candidate in product(colors, repeat=code_length)]
-
-    for attempt, guess in state.guessHistory.items():
-        feedback = state.feedbackHistory.get(str(attempt))
-        if not feedback:
-            continue
-        candidates = [
-            candidate
-            for candidate in candidates
-            if score_feedback(candidate, guess) == {
-                "black": int(feedback.get("black", 0)),
-                "white": int(feedback.get("white", 0)),
-            }
-        ]
-
-    if not candidates:
-        return [colors[(idx + state.attempt - 1) % len(colors)] for idx in range(code_length)]
-
-    return max(candidates, key=lambda guess: (len(set(guess)), tuple(colors.index(c) for c in guess)))
 
 
 def dummy_llm_response(payload: ChatPayload) -> dict[str, Any]:
@@ -133,18 +87,18 @@ def dummy_llm_response(payload: ChatPayload) -> dict[str, Any]:
 
 
 @app.get("/api/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> dict[str, Any]:
+    return {
+        "status": "ok",
+        "rlModelLoaded": RL_MODEL.is_loaded,
+        "rlModelPath": RL_MODEL_PATH or None,
+        "rlModelLoadError": RL_MODEL.load_error,
+    }
 
 
 @app.post("/api/rl/predict")
 def predict_rl(state: RLState) -> dict[str, Any]:
-    guess = dummy_rl_guess(state)
-    return {
-        "guess": guess,
-        "model": "dummy-consistency-filter",
-        "note": "Replace services/haic_api/app.py:dummy_rl_guess with your trained Mastermind RL model.",
-    }
+    return RL_MODEL.predict(state)
 
 
 @app.post("/api/llm/chat")
