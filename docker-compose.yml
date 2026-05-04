@@ -1,0 +1,18 @@
+services:
+  study:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - haic-api
+    restart: unless-stopped
+
+  haic-api:
+    build:
+      context: ./services/haic_api
+    env_file:
+      - path: .env.docker
+        required: false
+    restart: unless-stopped

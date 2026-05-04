@@ -37,3 +37,11 @@ supabase/volumes/*
 !supabase/volumes/db/
 supabase/volumes/db/data
 !supabase/volumes/api/
+
+venv/
+.env
+dist/
+build/
+google-cloud-sdk/.env
+
+google-cloud-sdk/

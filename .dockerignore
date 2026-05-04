@@ -1,0 +1,16 @@
+.git
+.DS_Store
+.env
+.env.*
+!.env.docker.example
+.env.docker
+node_modules
+dist
+google-cloud-sdk
+venv
+studyenv
+data_analysis
+firebase-debug.log
+playwright-report
+test-results
+supabase/volumes

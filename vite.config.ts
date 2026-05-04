@@ -5,9 +5,10 @@ import react from '@vitejs/plugin-react-swc';
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd());
+  const basePath = env.VITE_BASE_PATH || process.env.VITE_BASE_PATH || '/';
 
   return {
-    base: command === 'build' ? env.VITE_BASE_PATH : '/',
+    base: command === 'build' ? basePath : '/',
     plugins: [
       react({ devTarget: 'es2022' }),
     ],
