@@ -13,6 +13,5 @@ services:
     build:
       context: ./services/haic_api
     env_file:
-      - path: .env.docker
-        required: false
+      .env.docker
     restart: unless-stopped
