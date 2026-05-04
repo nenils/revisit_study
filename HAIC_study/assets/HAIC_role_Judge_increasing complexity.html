@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>Mastermind — Judge System (Increasing Difficulty)</title>
+<title>Mastermind — AI System (Increasing Difficulty)</title>
 <script src="/revisitUtilities/revisit-communicate.js"></script>
 <script src="/revisitUtilities/revisit-provenance.js"></script>
 <style>
@@ -55,16 +55,16 @@
 <body>
 
 <div class="game">
-  <h2>🎯 Mastermind — High Cognitive Responsibility (AI as a Judge)</h2>
+  <h2>🎯 Mastermind — High Cognitive Responsibility (AI)</h2>
   <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works (high cognitive responsibility; low AI autonomy):</b><br>
     1️⃣ Select a <b>color</b> from the palette and click <b>pegs</b> to build your guess.<br>
     2️⃣ You have two choices:<br>
     &nbsp;&nbsp;&nbsp;• <b>"Submit Directly"</b> — submit your guess as-is to the game.<br>
-    &nbsp;&nbsp;&nbsp;• <b>"Send to Judge"</b> — the AI Judge reviews your guess, may adapt it, and proposes a revised version.<br>
-    3️⃣ If the Judge proposes changes, click <b>"Apply Judge's Guess"</b> to load it onto the board, then adjust if needed.<br>
-    4️⃣ Chat with the Judge to discuss strategy.<br>
+    &nbsp;&nbsp;&nbsp;• <b>"Send to AI"</b> — the AI reviews your guess, may adapt it, and proposes a revised version.<br>
+    3️⃣ If the AI proposes changes, click <b>"Apply AI guess"</b> to load it onto the board, then adjust if needed.<br>
+    4️⃣ Chat with the AI to discuss strategy.<br>
     5️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     <span id="colorListDisplay"><b>Available colors:</b> Blue</span>
@@ -78,16 +78,16 @@
   <div class="palette" id="colorPalette"></div>
   <div class="controls">
     <button id="guessBtn" type="button" disabled>✅ Submit Directly</button>
-    <button id="sendToJudgeBtn" type="button" disabled>⚖️ Send to Judge</button>
-    <button id="applyJudgeBtn" type="button">📥 Apply Judge's Guess</button>
+    <button id="sendToJudgeBtn" type="button" disabled>⚖️ Send to AI</button>
+    <button id="applyJudgeBtn" type="button">📥 Apply AI guess</button>
   </div>
 </div>
 
 <div class="chat">
-  <div class="chat-header">⚖️ Judge Chat — Discuss strategy or review proposals</div>
+  <div class="chat-header">⚖️ AI Chat — Discuss strategy or review proposals</div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="Discuss your reasoning with the judge..."
+    <input id="chatInput" placeholder="Discuss your reasoning with the AI..."
            style="flex:1;padding:8px;border-radius:8px;border:1px solid #e6eefb;">
     <button id="sendBtn" type="button">Send</button>
   </div>
@@ -263,7 +263,7 @@ function startRound() {
   updateButtons();
   document.getElementById("applyJudgeBtn").style.display = "none";
 
-  addMsg("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to Judge!", "system");
+  addMsg("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
 }
 
 function addRow() {
@@ -452,7 +452,7 @@ function finishGame(message) {
   Revisit.postAnswers(answers);
 }
 
-/* === AI Judge via OpenRouter === */
+/* === AI review via OpenRouter === */
 function parseColorsFromText(text) {
   var found = [];
   var re = new RegExp("\\b(" + ALL_COLORS.map(function(c){ return c.toLowerCase(); }).join("|") + ")\\b", "gi");
@@ -476,7 +476,7 @@ function buildJudgeSystemPrompt(humanGuess) {
     historyStr += "  Attempt " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
   }
 
-  return "You are a JUDGE in a Judge-Advisor decision system for the game Mastermind.\n\n" +
+  return "You are an AI reviewer in a human-AI decision system for the game Mastermind.\n\n" +
     "YOUR ROLE:\n" +
     "- The Human proposes a guess. You REVIEW it — you do NOT generate your own independent solution.\n" +
     "- You may ADAPT the human's proposal (swap positions, change 1-2 colors) based on logical deduction from the feedback history.\n" +
@@ -529,7 +529,7 @@ function sendToJudge(userMsg, humanGuess) {
       addMsg(reply, "bot");
       conversationMessages.push({ role: "assistant", content: reply });
 
-      chatHistory.push({ round: currentRound, attempt: stepCount, role: "judge", message: reply, timestamp: new Date().toISOString() });
+      chatHistory.push({ round: currentRound, attempt: stepCount, role: "ai", message: reply, timestamp: new Date().toISOString() });
       logProv('judgeResponseReceived', 'system', { round: currentRound, attempt: stepCount, responseLength: reply.length, timestamp: new Date().toISOString() });
 
       var predMatch = reply.match(/FINAL\s*GUESS\s*:\s*\[([^\]]+)\]/i);
@@ -540,7 +540,7 @@ function sendToJudge(userMsg, humanGuess) {
         for (var i = 0; i < colors.length; i++) {
           var trimmed = colors[i].trim();
           var found = null;
-          for (var j = 0; i < availableColors.length; j++) {
+          for (var j = 0; j < availableColors.length; j++) {
             if (availableColors[j].toLowerCase() === trimmed.toLowerCase()) { found = availableColors[j]; break; }
           }
           valid.push(found);
@@ -552,7 +552,7 @@ function sendToJudge(userMsg, humanGuess) {
       if (parsed) {
         currentJudgeGuess = parsed;
         document.getElementById("applyJudgeBtn").style.display = "inline-block";
-        addMsg("⚖️ Judge proposes: [" + parsed.join(", ") + "]\nClick 'Apply Judge's Guess' to load it, or keep your own and Submit Directly.", "system");
+        addMsg("⚖️ AI proposes: [" + parsed.join(", ") + "]\nClick 'Apply AI guess' to load it, or keep your own and Submit Directly.", "system");
       }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
@@ -578,8 +578,8 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("sendToJudgeBtn").addEventListener("click", function() {
     if (gameOver) return;
     var guess = getCurrentGuessFromBoard();
-    if (guess.indexOf(null) !== -1) { alert("Fill all 4 pegs before sending to the Judge!"); return; }
-    addMsg("📤 Sending your guess [" + guess.join(", ") + "] to the Judge for review...", "system");
+    if (guess.indexOf(null) !== -1) { alert("Fill all 4 pegs before sending to the AI!"); return; }
+    addMsg("📤 Sending your guess [" + guess.join(", ") + "] to the AI for review...", "system");
     logProv('sentToJudge', 'click', { guess: guess, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
     sendToJudge(null, guess);
   });
@@ -588,7 +588,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (gameOver || !currentJudgeGuess) return;
     applyGuessToBoard(currentJudgeGuess);
     logProv('judgeGuessApplied', 'click', { guess: currentJudgeGuess, round: currentRound, timestamp: new Date().toISOString() });
-    addMsg("📥 Judge's guess applied to the board. Adjust any peg if needed, then Submit Directly.", "system");
+    addMsg("📥 AI guess applied to the board. Adjust any peg if needed, then Submit Directly.", "system");
   });
 
   document.getElementById("sendBtn").addEventListener("click", function() {
