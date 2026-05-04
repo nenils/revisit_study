@@ -1,7 +1,9 @@
 import {
   forwardRef, RefObject, useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
-import { APITypes, PlyrProps, usePlyr } from 'plyr-react';
+import {
+  APITypes, PlyrOptions, PlyrProps, PlyrSource, usePlyr,
+} from 'plyr-react';
 import { VideoComponent } from '../parser/types';
 import { PREFIX } from '../utils/Prefix';
 import { getStaticAssetByPath } from '../utils/getStaticAsset';
@@ -63,32 +65,26 @@ export function VideoController({ currentConfig }: { currentConfig: VideoCompone
     fetchVideo();
   }, [url]);
 
-  const sources = useMemo<Plyr.Source[]>(() => {
+  const source = useMemo<PlyrSource>(() => {
     if (url.includes('youtube')) {
-      return [
-        {
-          src: url,
-          provider: 'youtube',
-        },
-      ];
+      return {
+        type: 'video',
+        sources: [{ src: url, provider: 'youtube' }],
+      };
     }
     if (url.includes('vimeo')) {
-      return [
-        {
-          src: url,
-          provider: 'vimeo',
-        },
-      ];
+      return {
+        type: 'video',
+        sources: [{ src: url, provider: 'vimeo' }],
+      };
     }
-    return [
-      {
-        src: url,
-        type: 'video/mp4',
-      },
-    ];
+    return {
+      type: 'video',
+      sources: [{ src: url, type: 'video/mp4' }],
+    };
   }, [url]);
 
-  const options = useMemo<Plyr.Options>(() => ({
+  const options = useMemo<PlyrOptions>(() => ({
     controls: [
       currentConfig.forceCompletion !== false ? 'play-large' : 'play',
       'current-time',
@@ -142,7 +138,7 @@ export function VideoController({ currentConfig }: { currentConfig: VideoCompone
       <Box>
         <CustomPlyrInstance
           ref={ref}
-          source={{ type: 'video', sources }}
+          source={source}
           options={options}
           endedCallback={endedCallback}
           errorCallback={errorCallback}
