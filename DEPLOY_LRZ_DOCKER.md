@@ -39,6 +39,22 @@ Open:
 http://<vm-hostname-or-ip>:8080
 ```
 
+Important: `localhost` means "this same machine". If the browser is running on your laptop, `http://localhost:8080` points to your laptop, not to the LRZ VM.
+
+For testing from your laptop without a domain, use an SSH tunnel:
+
+```bash
+ssh -L 8080:localhost:8080 neni@<vm-hostname-or-ip>
+```
+
+Keep that SSH session open, then open this on your laptop:
+
+```text
+http://localhost:8080
+```
+
+If you open a browser directly on the VM, then `http://localhost:8080` is also correct there. If you want to access the study without an SSH tunnel, use `http://<vm-hostname-or-ip>:8080` and make sure LRZ/firewall rules allow inbound TCP traffic on port `8080`.
+
 If you use a reverse proxy or LRZ-provided HTTPS endpoint, point it to port `8080` and set `STUDY_PUBLIC_URL` to the public HTTPS URL.
 
 ## 4. Dummy RL model
@@ -82,3 +98,12 @@ Health check:
 ```bash
 curl http://localhost:8080/api/health
 ```
+
+Route check:
+
+```bash
+curl -I http://localhost:8080
+curl -I http://localhost:8080/HAIC_study
+```
+
+Both should return `200 OK` from the VM. If these work on the VM but the link fails in your laptop browser, the problem is network access to the VM, not the study build.

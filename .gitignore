@@ -40,6 +40,7 @@ supabase/volumes/db/data
 
 venv/
 .env
+.env.docker
 dist/
 build/
 google-cloud-sdk/.env

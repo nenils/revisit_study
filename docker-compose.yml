@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:80"
+      - "0.0.0.0:8080:80"
     depends_on:
       - haic-api
     restart: unless-stopped
