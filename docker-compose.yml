@@ -3,6 +3,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/}
+        VITE_STORAGE_ENGINE: ${VITE_STORAGE_ENGINE:-localStorage}
+        VITE_REPO_URL: ${VITE_REPO_URL:-https://github.com/revisit-studies/study}
+        VITE_FIREBASE_CONFIG: ${VITE_FIREBASE_CONFIG:-}
+        VITE_RECAPTCHAV3TOKEN: ${VITE_RECAPTCHAV3TOKEN:-}
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
     ports:
       - "0.0.0.0:8080:80"
     depends_on:
