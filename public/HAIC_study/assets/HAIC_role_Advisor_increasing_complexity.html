@@ -24,8 +24,10 @@
   #guessBtn { background:#2563eb; color:white; border:none; font-size:15px; padding:10px 20px; }
   #guessBtn:hover { background:#1d4ed8; }
   #guessBtn:disabled { background:#94a3b8; cursor:not-allowed; }
-  #applyAdvisorBtn { background:#f59e0b; color:white; border:none; font-size:14px; padding:8px 16px; display:none; }
+  #applyAdvisorBtn { background:#f59e0b; color:white; border:none; font-size:14px; padding:8px 16px; display:none; min-width:180px; }
   #applyAdvisorBtn:hover { background:#d97706; }
+  #applyAdvisorBtn:disabled { background:#94a3b8; cursor:wait; }
+  #applyAdvisorBtn.loading { background:#64748b; }
 
   .chat { margin:20px auto 0 auto; max-width:760px; height:380px;
           border-radius:10px; overflow:hidden;
@@ -101,6 +103,7 @@ var totalAttemptCount = 0;
 var selectedColor = null;
 var gameOver = false;
 var currentAdvisorGuess = null;
+var advisorRequestToken = 0;
 var conversationMessages = [];
 
 var guessHistory = {};
@@ -203,6 +206,26 @@ function addMsg(text, cls) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function setAdvisorButtonState(state) {
+  var btn = document.getElementById("applyAdvisorBtn");
+  if (!btn) return;
+  btn.classList.remove("loading");
+  if (state === "loading") {
+    btn.style.display = "inline-block";
+    btn.disabled = true;
+    btn.classList.add("loading");
+    btn.textContent = "⏳ AI is thinking...";
+  } else if (state === "ready") {
+    btn.style.display = "inline-block";
+    btn.disabled = false;
+    btn.textContent = "📥 Apply AI suggestion";
+  } else {
+    btn.style.display = "none";
+    btn.disabled = true;
+    btn.textContent = "📥 Apply AI suggestion";
+  }
+}
+
 /* === Round Management === */
 function getAvailableColors(round) {
   return ALL_COLORS.slice(0, Math.min(round, ALL_COLORS.length));
@@ -256,7 +279,7 @@ function startRound() {
   renderPalette();
   addRow();
   updateGuessBtn();
-  document.getElementById("applyAdvisorBtn").style.display = "none";
+  setAdvisorButtonState("hidden");
 
   addMsg("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". The Advisor will propose the next guess.", "system");
   requestAdvisorPrediction("round start", true);
@@ -353,7 +376,7 @@ function submitGuess() {
   showFeedbackOnRow(fb);
   currentRow.classList.add("locked");
   updateUI();
-  document.getElementById("applyAdvisorBtn").style.display = "none";
+  setAdvisorButtonState("hidden");
   currentAdvisorGuess = null;
 
   var fbMsg = "[GAME FEEDBACK] Attempt " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
@@ -551,12 +574,21 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
 }
 
 function requestAdvisorPrediction(reason, isInitialRequest) {
+  currentAdvisorGuess = null;
+  var requestToken = ++advisorRequestToken;
+  setAdvisorButtonState("loading");
   requestRLSuggestion(reason, function(rlSuggestion) {
-    sendToAdvisor(reason, isInitialRequest, rlSuggestion);
+    if (requestToken !== advisorRequestToken) return;
+    sendToAdvisor(reason, isInitialRequest, rlSuggestion, requestToken);
   });
 }
 
-function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion) {
+function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
+  if (!requestToken) {
+    currentAdvisorGuess = null;
+    requestToken = ++advisorRequestToken;
+    setAdvisorButtonState("loading");
+  }
   var sysPrompt = buildAdvisorSystemPrompt(rlSuggestion);
 
   if (isInitialRequest) {
@@ -584,9 +616,11 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion) {
     if (xhr.readyState !== 4) return;
     if (xhr.status !== 200) {
       addMsg("⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
+      if (requestToken === advisorRequestToken) setAdvisorButtonState("hidden");
       return;
     }
     try {
+      if (requestToken !== advisorRequestToken) return;
       var d = JSON.parse(xhr.responseText);
       var reply = (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) || "⚠️ No response.";
       addMsg(reply, "bot");
@@ -614,11 +648,14 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion) {
 
       if (parsed) {
         currentAdvisorGuess = parsed;
-        document.getElementById("applyAdvisorBtn").style.display = "inline-block";
+        setAdvisorButtonState("ready");
         addMsg("🤖 AI suggests: [" + parsed.join(", ") + "]\nClick 'Apply AI suggestion' to load and submit it, or keep your own guess.", "system");
+      } else {
+        setAdvisorButtonState("hidden");
       }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
+      if (requestToken === advisorRequestToken) setAdvisorButtonState("hidden");
     }
   };
   xhr.send(JSON.stringify(payload));
