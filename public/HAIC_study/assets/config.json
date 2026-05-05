@@ -122,8 +122,8 @@
             "prompt": "For this task, many things needed to be kept in mind simultaneously.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -131,8 +131,8 @@
             "prompt": "This task was very complex.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -140,8 +140,8 @@
             "prompt": "During this task, it was exhausting to find the important information.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -149,8 +149,8 @@
             "prompt": "The design of this task was very inconvenient for playing the game.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -158,8 +158,8 @@
             "prompt": "During this task, it was difficult to recognize and link the crucial information.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -167,8 +167,8 @@
             "prompt": "I made an effort, not only to understand several details, but to understand the overall context.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -176,8 +176,8 @@
             "prompt": "My point while dealing with the task was to understand everything correctly.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           },
           {
@@ -185,8 +185,8 @@
             "prompt": "The task consisted of elements supporting my comprehension of the task.",
             "required": true,
             "type": "likert",
-            "leftLabel": "Completely Wrong",
-            "rightLabel": "Absolutely Right",
+            "leftLabel": "Stronlgy Disagree",
+            "rightLabel": "Strongly Agree",
             "numItems": 7
           }
         ]
@@ -895,28 +895,38 @@
           }
         ]
       },
-
-      "control-llm-experience": {
+      "control-game-llm-experience": {
         "type": "questionnaire",
-        "description": "Control variables: experience with large language models.",
+        "description": "Prior game experience and experience with large language models.",
         "responseDividers": true,
         "responseOrder": "random",
         "response": [
           {
-            "id": "llm-experience-frequency",
+            "id": "game-llm-prior-mastermind-experience",
+            "prompt": "How much prior experience do you have with Mastermind?",
+            "required": true,
+            "type": "likert",
+            "leftLabel": "None",
+            "rightLabel": "Extensive",
+            "numItems": 7
+          },
+          {
+            "id": "game-llm-prior-codebreaking-experience",
+            "prompt": "How much prior experience do you have with similar code-breaking or deduction games like Sudoku or Wordle?",
+            "required": true,
+            "type": "likert",
+            "leftLabel": "None",
+            "rightLabel": "Extensive",
+            "numItems": 7
+          },
+          {
+            "id": "game-llm-llm-experience-frequency",
             "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
             "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "Never",
-              "Less than once per month",
-              "Monthly",
-              "Weekly",
-              "Several times per week",
-              "Daily",
-              "Prefer not to say"
-            ]
+            "type": "likert",
+            "leftLabel": "Never",
+            "rightLabel": "Daily",
+            "numItems": 7
           },
           {
             "id": "llm-experience-purpose",
@@ -936,106 +946,13 @@
             ]
           },
           {
-            "id": "llm-experience-confidence",
-            "prompt": "How confident are you in evaluating the quality of LLM-generated advice?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "Not confident",
-              "Slightly confident",
-              "Moderately confident",
-              "Very confident",
-              "Extremely confident",
-              "Prefer not to say"
-            ]
-          }
-        ]
-      },
-
-      "control-game-llm-experience": {
-        "type": "questionnaire",
-        "description": "Prior game experience and experience with large language models.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "game-llm-prior-mastermind-experience",
-            "prompt": "How much prior experience do you have with Mastermind?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "No prior experience",
-              "I know the rules but have rarely or never played",
-              "I have played a few times",
-              "I have played several times",
-              "I play Mastermind or similar code-breaking games regularly",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "game-llm-prior-codebreaking-experience",
-            "prompt": "How much prior experience do you have with similar code-breaking or deduction games?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "No prior experience",
-              "Very little experience",
-              "Some experience",
-              "Considerable experience",
-              "Extensive experience",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "game-llm-llm-experience-frequency",
+            "id": "llm-experience-frequency",
             "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
             "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "Never",
-              "Less than once per month",
-              "Monthly",
-              "Weekly",
-              "Several times per week",
-              "Daily",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "game-llm-llm-experience-purpose",
-            "prompt": "For what purpose do you most often use LLM-based tools?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "I do not use LLM-based tools",
-              "Learning or explanations",
-              "Writing or editing",
-              "Programming or data analysis",
-              "Work or productivity tasks",
-              "Entertainment or casual use",
-              "Other / not listed",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "game-llm-llm-experience-confidence",
-            "prompt": "How confident are you in evaluating the quality of LLM-generated advice?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "Not confident",
-              "Slightly confident",
-              "Moderately confident",
-              "Very confident",
-              "Extremely confident",
-              "Prefer not to say"
-            ]
+            "type": "likert",
+            "leftLabel": "Never",
+            "rightLabel": "Daily",
+            "numItems": 7
           }
         ]
       },

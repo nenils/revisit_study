@@ -40,7 +40,6 @@
          box-shadow:0 1px 6px rgba(16,24,40,0.04); }
   .msg.user { background:#e6f0ff; align-self:flex-end; color:#0b4da0; text-align:right; }
   .msg.bot  { background:#0f172a; color:white; align-self:flex-start; }
-  .msg.system { background:#fef3c7; align-self:center; color:#92400e; text-align:center; font-style:italic; font-size:13px; max-width:90%; }
   .bot-text { white-space:pre-wrap; font-size:14px; }
   .completion-code-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.72); z-index:2000; display:flex; align-items:center; justify-content:center; padding:24px; }
   .completion-code-panel { background:#fff; border-radius:12px; max-width:680px; width:100%; padding:28px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.35); border:4px solid #f59e0b; }
@@ -53,10 +52,10 @@
 <body>
 
 <div class="game">
-  <h2>🎯 Mastermind — High Cognitive Responsibility (AI)</h2>
+  <h2>🎯 Mastermind</h2>
   <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
-    <b>How it works (high cognitive responsibility; low AI autonomy):</b><br>
+    <b>How it works:</b><br>
     1️⃣ Select a <b>color</b> from the palette and click <b>pegs</b> to build your guess.<br>
     2️⃣ You have two choices:<br>
     &nbsp;&nbsp;&nbsp;• <b>"Submit Directly"</b> — submit your guess as-is to the game.<br>
@@ -104,7 +103,6 @@ var stepCount = 0;
 var totalAttemptCount = 0;
 var selectedColor = null;
 var gameOver = false;
-var currentAIGuess = null;
 var conversationMessages = [];
 
 var guessHistory = {};
@@ -114,6 +112,7 @@ var suggestionHistory = [];
 var roundHistory = [];
 
 var LLM_PROXY_ENDPOINT = "/api/llm/chat";
+var RL_MODEL_ENDPOINT = "/api/rl/predict";
 
 /* === Mouse & Keyboard Tracking === */
 var mouseTrackingData = [];
@@ -195,6 +194,7 @@ function logProv(action, trigger, data) {
 }
 
 function addMsg(text, cls) {
+  if (cls === "system") return;
   var chatBox = document.getElementById("chatMessages");
   var m = el("div", { "class": "msg " + cls });
   var span = document.createElement("span");
@@ -250,7 +250,6 @@ function startRound() {
   guessHistory = {};
   feedbackHistory = {};
   gameOver = false;
-  currentAIGuess = null;
   conversationMessages = [];
 
   logProv('roundStarted', 'system', { round: currentRound, availableColors: availableColors, secretCode: secret, timestamp: new Date().toISOString() });
@@ -334,19 +333,10 @@ function submitGuess(source) {
   guessHistory[stepCount] = guess.slice();
   feedbackHistory[stepCount] = fb;
 
-  var matchedAIReview = false;
-  if (currentAIGuess) {
-    matchedAIReview = true;
-    for (var j = 0; j < CODE_LENGTH; j++) {
-      if (guess[j] !== currentAIGuess[j]) { matchedAIReview = false; break; }
-    }
-  }
-
-  logProv('guessSubmitted', 'click', { round: currentRound, attempt: stepCount, guess: guess, feedback: fb, submittedVia: source || "direct", matchedAIReview: matchedAIReview, timestamp: new Date().toISOString() });
+  logProv('guessSubmitted', 'click', { round: currentRound, attempt: stepCount, guess: guess, feedback: fb, submittedVia: source || "direct", timestamp: new Date().toISOString() });
   showFeedbackOnRow(fb);
   currentRow.classList.add("locked");
   updateUI();
-  currentAIGuess = null;
 
   var fbMsg = "[GAME FEEDBACK] Attempt " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
   conversationMessages.push({ role: "user", content: fbMsg });
@@ -437,22 +427,66 @@ function finishGame(message) {
 }
 
 /* === AI review via OpenRouter === */
-function parseColorsFromText(text) {
-  var found = [];
-  var re = new RegExp("\\b(" + ALL_COLORS.map(function(c){ return c.toLowerCase(); }).join("|") + ")\\b", "gi");
-  var match;
-  while ((match = re.exec(text)) !== null && found.length < CODE_LENGTH) {
-    for (var j = 0; j < ALL_COLORS.length; j++) {
-      if (ALL_COLORS[j].toLowerCase() === match[1].toLowerCase() && availableColors.indexOf(ALL_COLORS[j]) !== -1) {
-        found.push(ALL_COLORS[j]);
-        break;
-      }
-    }
-  }
-  return found.length === CODE_LENGTH ? found : null;
+function getRlStatePayload(reason) {
+  return {
+    game: "mastermind",
+    reason: reason || "ai feedback request",
+    round: currentRound,
+    codeLength: CODE_LENGTH,
+    availableColors: availableColors.slice(),
+    maxAttemptsPerRound: MAX_ATTEMPTS_PER_ROUND,
+    attempt: stepCount + 1,
+    guessHistory: guessHistory,
+    feedbackHistory: feedbackHistory
+  };
 }
 
-function buildJudgeSystemPrompt(humanGuess) {
+function requestRLSuggestion(reason, callback) {
+  if (!RL_MODEL_ENDPOINT) {
+    callback(null);
+    return;
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", RL_MODEL_ENDPOINT, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) return;
+    if (xhr.status < 200 || xhr.status >= 300) {
+      logProv('rlFeedbackUnavailable', 'system', { status: xhr.status, response: xhr.responseText, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
+      callback(null);
+      return;
+    }
+    try {
+      var data = JSON.parse(xhr.responseText);
+      var guess = data.guess || data.suggestion || data.next_guess || data.action;
+      if (typeof guess === "string") guess = guess.split(",");
+      if (!Array.isArray(guess)) {
+        callback(null);
+        return;
+      }
+      guess = guess.map(function(c) {
+        c = String(c).trim();
+        for (var i = 0; i < availableColors.length; i++) {
+          if (availableColors[i].toLowerCase() === c.toLowerCase()) return availableColors[i];
+        }
+        return null;
+      });
+      if (guess.length !== CODE_LENGTH || guess.indexOf(null) !== -1) {
+        callback(null);
+        return;
+      }
+      logProv('rlFeedbackReceived', 'system', { round: currentRound, attempt: stepCount + 1, rlDiagnosticGuess: guess, model: data.model || null, timestamp: new Date().toISOString() });
+      callback({ guess: guess, raw: data });
+    } catch (err) {
+      logProv('rlFeedbackParseError', 'system', { error: err.message, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
+      callback(null);
+    }
+  };
+  xhr.send(JSON.stringify(getRlStatePayload(reason)));
+}
+
+function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
   var historyStr = "";
   for (var i = 1; i <= stepCount; i++) {
     var g = guessHistory[i] || [];
@@ -460,29 +494,51 @@ function buildJudgeSystemPrompt(humanGuess) {
     historyStr += "  Attempt " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
   }
 
-  return "You are an AI reviewer in a human-AI decision system for the game Mastermind.\n\n" +
+  return "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
+    "STUDY DESIGN REQUIREMENT:\n" +
+    "- The Human has HIGH cognitive responsibility and must remain the task solver.\n" +
+    "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
     "YOUR ROLE:\n" +
-    "- The Human proposes a guess. You REVIEW it — you do NOT generate your own independent solution.\n" +
-    "- You may ADAPT the human's proposal (swap positions, change 1-2 colors) based on logical deduction from the feedback history.\n" +
-    "- You must clearly explain WHY you kept or changed each part of their proposal (2-3 sentences).\n" +
-    "- Always end with exactly: FINAL GUESS: [Color1, Color2, Color3, Color4]\n\n" +
+    "- Review the Human's proposed guess and give concise strategic feedback.\n" +
+    "- Point out strengths, possible weaknesses, and what the feedback history implies.\n" +
+    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" +
+    "- If an RL diagnostic is available, use it only as a private benchmark for better feedback quality.\n" +
+    "- Do not reveal the RL diagnostic guess, copy it, or present it as your recommendation.\n" +
+    "- Keep the Human responsible for deciding and entering the final guess.\n" +
+    "- Respond in 2-3 short sentences.\n\n" +
     "CONSTRAINTS:\n" +
     "- Only use colors from: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors CAN repeat.\n" +
     "- Do NOT reveal the secret code (you don't know it).\n\n" +
+    "OUTPUT RULES:\n" +
+    "- Do NOT output a full 4-color guess.\n" +
+    "- Do NOT use labels such as FINAL GUESS, PREDICTION, or RECOMMENDED GUESS.\n" +
+    "- Do NOT list four colors in sequence as an alternative answer.\n" +
+    "- End with a feedback-oriented sentence that leaves the final decision to the Human.\n\n" +
     "CURRENT STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
     "- Attempts this round: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
-    (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "");
+    (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "") +
+    (rlSuggestion ? "\n- Private RL diagnostic guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
 }
 
 function sendToJudge(userMsg, humanGuess) {
-  var sysPrompt = buildJudgeSystemPrompt(humanGuess);
+  if (humanGuess) {
+    requestRLSuggestion("feedback on human proposal", function(rlSuggestion) {
+      sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion);
+    });
+  } else {
+    sendToJudgeWithFeedback(userMsg, humanGuess, null);
+  }
+}
+
+function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
+  var sysPrompt = buildJudgeSystemPrompt(humanGuess, rlSuggestion);
 
   if (humanGuess) {
-    conversationMessages.push({ role: "user", content: "My proposed guess is: [" + humanGuess.join(", ") + "]. Please review and adapt if needed." });
+    conversationMessages.push({ role: "user", content: "My proposed guess is: [" + humanGuess.join(", ") + "]. Please review it and give feedback only. Do not provide a full replacement guess." });
   } else {
     conversationMessages.push({ role: "user", content: userMsg });
   }
@@ -495,6 +551,7 @@ function sendToJudge(userMsg, humanGuess) {
   suggestionHistory.push({
     round: currentRound, attempt: stepCount,
     humanProposal: humanGuess ? humanGuess.slice() : userMsg,
+    rlDiagnosticGuess: rlSuggestion ? rlSuggestion.guess.slice() : null,
     timestamp: new Date().toISOString()
   });
 
@@ -515,28 +572,6 @@ function sendToJudge(userMsg, humanGuess) {
 
       chatHistory.push({ round: currentRound, attempt: stepCount, role: "ai", message: reply, timestamp: new Date().toISOString() });
       logProv('judgeResponseReceived', 'system', { round: currentRound, attempt: stepCount, responseLength: reply.length, timestamp: new Date().toISOString() });
-
-      var predMatch = reply.match(/FINAL\s*GUESS\s*:\s*\[([^\]]+)\]/i);
-      var parsed = null;
-      if (predMatch) {
-        var colors = predMatch[1].split(",");
-        var valid = [];
-        for (var i = 0; i < colors.length; i++) {
-          var trimmed = colors[i].trim();
-          var found = null;
-          for (var j = 0; j < availableColors.length; j++) {
-            if (availableColors[j].toLowerCase() === trimmed.toLowerCase()) { found = availableColors[j]; break; }
-          }
-          valid.push(found);
-        }
-        if (valid.length === CODE_LENGTH && valid.indexOf(null) === -1) parsed = valid;
-      }
-      if (!parsed) parsed = parseColorsFromText(reply);
-
-      if (parsed) {
-        currentAIGuess = parsed;
-        addMsg("⚖️ AI proposes: [" + parsed.join(", ") + "]\nUse this as advice, adjust the board manually if needed, then Submit Directly.", "system");
-      }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
     }
