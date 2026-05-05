@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>Mastermind — Advisor System (Increasing Difficulty)</title>
+<title>Mastermind</title>
 <script src="/revisitUtilities/revisit-communicate.js"></script>
 <script src="/revisitUtilities/revisit-provenance.js"></script>
 <style>
@@ -39,7 +39,6 @@
          box-shadow:0 1px 6px rgba(16,24,40,0.04); }
   .msg.user { background:#e6f0ff; align-self:flex-end; color:#0b4da0; text-align:right; }
   .msg.bot  { background:#0f172a; color:white; align-self:flex-start; }
-  .msg.system { background:#fef3c7; align-self:center; color:#92400e; text-align:center; font-style:italic; font-size:13px; max-width:90%; }
   .bot-text { white-space:pre-wrap; font-size:14px; }
   .completion-code-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.72); z-index:2000; display:flex; align-items:center; justify-content:center; padding:24px; }
   .completion-code-panel { background:#fff; border-radius:12px; max-width:680px; width:100%; padding:28px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,0.35); border:4px solid #f59e0b; }
@@ -52,10 +51,10 @@
 <body>
 
 <div class="game">
-  <h2>🎯 Mastermind — Low Cognitive Responsibility (AI as an Advisor)</h2>
+  <h2>🎯 Mastermind</h2>
   <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
-    <b>How it works (low cognitive responsibility; high AI autonomy):</b><br>
+    <b>How it works:</b><br>
     1️⃣ The AI Advisor proactively requests a trained Mastermind RL model's next guess and explains the rationale.<br>
     2️⃣ Click <b>"Apply AI suggestion"</b> to load the AI's prediction and submit it immediately.<br>
     3️⃣ You can also build and submit your own guess manually.<br>
@@ -193,6 +192,7 @@ function logProv(action, trigger, data) {
 }
 
 function addMsg(text, cls) {
+  if (cls === "system") return;
   var chatBox = document.getElementById("chatMessages");
   var m = el("div", { "class": "msg " + cls });
   var span = document.createElement("span");
@@ -615,7 +615,7 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion) {
       if (parsed) {
         currentAdvisorGuess = parsed;
         document.getElementById("applyAdvisorBtn").style.display = "inline-block";
-        addMsg("🤖 Advisor suggests: [" + parsed.join(", ") + "]\nClick 'Apply AI suggestion' to load and submit it, or keep your own guess.", "system");
+        addMsg("🤖 AI suggests: [" + parsed.join(", ") + "]\nClick 'Apply AI suggestion' to load and submit it, or keep your own guess.", "system");
       }
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
