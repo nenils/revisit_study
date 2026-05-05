@@ -1003,8 +1003,7 @@
               "numItems": 7
             }
           ]
-          },
-      "Ownership": {
+          }, "Ownership": {
         "type": "questionnaire",
         "response": [
           {
@@ -1038,7 +1037,6 @@
         },
         "manipulation-check",
         "cognitive-load",
-        "Ownership",
         "control-trust-willingness",
         "control-mails-short",
         "control-game-llm-experience",
