@@ -476,7 +476,8 @@
             "89",
             "90",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-gender",
@@ -490,7 +491,8 @@
             "Non-binary",
             "Another gender identity",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-country-residence",
@@ -524,7 +526,8 @@
             "Australia",
             "Other / not listed",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-ethnicity",
@@ -542,7 +545,8 @@
             "Mixed or multiple ethnic backgrounds",
             "Other / not listed",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-education",
@@ -560,7 +564,8 @@
             "Doctoral degree (e.g., PhD, EdD)",
             "Professional degree (e.g., MD, JD)",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-job-sector",
@@ -580,7 +585,8 @@
             "Arts and Entertainment",
             "Other / not listed",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         },
         {
           "id": "demographics-household-income",
@@ -597,7 +603,8 @@
             "EUR 100,000 to EUR 149,999",
             "EUR 150,000 or more",
             "Prefer not to say"
-          ]
+          ],
+          "searchable": true
         }
       ],
       "instructionLocation": "aboveStimulus",
@@ -647,7 +654,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Trust\nPlease indicate how willing you would be to depend on the AI system in task-solving situations."
+      "instruction": "## Perception of AI\nPlease indicate how willing you would be to depend on the AI system in task-solving situations."
     },
     "control-trust-integrity": {
       "type": "questionnaire",
@@ -739,7 +746,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Trust: Competence\nPlease indicate how capable and knowledgeable you perceived the AI system to be."
+      "instruction": "## Competence\nPlease indicate how capable and knowledgeable you perceived the AI system to be."
     },
     "control-trust": {
       "type": "questionnaire",
@@ -848,7 +855,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Trust\nPlease indicate your beliefs about the AI system after completing the task."
+      "instruction": "## Perception of AI\nPlease indicate your beliefs about the AI system after completing the task."
     },
     "control-game-experience": {
       "type": "questionnaire",
@@ -915,24 +922,6 @@
           "numItems": 7
         },
         {
-          "id": "mails-4-emotion-regulation",
-          "prompt": "I can handle it when interactions with AI frustrate or frighten me.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "mails-5-ai-ethics",
-          "prompt": "I can weigh the consequences of using AI for society.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
           "id": "mails-7-apply-ai",
           "prompt": "I can use artificial intelligence meaningfully to achieve my goals.",
           "required": true,
@@ -951,15 +940,6 @@
           "numItems": 7
         },
         {
-          "id": "mails-9-persuasion-literacy",
-          "prompt": "I can prevent an AI from influencing me in my decisions.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
           "id": "mails-10-understand-ai",
           "prompt": "I can assess what advantages and disadvantages the use of an artificial intelligence entails.",
           "required": true,
@@ -970,13 +950,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## AI Literacy\nPlease indicate how you generally assess your ability to understand and work with AI systems."
+      "instruction": "## AI Competence\nPlease indicate how you generally assess your ability to understand and work with AI systems."
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
       "description": "Prior game experience and experience with large language models.",
       "responseDividers": true,
-      "responseOrder": "random",
       "response": [
         {
           "id": "game-llm-prior-mastermind-experience",
@@ -1021,15 +1000,6 @@
             "Other / not listed",
             "Prefer not to say"
           ]
-        },
-        {
-          "id": "llm-experience-frequency",
-          "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Never",
-          "rightLabel": "Daily",
-          "numItems": 7
         }
       ],
       "instructionLocation": "aboveStimulus",
@@ -1041,15 +1011,6 @@
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
-        {
-          "id": "mc-initiative-ai",
-          "prompt": "In most rounds, the AI generated the initial content of a guess.",
-          "type": "likert",
-          "required": true,
-          "leftLabel": "Strongly disagree",
-          "rightLabel": "Strongly agree",
-          "numItems": 7
-        },
         {
           "id": "mc-initiative-self",
           "prompt": "In most rounds, I generated the initial content of a guess.",
@@ -1071,15 +1032,6 @@
         {
           "id": "mc-responsibility-self",
           "prompt": "I felt responsible for the outcomes of the guesses.",
-          "type": "likert",
-          "required": true,
-          "leftLabel": "Strongly disagree",
-          "rightLabel": "Strongly agree",
-          "numItems": 7
-        },
-        {
-          "id": "mc-responsibility-ai",
-          "prompt": "The AI was responsible for the outcomes of the guesses.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -1119,7 +1071,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: intrinsic cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Cognitive Load: Task Complexity\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
+      "instruction": "## Task Complexity\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -1147,7 +1099,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: extraneous cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Cognitive Load: Interface And Information Search\nPlease indicate how much unnecessary effort was caused by finding, recognizing, and linking information.",
+      "instruction": "## Interface And Information Search\nPlease indicate how much effort was needed to find, recognize, and link information.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -1184,7 +1136,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Cognitive Load: Understanding And Strategy\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
+      "instruction": "## Understanding And Strategy\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
