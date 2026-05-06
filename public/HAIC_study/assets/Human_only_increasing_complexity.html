@@ -302,7 +302,7 @@ function handleRoundWin() {
   gameOver = true;
   updateGuessBtn();
   showStatus("🎉 Code cracked in Round " + currentRound + " after " + stepCount + " attempt(s)!", "success");
-  roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice() });
+  roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
 
@@ -319,13 +319,23 @@ function handleRoundLoss() {
   gameOver = true;
   updateGuessBtn();
   showStatus("❌ Round " + currentRound + " failed. The code was: " + secret.join(", "), "error");
-  roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice() });
+  roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
   finishGame("Game over! Max attempts reached in Round " + currentRound + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {
   return message.indexOf("YOUwin!") !== -1 ? "YOUwin!" : "YOUgo!";
+}
+
+function getReactiveAnswerId() {
+  var trialId = new URLSearchParams(window.location.search).get("trialid") || "";
+  if (trialId === "mastermind_human_only") return "mastermind_human_only_reactive";
+  return "mastermind_game_reactive";
+}
+
+function cloneForStorage(value) {
+  return JSON.parse(JSON.stringify(value));
 }
 
 function showCompletionCode(message) {
@@ -370,6 +380,7 @@ function finishGame(message) {
   answers[taskID + "_keyTrackingData"] = JSON.stringify(keyTrackingData);
   answers[taskID + "_finalPassword"] = getStudyCode(message);
   try { if (typeof Revisit !== 'undefined' && Revisit.getProvenance) { answers[taskID + "_provenance"] = Revisit.getProvenance(); } } catch (e) {}
+  answers[getReactiveAnswerId()] = ["Game completed; detailed tracking data saved."];
   Revisit.postAnswers(answers);
 }
 

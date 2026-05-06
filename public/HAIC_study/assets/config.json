@@ -78,6 +78,16 @@
       "description": "Play Mastermind on your own with increasing difficulty (1→6 colors).",
       "response": [
         {
+          "id": "mastermind_human_only_reactive",
+          "prompt": "Game data saved",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive",
+          "style": {
+            "display": "none"
+          }
+        },
+        {
           "id": "played-game",
           "prompt": "What was the password displayed after finishing the Game?",
           "required": true,
@@ -91,6 +101,16 @@
       "description": "High cognitive responsibility (AI as a Judge): you create and submit guesses; the AI has low autonomy and only reviews a guess when you explicitly send it.",
       "response": [
         {
+          "id": "mastermind_judge_reactive",
+          "prompt": "Game data saved",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive",
+          "style": {
+            "display": "none"
+          }
+        },
+        {
           "id": "played-game",
           "prompt": "What was the password?",
           "required": true,
@@ -103,6 +123,16 @@
       "baseComponent": "mind_advisor",
       "description": "Low cognitive responsibility (AI as an Advisor): the AI has high autonomy and proactively proposes the next guess using a trained Mastermind RL model; you can apply or adjust it before submitting.",
       "response": [
+        {
+          "id": "mastermind_advisor_reactive",
+          "prompt": "Game data saved",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive",
+          "style": {
+            "display": "none"
+          }
+        },
         {
           "id": "played-game",
           "prompt": "What was the password?",
