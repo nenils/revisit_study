@@ -1,1046 +1,1245 @@
 {
-    "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
-  
-    "studyMetadata": {
-      "title": "Study with Humans playing a Game",
-      "version": "v-2",
-      "authors": ["Nils Ness"],
-      "date": "2026-03-04",
-      "description": "",
-      "organizations": ["Technical University of Munich"]
+  "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
+  "studyMetadata": {
+    "title": "Study with Humans playing a Game",
+    "version": "v-2",
+    "authors": [
+      "Nils Ness"
+    ],
+    "date": "2026-03-04",
+    "description": "",
+    "organizations": [
+      "Technical University of Munich"
+    ]
+  },
+  "uiConfig": {
+    "contactEmail": "nils.ness@tum.de",
+    "helpTextPath": "HAIC_study/assets/help.md",
+    "logoPath": "HAIC_study/assets/logo.svg.png",
+    "withProgressBar": true,
+    "autoDownloadStudy": false,
+    "withSidebar": true,
+    "enumerateQuestions": true
+  },
+  "baseComponents": {
+    "mind_human_only": {
+      "type": "website",
+      "response": [
+        {
+          "id": "mastermind_human_only_reactive",
+          "prompt": "Play the Game!",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive"
+        }
+      ],
+      "path": "HAIC_study/assets/Human_only_increasing_complexity.html",
+      "instructionLocation": "aboveStimulus"
     },
-  
-    "uiConfig": {
-      "contactEmail": "nils.ness@tum.de",
-      "helpTextPath": "HAIC_study/assets/help.md",
-      "logoPath": "HAIC_study/assets/logo.svg.png",
-      "withProgressBar": true,
-      "autoDownloadStudy": false,
-      "withSidebar": true,
-      "enumerateQuestions": true
+    "mind_judge": {
+      "type": "website",
+      "response": [
+        {
+          "id": "mastermind_judge_reactive",
+          "prompt": "Play the Game!",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive"
+        }
+      ],
+      "path": "HAIC_study/assets/HAIC_role_Judge_increasing complexity.html",
+      "instructionLocation": "aboveStimulus"
     },
-
-    "baseComponents": {
-      "mind_human_only": {
-        "type": "website",
-        "response": [
-          {
-            "id": "mastermind_human_only_reactive",
-            "prompt": "Play the Game!",
-            "required": true,
-            "location": "belowStimulus",
-            "type": "reactive"
-          }
-        ],
-        "path": "HAIC_study/assets/Human_only_increasing_complexity.html",
-        "instructionLocation": "aboveStimulus"
-      },
-      "mind_judge": {
-        "type": "website",
-        "response": [
-          {
-            "id": "mastermind_judge_reactive",
-            "prompt": "Play the Game!",
-            "required": true,
-            "location": "belowStimulus",
-            "type": "reactive"
-          }
-        ],
-        "path": "HAIC_study/assets/HAIC_role_Judge_increasing complexity.html",
-        "instructionLocation": "aboveStimulus"
-      },
-      "mind_advisor": {
-        "type": "website",
-        "response": [
-          {
-            "id": "mastermind_advisor_reactive",
-            "prompt": "Play the Game!",
-            "required": true,
-            "location": "belowStimulus",
-            "type": "reactive"
-          }
-        ],
-        "path": "HAIC_study/assets/HAIC_role_Advisor_increasing_complexity.html",
-        "instructionLocation": "aboveStimulus"
-      }
+    "mind_advisor": {
+      "type": "website",
+      "response": [
+        {
+          "id": "mastermind_advisor_reactive",
+          "prompt": "Play the Game!",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive"
+        }
+      ],
+      "path": "HAIC_study/assets/HAIC_role_Advisor_increasing_complexity.html",
+      "instructionLocation": "aboveStimulus"
+    }
+  },
+  "components": {
+    "introduction": {
+      "type": "markdown",
+      "path": "HAIC_study/assets/introduction.md",
+      "response": [],
+      "nextButtonEnableTime": 20000,
+      "nextButtonText": "Next"
     },
-
-    "components": {
-      "introduction": {
-        "type": "markdown",
-        "path": "HAIC_study/assets/introduction.md",
-        "response": []
-      },
-
-      "mastermind_human_only": {
-        "baseComponent": "mind_human_only",
-        "description": "Play Mastermind on your own with increasing difficulty (1→6 colors).",
-        "response": [
-          {
-            "id": "played-game",
-            "prompt": "What was the password?",
-            "required": true,
-            "type": "shortText"
-          }
-        ]
-      },
-
-      "mastermind_judge": {
-        "baseComponent": "mind_judge",
-        "description": "High cognitive responsibility (AI as a Judge): you create and submit guesses; the AI has low autonomy and only reviews a guess when you explicitly send it.",
-        "response": [
-          {
-            "id": "played-game",
-            "prompt": "What was the password?",
-            "required": true,
-            "type": "shortText"
-          }
-        ]
-      },
-
-      "mastermind_advisor": {
-        "baseComponent": "mind_advisor",
-        "description": "Low cognitive responsibility (AI as an Advisor): the AI has high autonomy and proactively proposes the next guess using a trained Mastermind RL model; you can apply or adjust it before submitting.",
-        "response": [
-          {
-            "id": "played-game",
-            "prompt": "What was the password?",
-            "required": true,
-            "type": "shortText"
-          }
-        ]
-      },
-
-      "cognitive-load": {
-        "type": "questionnaire",
-        "description": "Post-game cognitive load assessment based on Klepsch et al. (2017).",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "cl-icl-1",
-            "prompt": "For this task, many things needed to be kept in mind simultaneously.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-icl-2",
-            "prompt": "This task was very complex.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-ecl-1",
-            "prompt": "During this task, it was exhausting to find the important information.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-ecl-2",
-            "prompt": "The design of this task was very inconvenient for playing the game.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-ecl-3",
-            "prompt": "During this task, it was difficult to recognize and link the crucial information.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-gcl-1",
-            "prompt": "I made an effort, not only to understand several details, but to understand the overall context.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-gcl-2",
-            "prompt": "My point while dealing with the task was to understand everything correctly.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "cl-gcl-3",
-            "prompt": "The task consisted of elements supporting my comprehension of the task.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Stronlgy Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-
-      "TOAST": {
-        "type": "questionnaire",
-        "description": "Evaluate the usability and performance of the system.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "toast-1",
-            "prompt": "I understand what the system should do.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-2",
-            "prompt": "The system helps me achieve my goals.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-3",
-            "prompt": "I understand the limitations of the system.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-4",
-            "prompt": "I understand the capabilities of the system.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-5",
-            "prompt": "The system performs consistently.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-6",
-            "prompt": "The system performs the way it should.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-7",
-            "prompt": "I feel comfortable relying on the information provided by the system.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-8",
-            "prompt": "I understand how the system executes tasks.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "toast-9",
-            "prompt": "I am rarely surprised by how the system responds.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-  
-      "NASA_TLX": {
-        "type": "questionnaire",
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "Mental Demand",
-            "prompt": "How mentally demanding was the task?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Low" },
-              { "value": 25, "label": "Low" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "High" },
-              { "value": 100, "label": "Very High" }
-            ]
-          },
-          {
-            "id": "Physical Demand",
-            "prompt": "How physically demanding was the task?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Low" },
-              { "value": 25, "label": "Low" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "High" },
-              { "value": 100, "label": "Very High" }
-            ]
-          },
-          {
-            "id": "Temporal Demand",
-            "prompt": "How hurried or rushed was the pace of the task?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Low" },
-              { "value": 25, "label": "Low" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "High" },
-              { "value": 100, "label": "Very High" }
-            ]
-          },
-          {
-            "id": "Performance",
-            "prompt": "How successful were you in accomplishing what you were asked to do?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Perfect" },
-              { "value": 25, "label": "Good" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "Bad" },
-              { "value": 100, "label": "Failure" }
-            ]
-          },
-          {
-            "id": "Effort",
-            "prompt": "How hard did you have to work to accomplish your level of performance?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Low" },
-              { "value": 25, "label": "Low" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "High" },
-              { "value": 100, "label": "Very High" }
-            ]
-          },
-          {
-            "id": "Frustration",
-            "prompt": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
-            "location": "aboveStimulus",
-            "required": true,
-            "type": "slider",
-            "startingValue": 50,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Low" },
-              { "value": 25, "label": "Low" },
-              { "value": 50, "label": "Medium" },
-              { "value": 75, "label": "High" },
-              { "value": 100, "label": "Very High" }
-            ]
-          }
-        ]
-      },
-  
-      "demographics": {
-        "type": "questionnaire",
-        "description": "Demographic information.",
-        "responseDividers": true,
-        "response": [
-          {
-            "id": "demographics-age",
-            "prompt": "Age",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your age range",
-            "options": [
-              "18","19","20","21","22","23","24","25","26","27","28","29","30",
-              "31","32","33","34","35","36","37","38","39","40",
-              "41","42","43","44","45","46","47","48","49","50",
-              "51","52","53","54","55","56","57","58","59","60",
-              "61","62","63","64","65",
-              "66","67","68","69","70",
-              "71","72","73","74","75",
-              "76","77","78","79","80",
-              "81","82","83","84","85",
-              "86","87","88","89","90",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "demographics-gender",
-            "prompt": "Gender",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your gender",
-            "options": [
-              "Woman",
-              "Man",
-              "Non-binary",
-              "Another gender identity",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "demographics-country-residence",
-            "prompt": "Country of residence",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your country of residence",
-            "options": [
-              "Germany",
-              "Austria",
-              "Switzerland",
-              "United States",
-              "United Kingdom",
-              "France",
-              "Italy",
-              "Spain",
-              "Netherlands",
-              "Belgium",
-              "Poland",
-              "Czechia",
-              "Denmark",
-              "Sweden",
-              "Norway",
-              "Finland",
-              "India",
-              "China",
-              "Japan",
-              "South Korea",
-              "Brazil",
-              "Canada",
-              "Australia",
-              "Other / not listed",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "demographics-country-origin",
-            "prompt": "Country of origin",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your country of origin",
-            "options": [
-              "Germany",
-              "Austria",
-              "Switzerland",
-              "United States",
-              "United Kingdom",
-              "France",
-              "Italy",
-              "Spain",
-              "Netherlands",
-              "Belgium",
-              "Poland",
-              "Czechia",
-              "Denmark",
-              "Sweden",
-              "Norway",
-              "Finland",
-              "India",
-              "China",
-              "Japan",
-              "South Korea",
-              "Brazil",
-              "Canada",
-              "Australia",
-              "Other / not listed",
-              "Prefer not to say"
-            ]
-          }, 
-          {
-            "id": "demographics-education",
-            "prompt": "Highest level of education completed",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your highest level of education",
-            "options": [
-              "Less than high school",
-              "High school diploma or equivalent",
-              "Some college, no degree",
-              "Associate degree (e.g., AA, AS)",
-              "Bachelor's degree (e.g., BA, BS)",
-              "Master's degree (e.g., MA, MS)",
-              "Doctoral degree (e.g., PhD, EdD)",
-              "Professional degree (e.g., MD, JD)",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "demographics-job-sector",
-            "prompt": "Current job sector",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select your current job sector",
-            "options": [
-              "Technology",
-              "Education",
-              "Healthcare",
-              "Finance",
-              "Government",
-              "Manufacturing",
-              "Retail",
-              "Hospitality",
-              "Arts and Entertainment",
-              "Other / not listed",
-              "Prefer not to say"
-            ]
-          }
-        ]
-      },
-
-      "control-trust-willingness": {
-        "type": "questionnaire",
-        "description": "Control variables: McKnight trusting beliefs — Willingness to depend.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "willingness-to-depend-1",
-            "prompt": "When an important task or problem arises, I would feel comfortable depending on the information provided by the AI.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "willingness-to-depend-2",
-            "prompt": "I can always rely on the AI in a tough situation.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "willingness-to-depend-3",
-            "prompt": "I feel that I could count on the AI to help with a crucial task solving problem.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "willingness-to-depend-4",
-            "prompt": "Faced with a difficult task that required me to hire an expert (for a fee), I would use the AI.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-
-      "control-trust-integrity": {
-        "type": "questionnaire",
-        "description": "Control variables: McKnight trusting beliefs — integrity.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "trust-integrity-1",
-            "prompt": "The AI system is truthful in its dealings with me.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-integrity-2",
-            "prompt": "I would characterize the AI system as honest.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-integrity-3",
-            "prompt": "The AI system would keep its commitments.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-integrity-4",
-            "prompt": "The AI system is sincere and genuine.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-
-      "control-trust-competence": {
-        "type": "questionnaire",
-        "description": "Control variables: McKnight trusting beliefs — competence.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "trust-competence-1",
-            "prompt": "The AI system is competent and effective in providing Mastermind advice.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-competence-2",
-            "prompt": "The AI system performs its role of giving Mastermind advice very well.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-competence-3",
-            "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-competence-4",
-            "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-
-      "control-trust": {
-        "type": "questionnaire",
-        "description": "Trust in the AI system: McKnight trusting beliefs.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "trust-all-benevolence-1",
-            "prompt": "I believe that the AI system would act in my best interest.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-benevolence-2",
-            "prompt": "If I required help, the AI system would do its best to help me.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-benevolence-3",
-            "prompt": "The AI system is interested in my well-being, not just its own.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-integrity-1",
-            "prompt": "The AI system is truthful in its dealings with me.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-integrity-2",
-            "prompt": "I would characterize the AI system as honest.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-integrity-3",
-            "prompt": "The AI system would keep its commitments.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-integrity-4",
-            "prompt": "The AI system is sincere and genuine.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-competence-1",
-            "prompt": "The AI system is competent and effective in providing Mastermind advice.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-competence-2",
-            "prompt": "The AI system performs its role of giving Mastermind advice very well.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-competence-3",
-            "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "trust-all-competence-4",
-            "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-
-      "control-game-experience": {
-        "type": "questionnaire",
-        "description": "Control variables: prior game experience.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "prior-mastermind-experience",
-            "prompt": "How much prior experience do you have with Mastermind?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "No prior experience",
-              "I know the rules but have rarely or never played",
-              "I have played a few times",
-              "I have played several times",
-              "I play Mastermind or similar code-breaking games regularly",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "prior-codebreaking-experience",
-            "prompt": "How much prior experience do you have with similar code-breaking or deduction games?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "No prior experience",
-              "Very little experience",
-              "Some experience",
-              "Considerable experience",
-              "Extensive experience",
-              "Prefer not to say"
-            ]
-          }
-        ]
-      },
-
-      "control-mails-short": {
-        "type": "questionnaire",
-        "description": "Control variables: Meta Artificial Intelligence Literacy Scale — Short Version (MAILS).",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "mails-1-detect-ai",
-            "prompt": "I can tell if I am dealing with an application based on artificial intelligence.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-3-up-to-date",
-            "prompt": "Although there are often new AI applications, I manage to always be up to date.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-4-emotion-regulation",
-            "prompt": "I can handle it when interactions with AI frustrate or frighten me.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-5-ai-ethics",
-            "prompt": "I can weigh the consequences of using AI for society.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-7-apply-ai",
-            "prompt": "I can use artificial intelligence meaningfully to achieve my goals.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-8-ai-problem-solving",
-            "prompt": "I can usually solve strenuous and complicated tasks when working with artificial intelligence well.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-9-persuasion-literacy",
-            "prompt": "I can prevent an AI from influencing me in my decisions.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          },
-          {
-            "id": "mails-10-understand-ai",
-            "prompt": "I can assess what advantages and disadvantages the use of an artificial intelligence entails.",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Strongly Disagree",
-            "rightLabel": "Strongly Agree",
-            "numItems": 7
-          }
-        ]
-      },
-      "control-game-llm-experience": {
-        "type": "questionnaire",
-        "description": "Prior game experience and experience with large language models.",
-        "responseDividers": true,
-        "responseOrder": "random",
-        "response": [
-          {
-            "id": "game-llm-prior-mastermind-experience",
-            "prompt": "How much prior experience do you have with Mastermind?",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "None",
-            "rightLabel": "Extensive",
-            "numItems": 7
-          },
-          {
-            "id": "game-llm-prior-codebreaking-experience",
-            "prompt": "How much prior experience do you have with similar code-breaking or deduction games like Sudoku or Wordle?",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "None",
-            "rightLabel": "Extensive",
-            "numItems": 7
-          },
-          {
-            "id": "game-llm-llm-experience-frequency",
-            "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Never",
-            "rightLabel": "Daily",
-            "numItems": 7
-          },
-          {
-            "id": "llm-experience-purpose",
-            "prompt": "For what purpose do you most often use LLM-based tools?",
-            "required": true,
-            "type": "dropdown",
-            "placeholder": "Select one option",
-            "options": [
-              "I do not use LLM-based tools",
-              "Learning or explanations",
-              "Writing or editing",
-              "Programming or data analysis",
-              "Work or productivity tasks",
-              "Entertainment or casual use",
-              "Other / not listed",
-              "Prefer not to say"
-            ]
-          },
-          {
-            "id": "llm-experience-frequency",
-            "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
-            "required": true,
-            "type": "likert",
-            "leftLabel": "Never",
-            "rightLabel": "Daily",
-            "numItems": 7
-          }
-        ]
-      },
-        "manipulation-check": {
-          "type": "questionnaire",
-          "description": "Please answer the following questions about your experience during the task.",
-          "responseDividers": true,
-          "responseOrder": "random",
-          "response": [
-            {"id":"mc-initiative-ai",
-              "prompt": "In most rounds, the AI generated the initial content of a guess.",
-              "type": "likert",
-              "required": true,
-              "leftLabel": "Strongly disagree",
-              "rightLabel": "Strongly agree",
-              "numItems": 7
+    "mastermind_human_only": {
+      "baseComponent": "mind_human_only",
+      "description": "Play Mastermind on your own with increasing difficulty (1→6 colors).",
+      "response": [
+        {
+          "id": "played-game",
+          "prompt": "What was the password?",
+          "required": true,
+          "type": "shortText"
+        }
+      ]
+    },
+    "mastermind_judge": {
+      "baseComponent": "mind_judge",
+      "description": "High cognitive responsibility (AI as a Judge): you create and submit guesses; the AI has low autonomy and only reviews a guess when you explicitly send it.",
+      "response": [
+        {
+          "id": "played-game",
+          "prompt": "What was the password?",
+          "required": true,
+          "type": "shortText"
+        }
+      ]
+    },
+    "mastermind_advisor": {
+      "baseComponent": "mind_advisor",
+      "description": "Low cognitive responsibility (AI as an Advisor): the AI has high autonomy and proactively proposes the next guess using a trained Mastermind RL model; you can apply or adjust it before submitting.",
+      "response": [
+        {
+          "id": "played-game",
+          "prompt": "What was the password?",
+          "required": true,
+          "type": "shortText"
+        }
+      ]
+    },
+    "TOAST": {
+      "type": "questionnaire",
+      "description": "Evaluate the usability and performance of the system.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "toast-1",
+          "prompt": "I understand what the system should do.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-2",
+          "prompt": "The system helps me achieve my goals.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-3",
+          "prompt": "I understand the limitations of the system.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-4",
+          "prompt": "I understand the capabilities of the system.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-5",
+          "prompt": "The system performs consistently.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-6",
+          "prompt": "The system performs the way it should.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-7",
+          "prompt": "I feel comfortable relying on the information provided by the system.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-8",
+          "prompt": "I understand how the system executes tasks.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "toast-9",
+          "prompt": "I am rarely surprised by how the system responds.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ]
+    },
+    "NASA_TLX": {
+      "type": "questionnaire",
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "Mental Demand",
+          "prompt": "How mentally demanding was the task?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Low"
             },
-            { "id":"mc-initiative-self",
-              "prompt": "In most rounds, I generated the initial content of a guess.",
-              "type": "likert",
-              "required": true,
-              "leftLabel": "Strongly disagree",
-              "rightLabel": "Strongly agree",
-              "numItems": 7
+            {
+              "value": 25,
+              "label": "Low"
             },
-            { "id":"mc-selection-self",
-              "prompt": "I determined which guess was ultimately submitted.",
-              "type": "likert",
-              "required": true,
-              "leftLabel": "Strongly disagree",
-              "rightLabel": "Strongly agree",
-              "numItems": 7
+            {
+              "value": 50,
+              "label": "Medium"
             },
-            { "id":"mc-responsibility-self",
-              "prompt": "I felt responsible for the outcomes of the guesses.",
-              "type": "likert",
-              "required": true,
-              "leftLabel": "Strongly disagree",
-              "rightLabel": "Strongly agree",
-              "numItems": 7
+            {
+              "value": 75,
+              "label": "High"
             },
-            {"id":"mc-responsibility-ai",
-              "prompt": "The AI was responsible for the outcomes of the guesses.",
-              "type": "likert",
-              "required": true,
-              "leftLabel": "Strongly disagree",
-              "rightLabel": "Strongly agree",
-              "numItems": 7
+            {
+              "value": 100,
+              "label": "Very High"
             }
           ]
-          }, "Ownership": {
-        "type": "questionnaire",
-        "response": [
-          {
-            "id": "ownership",
-            "prompt": "To what extent do you feel you contributed to solving the task?",
-            "required": true,
-            "type": "slider",
-            "startingValue": 0,
-            "tlxStyle": true,
-            "options": [
-              { "value": 0, "label": "Very Little" },
-              { "value": 100, "label": "Very Much" }
-            ]
-          }
-        ]
-      }
-    },
-  
-    "sequence": {
-      "order": "fixed",
-      "components": [
-        "introduction",
+        },
         {
-          "order": "random",
-          "numSamples": 1,
-          "components": [
-            "mastermind_human_only",
-            "mastermind_judge",
-            "mastermind_advisor"
+          "id": "Physical Demand",
+          "prompt": "How physically demanding was the task?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Low"
+            },
+            {
+              "value": 25,
+              "label": "Low"
+            },
+            {
+              "value": 50,
+              "label": "Medium"
+            },
+            {
+              "value": 75,
+              "label": "High"
+            },
+            {
+              "value": 100,
+              "label": "Very High"
+            }
           ]
         },
-        "manipulation-check",
-        "cognitive-load",
-        "control-trust-willingness",
-        "control-mails-short",
-        "control-game-llm-experience",
-        "demographics"
+        {
+          "id": "Temporal Demand",
+          "prompt": "How hurried or rushed was the pace of the task?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Low"
+            },
+            {
+              "value": 25,
+              "label": "Low"
+            },
+            {
+              "value": 50,
+              "label": "Medium"
+            },
+            {
+              "value": 75,
+              "label": "High"
+            },
+            {
+              "value": 100,
+              "label": "Very High"
+            }
+          ]
+        },
+        {
+          "id": "Performance",
+          "prompt": "How successful were you in accomplishing what you were asked to do?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Perfect"
+            },
+            {
+              "value": 25,
+              "label": "Good"
+            },
+            {
+              "value": 50,
+              "label": "Medium"
+            },
+            {
+              "value": 75,
+              "label": "Bad"
+            },
+            {
+              "value": 100,
+              "label": "Failure"
+            }
+          ]
+        },
+        {
+          "id": "Effort",
+          "prompt": "How hard did you have to work to accomplish your level of performance?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Low"
+            },
+            {
+              "value": 25,
+              "label": "Low"
+            },
+            {
+              "value": 50,
+              "label": "Medium"
+            },
+            {
+              "value": 75,
+              "label": "High"
+            },
+            {
+              "value": 100,
+              "label": "Very High"
+            }
+          ]
+        },
+        {
+          "id": "Frustration",
+          "prompt": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
+          "location": "aboveStimulus",
+          "required": true,
+          "type": "slider",
+          "startingValue": 50,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Low"
+            },
+            {
+              "value": 25,
+              "label": "Low"
+            },
+            {
+              "value": 50,
+              "label": "Medium"
+            },
+            {
+              "value": 75,
+              "label": "High"
+            },
+            {
+              "value": 100,
+              "label": "Very High"
+            }
+          ]
+        }
+      ]
+    },
+    "demographics": {
+      "type": "questionnaire",
+      "description": "Demographic information.",
+      "responseDividers": true,
+      "response": [
+        {
+          "id": "demographics-age",
+          "prompt": "Age",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your age range",
+          "options": [
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50",
+            "51",
+            "52",
+            "53",
+            "54",
+            "55",
+            "56",
+            "57",
+            "58",
+            "59",
+            "60",
+            "61",
+            "62",
+            "63",
+            "64",
+            "65",
+            "66",
+            "67",
+            "68",
+            "69",
+            "70",
+            "71",
+            "72",
+            "73",
+            "74",
+            "75",
+            "76",
+            "77",
+            "78",
+            "79",
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-gender",
+          "prompt": "Gender",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your gender",
+          "options": [
+            "Woman",
+            "Man",
+            "Non-binary",
+            "Another gender identity",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-country-residence",
+          "prompt": "Country of residence",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your country of residence",
+          "options": [
+            "Germany",
+            "Austria",
+            "Switzerland",
+            "United States",
+            "United Kingdom",
+            "France",
+            "Italy",
+            "Spain",
+            "Netherlands",
+            "Belgium",
+            "Poland",
+            "Czechia",
+            "Denmark",
+            "Sweden",
+            "Norway",
+            "Finland",
+            "India",
+            "China",
+            "Japan",
+            "South Korea",
+            "Brazil",
+            "Canada",
+            "Australia",
+            "Other / not listed",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-ethnicity",
+          "prompt": "Ethnicity",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select one option",
+          "options": [
+            "Asian or Asian descent",
+            "Black, African, or African descent",
+            "Hispanic, Latino/a/x, or Latin American descent",
+            "Middle Eastern or North African descent",
+            "White or European descent",
+            "Indigenous, First Nations, or Native descent",
+            "Mixed or multiple ethnic backgrounds",
+            "Other / not listed",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-education",
+          "prompt": "Highest level of education completed",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your highest level of education",
+          "options": [
+            "Less than high school",
+            "High school diploma or equivalent",
+            "Some college, no degree",
+            "Associate degree (e.g., AA, AS)",
+            "Bachelor's degree (e.g., BA, BS)",
+            "Master's degree (e.g., MA, MS)",
+            "Doctoral degree (e.g., PhD, EdD)",
+            "Professional degree (e.g., MD, JD)",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-job-sector",
+          "prompt": "Current job sector",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your current job sector",
+          "options": [
+            "Technology",
+            "Education",
+            "Healthcare",
+            "Finance",
+            "Government",
+            "Manufacturing",
+            "Retail",
+            "Hospitality",
+            "Arts and Entertainment",
+            "Other / not listed",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "demographics-household-income",
+          "prompt": "Annual household income before taxes",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select your household income range",
+          "options": [
+            "Less than EUR 20,000",
+            "EUR 20,000 to EUR 39,999",
+            "EUR 40,000 to EUR 59,999",
+            "EUR 60,000 to EUR 79,999",
+            "EUR 80,000 to EUR 99,999",
+            "EUR 100,000 to EUR 149,999",
+            "EUR 150,000 or more",
+            "Prefer not to say"
+          ]
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Demographics\nPlease select the option that best describes you for each item."
+    },
+    "control-trust-willingness": {
+      "type": "questionnaire",
+      "description": "Control variables: McKnight trusting beliefs — Willingness to depend.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "willingness-to-depend-1",
+          "prompt": "When an important task or problem arises, I would feel comfortable depending on the information provided by the AI.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "willingness-to-depend-2",
+          "prompt": "I can always rely on the AI in a tough situation.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "willingness-to-depend-3",
+          "prompt": "I feel that I could count on the AI to help with a crucial task solving problem.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "willingness-to-depend-4",
+          "prompt": "Faced with a difficult task that required me to hire an expert (for a fee), I would use the AI.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Trust\nPlease indicate how willing you would be to depend on the AI system in task-solving situations."
+    },
+    "control-trust-integrity": {
+      "type": "questionnaire",
+      "description": "Control variables: McKnight trusting beliefs — integrity.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "trust-integrity-1",
+          "prompt": "The AI system is truthful in its dealings with me.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-integrity-2",
+          "prompt": "I would characterize the AI system as honest.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-integrity-3",
+          "prompt": "The AI system would keep its commitments.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-integrity-4",
+          "prompt": "The AI system is sincere and genuine.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Trust: Integrity\nPlease indicate how honest and principled you perceived the AI system to be."
+    },
+    "control-trust-competence": {
+      "type": "questionnaire",
+      "description": "Control variables: McKnight trusting beliefs — competence.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "trust-competence-1",
+          "prompt": "The AI system is competent and effective in providing Mastermind advice.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-competence-2",
+          "prompt": "The AI system performs its role of giving Mastermind advice very well.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-competence-3",
+          "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-competence-4",
+          "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Trust: Competence\nPlease indicate how capable and knowledgeable you perceived the AI system to be."
+    },
+    "control-trust": {
+      "type": "questionnaire",
+      "description": "Trust in the AI system: McKnight trusting beliefs.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "trust-all-benevolence-1",
+          "prompt": "I believe that the AI system would act in my best interest.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-benevolence-2",
+          "prompt": "If I required help, the AI system would do its best to help me.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-benevolence-3",
+          "prompt": "The AI system is interested in my well-being, not just its own.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-integrity-1",
+          "prompt": "The AI system is truthful in its dealings with me.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-integrity-2",
+          "prompt": "I would characterize the AI system as honest.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-integrity-3",
+          "prompt": "The AI system would keep its commitments.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-integrity-4",
+          "prompt": "The AI system is sincere and genuine.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-competence-1",
+          "prompt": "The AI system is competent and effective in providing Mastermind advice.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-competence-2",
+          "prompt": "The AI system performs its role of giving Mastermind advice very well.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-competence-3",
+          "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "trust-all-competence-4",
+          "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Trust\nPlease indicate your beliefs about the AI system after completing the task."
+    },
+    "control-game-experience": {
+      "type": "questionnaire",
+      "description": "Control variables: prior game experience.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "prior-mastermind-experience",
+          "prompt": "How much prior experience do you have with Mastermind?",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select one option",
+          "options": [
+            "No prior experience",
+            "I know the rules but have rarely or never played",
+            "I have played a few times",
+            "I have played several times",
+            "I play Mastermind or similar code-breaking games regularly",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "prior-codebreaking-experience",
+          "prompt": "How much prior experience do you have with similar code-breaking or deduction games?",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select one option",
+          "options": [
+            "No prior experience",
+            "Very little experience",
+            "Some experience",
+            "Considerable experience",
+            "Extensive experience",
+            "Prefer not to say"
+          ]
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Game Experience\nPlease answer a few questions about your prior experience with Mastermind and related games."
+    },
+    "control-mails-short": {
+      "type": "questionnaire",
+      "description": "Control variables: Meta Artificial Intelligence Literacy Scale — Short Version (MAILS).",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "mails-1-detect-ai",
+          "prompt": "I can tell if I am dealing with an application based on artificial intelligence.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-3-up-to-date",
+          "prompt": "Although there are often new AI applications, I manage to always be up to date.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-4-emotion-regulation",
+          "prompt": "I can handle it when interactions with AI frustrate or frighten me.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-5-ai-ethics",
+          "prompt": "I can weigh the consequences of using AI for society.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-7-apply-ai",
+          "prompt": "I can use artificial intelligence meaningfully to achieve my goals.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-8-ai-problem-solving",
+          "prompt": "I can usually solve strenuous and complicated tasks when working with artificial intelligence well.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-9-persuasion-literacy",
+          "prompt": "I can prevent an AI from influencing me in my decisions.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "mails-10-understand-ai",
+          "prompt": "I can assess what advantages and disadvantages the use of an artificial intelligence entails.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## AI Literacy\nPlease indicate how you generally assess your ability to understand and work with AI systems."
+    },
+    "control-game-llm-experience": {
+      "type": "questionnaire",
+      "description": "Prior game experience and experience with large language models.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "game-llm-prior-mastermind-experience",
+          "prompt": "How much prior experience do you have with Mastermind?",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "None",
+          "rightLabel": "Extensive",
+          "numItems": 7
+        },
+        {
+          "id": "game-llm-prior-codebreaking-experience",
+          "prompt": "How much prior experience do you have with similar code-breaking or deduction games like Sudoku or Wordle?",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "None",
+          "rightLabel": "Extensive",
+          "numItems": 7
+        },
+        {
+          "id": "game-llm-llm-experience-frequency",
+          "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Never",
+          "rightLabel": "Daily",
+          "numItems": 7
+        },
+        {
+          "id": "llm-experience-purpose",
+          "prompt": "For what purpose do you most often use LLM-based tools?",
+          "required": true,
+          "type": "dropdown",
+          "placeholder": "Select one option",
+          "options": [
+            "I do not use LLM-based tools",
+            "Learning or explanations",
+            "Writing or editing",
+            "Programming or data analysis",
+            "Work or productivity tasks",
+            "Entertainment or casual use",
+            "Other / not listed",
+            "Prefer not to say"
+          ]
+        },
+        {
+          "id": "llm-experience-frequency",
+          "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Never",
+          "rightLabel": "Daily",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Game And LLM Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and LLM-based tools."
+    },
+    "manipulation-check": {
+      "type": "questionnaire",
+      "description": "Please answer the following questions about your experience during the task.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "mc-initiative-ai",
+          "prompt": "In most rounds, the AI generated the initial content of a guess.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        },
+        {
+          "id": "mc-initiative-self",
+          "prompt": "In most rounds, I generated the initial content of a guess.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        },
+        {
+          "id": "mc-selection-self",
+          "prompt": "I determined which guess was ultimately submitted.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        },
+        {
+          "id": "mc-responsibility-self",
+          "prompt": "I felt responsible for the outcomes of the guesses.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        },
+        {
+          "id": "mc-responsibility-ai",
+          "prompt": "The AI was responsible for the outcomes of the guesses.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Task Experience\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the game."
+    },
+    "Ownership": {
+      "type": "questionnaire",
+      "response": [
+        {
+          "id": "ownership",
+          "prompt": "To what extent do you feel you contributed to solving the task?",
+          "required": true,
+          "type": "slider",
+          "startingValue": 0,
+          "tlxStyle": true,
+          "options": [
+            {
+              "value": 0,
+              "label": "Very Little"
+            },
+            {
+              "value": 100,
+              "label": "Very Much"
+            }
+          ]
+        }
+      ],
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Ownership\nPlease indicate how much you felt you contributed to solving the task."
+    },
+    "cognitive-load-intrinsic": {
+      "type": "questionnaire",
+      "description": "Cognitive load assessment: intrinsic cognitive load based on Klepsch et al. (2017).",
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Cognitive Load: Task Complexity\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "cl-icl-1",
+          "prompt": "For this task, many things needed to be kept in mind simultaneously.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cl-icl-2",
+          "prompt": "This task was very complex.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ]
+    },
+    "cognitive-load-extraneous": {
+      "type": "questionnaire",
+      "description": "Cognitive load assessment: extraneous cognitive load based on Klepsch et al. (2017).",
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Cognitive Load: Interface And Information Search\nPlease indicate how much unnecessary effort was caused by finding, recognizing, and linking information.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "cl-ecl-1",
+          "prompt": "During this task, it was exhausting to find the important information.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cl-ecl-2",
+          "prompt": "The design of this task was very inconvenient for playing the game.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cl-ecl-3",
+          "prompt": "During this task, it was difficult to recognize and link the crucial information.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+      ]
+    },
+    "cognitive-load-germane": {
+      "type": "questionnaire",
+      "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Cognitive Load: Understanding And Strategy\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "cl-gcl-1",
+          "prompt": "I made an effort, not only to understand several details, but to understand the overall context.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cl-gcl-2",
+          "prompt": "My point while dealing with the task was to understand everything correctly.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cl-gcl-3",
+          "prompt": "The task consisted of elements supporting my comprehension of the task.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
       ]
     }
+  },
+  "sequence": {
+    "order": "fixed",
+    "components": [
+      "introduction",
+      {
+        "order": "random",
+        "numSamples": 1,
+        "components": [
+          "mastermind_human_only",
+          "mastermind_judge",
+          "mastermind_advisor"
+        ]
+      },
+      "manipulation-check",
+      "cognitive-load-intrinsic",
+      "cognitive-load-extraneous",
+      "cognitive-load-germane",
+      "Ownership",
+      "control-trust-willingness",
+      "control-mails-short",
+      "control-game-llm-experience",
+      "demographics"
+    ]
   }
+}

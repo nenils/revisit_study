@@ -9,7 +9,7 @@ Your personal data will be processed by the Technical University of Munich, repr
 You can revoke your consent at any time without affecting the legality of the processing carried out based on your consent prior to revocation (Art. 6 para. 1 lit. a GDPR). Revoking your consent may result in your inability to participate in the survey. To revoke your consent, please contact us at [nils.ness@tum.de](mailto:nils.ness@tum.de).
 
 ### Data Storage and Processing
-The survey is conducted using SoSciSurvey as part of the tum.de tenant's commissioned data processing. You can verify this via the "Data protection and cookies" link at the bottom of this page. The survey results are stored in Germany and are not enriched with metadata from Microsoft.
+The survey is conducted using Revisit as part of the tum.de tenant's commissioned data processing. You can verify this via the "Data protection and cookies" link at the bottom of this page. The survey results are stored in Germany.
 
 ### Your Rights
 Under legal requirements, you have the right to:
