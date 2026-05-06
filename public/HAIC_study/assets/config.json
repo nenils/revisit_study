@@ -479,8 +479,7 @@
             "89",
             "90",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-gender",
@@ -494,8 +493,7 @@
             "Non-binary",
             "Another gender identity",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-country-residence",
@@ -529,8 +527,7 @@
             "Australia",
             "Other / not listed",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-ethnicity",
@@ -548,8 +545,7 @@
             "Mixed or multiple ethnic backgrounds",
             "Other / not listed",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-education",
@@ -567,8 +563,7 @@
             "Doctoral degree (e.g., PhD, EdD)",
             "Professional degree (e.g., MD, JD)",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-job-sector",
@@ -588,8 +583,7 @@
             "Arts and Entertainment",
             "Other / not listed",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         },
         {
           "id": "demographics-household-income",
@@ -606,8 +600,7 @@
             "EUR 100,000 to EUR 149,999",
             "EUR 150,000 or more",
             "Prefer not to say"
-          ],
-          "searchable": true
+          ]
         }
       ],
       "instructionLocation": "aboveStimulus",

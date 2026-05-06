@@ -24,7 +24,7 @@ export function DropdownInput({
     options,
     secondaryText,
   } = response;
-  const searchable = (response as DropdownResponse & { searchable?: boolean }).searchable ?? false;
+  const searchable = response.id.startsWith('demographics-');
 
   const optionsAsStringOptions = options.map((option) => (typeof option === 'string' ? { value: option, label: option } : option));
 
