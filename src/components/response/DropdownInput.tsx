@@ -24,6 +24,7 @@ export function DropdownInput({
     options,
     secondaryText,
   } = response;
+  const searchable = (response as DropdownResponse & { searchable?: boolean }).searchable ?? false;
 
   const optionsAsStringOptions = options.map((option) => (typeof option === 'string' ? { value: option, label: option } : option));
 
@@ -34,6 +35,8 @@ export function DropdownInput({
       description={secondaryText}
       placeholder={placeholder}
       data={optionsAsStringOptions}
+      searchable={searchable}
+      nothingFoundMessage="No matching option"
       radius="md"
       size="md"
       {...answer}
