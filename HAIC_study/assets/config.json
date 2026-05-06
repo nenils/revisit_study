@@ -79,9 +79,10 @@
       "response": [
         {
           "id": "played-game",
-          "prompt": "What was the password?",
+          "prompt": "What was the password displayed after finishing the Game?",
           "required": true,
-          "type": "shortText"
+          "type": "shortText",
+          "location": "sidebar"
         }
       ]
     },
@@ -93,7 +94,8 @@
           "id": "played-game",
           "prompt": "What was the password?",
           "required": true,
-          "type": "shortText"
+          "type": "shortText",
+          "location": "sidebar"
         }
       ]
     },
@@ -105,7 +107,8 @@
           "id": "played-game",
           "prompt": "What was the password?",
           "required": true,
-          "type": "shortText"
+          "type": "shortText",
+          "location": "sidebar"
         }
       ]
     },
