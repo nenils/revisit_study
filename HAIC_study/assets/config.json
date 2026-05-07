@@ -18,7 +18,7 @@
     "logoPath": "HAIC_study/assets/logo.svg.png",
     "withProgressBar": true,
     "autoDownloadStudy": false,
-    "withSidebar": false,
+    "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
     "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=YOUR_PROLIFIC_COMPLETION_CODE)."
@@ -72,7 +72,7 @@
       "type": "markdown",
       "path": "HAIC_study/assets/introduction.md",
       "response": [],
-      "nextButtonEnableTime": 20000,
+      "nextButtonEnableTime": 15000,
       "nextButtonText": "Next"
     },
     "mastermind_human_only": {
@@ -91,7 +91,9 @@
       ],
       "style": {
         "minHeight": "760px"
-      }
+      },
+      "withSidebar": true,
+      "sidebarWidth": 320
     },
     "mastermind_judge": {
       "type": "website",
@@ -100,14 +102,6 @@
       "description": "High cognitive responsibility (AI as a Judge): you create and submit guesses; the AI has low autonomy and only reviews a guess when you explicitly send it.",
       "response": [
         {
-          "id": "mastermind_judge_reactive",
-          "prompt": "Game data saved",
-          "required": true,
-          "location": "belowStimulus",
-          "type": "reactive",
-          "withDivider": false
-        },
-        {
           "id": "played-game",
           "prompt": "What was the password displayed after finishing the Game?",
           "required": true,
@@ -117,7 +111,9 @@
       ],
       "style": {
         "minHeight": "760px"
-      }
+      },
+      "withSidebar": true,
+      "sidebarWidth": 320
     },
     "mastermind_advisor": {
       "type": "website",
@@ -126,14 +122,6 @@
       "description": "Low cognitive responsibility (AI as an Advisor): the AI has high autonomy and proactively proposes the next guess using a trained Mastermind RL model; you can apply or adjust it before submitting.",
       "response": [
         {
-          "id": "mastermind_advisor_reactive",
-          "prompt": "Game data saved",
-          "required": true,
-          "location": "belowStimulus",
-          "type": "reactive",
-          "withDivider": false
-        },
-        {
           "id": "played-game",
           "prompt": "What was the password displayed after finishing the Game?",
           "required": true,
@@ -143,7 +131,9 @@
       ],
       "style": {
         "minHeight": "760px"
-      }
+      },
+      "withSidebar": true,
+      "sidebarWidth": 320
     },
     "TOAST": {
       "type": "questionnaire",
