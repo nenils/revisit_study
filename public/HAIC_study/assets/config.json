@@ -18,7 +18,7 @@
     "logoPath": "HAIC_study/assets/logo.svg.png",
     "withProgressBar": true,
     "autoDownloadStudy": false,
-    "withSidebar": true,
+    "withSidebar": false,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
     "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=YOUR_PROLIFIC_COMPLETION_CODE)."
@@ -81,14 +81,6 @@
       "instructionLocation": "aboveStimulus",
       "description": "Play Mastermind on your own with increasing difficulty (1→6 colors).",
       "response": [
-        {
-          "id": "mastermind_human_only_reactive",
-          "prompt": "Game data saved",
-          "required": true,
-          "location": "belowStimulus",
-          "type": "reactive",
-          "withDivider": false
-        },
         {
           "id": "played-game",
           "prompt": "What was the password displayed after finishing the Game?",
