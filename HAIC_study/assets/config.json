@@ -85,9 +85,8 @@
           "required": true,
           "location": "belowStimulus",
           "type": "reactive",
-          "style": {
-            "display": "none"
-          }
+          "hidden": true,
+          "withDivider": false
         },
         {
           "id": "played-game",
@@ -108,9 +107,8 @@
           "required": true,
           "location": "belowStimulus",
           "type": "reactive",
-          "style": {
-            "display": "none"
-          }
+          "hidden": true,
+          "withDivider": false
         },
         {
           "id": "played-game",
@@ -131,9 +129,8 @@
           "required": true,
           "location": "belowStimulus",
           "type": "reactive",
-          "style": {
-            "display": "none"
-          }
+          "hidden": true,
+          "withDivider": false
         },
         {
           "id": "played-game",
