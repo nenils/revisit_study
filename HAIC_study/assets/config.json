@@ -15,7 +15,7 @@
   "uiConfig": {
     "contactEmail": "nils.ness@tum.de",
     "helpTextPath": "HAIC_study/assets/help.md",
-    "logoPath": "/HAIC_study/assets/Logo_of_the_Technical_University_of_Munich.svg",
+    "logoPath": "HAIC_study/assets/logo.svg",
     "withProgressBar": true,
     "autoDownloadStudy": false,
     "withSidebar": true,
