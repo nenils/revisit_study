@@ -76,7 +76,9 @@
       "nextButtonText": "Next"
     },
     "mastermind_human_only": {
-      "baseComponent": "mind_human_only",
+      "type": "website",
+      "path": "HAIC_study/assets/Human_only_increasing_complexity.html",
+      "instructionLocation": "aboveStimulus",
       "description": "Play Mastermind on your own with increasing difficulty (1→6 colors).",
       "response": [
         {
@@ -94,10 +96,15 @@
           "type": "shortText",
           "location": "sidebar"
         }
-      ]
+      ],
+      "style": {
+        "minHeight": "760px"
+      }
     },
     "mastermind_judge": {
-      "baseComponent": "mind_judge",
+      "type": "website",
+      "path": "HAIC_study/assets/HAIC_role_Judge_increasing complexity.html",
+      "instructionLocation": "aboveStimulus",
       "description": "High cognitive responsibility (AI as a Judge): you create and submit guesses; the AI has low autonomy and only reviews a guess when you explicitly send it.",
       "response": [
         {
@@ -115,10 +122,15 @@
           "type": "shortText",
           "location": "sidebar"
         }
-      ]
+      ],
+      "style": {
+        "minHeight": "760px"
+      }
     },
     "mastermind_advisor": {
-      "baseComponent": "mind_advisor",
+      "type": "website",
+      "path": "HAIC_study/assets/HAIC_role_Advisor_increasing_complexity.html",
+      "instructionLocation": "aboveStimulus",
       "description": "Low cognitive responsibility (AI as an Advisor): the AI has high autonomy and proactively proposes the next guess using a trained Mastermind RL model; you can apply or adjust it before submitting.",
       "response": [
         {
@@ -136,7 +148,10 @@
           "type": "shortText",
           "location": "sidebar"
         }
-      ]
+      ],
+      "style": {
+        "minHeight": "760px"
+      }
     },
     "TOAST": {
       "type": "questionnaire",
