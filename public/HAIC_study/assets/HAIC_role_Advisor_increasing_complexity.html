@@ -238,7 +238,8 @@ function updateUI() {
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
     "Round " + currentRound + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
-  document.getElementById("colorListDisplay").innerHTML = "<b>Available colors:</b> " + names;
+  var colorListDisplay = document.getElementById("colorListDisplay");
+  if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
 
 function renderPalette() {
