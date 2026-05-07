@@ -24,7 +24,7 @@
   #guessBtn { background:#2563eb; color:white; border:none; font-size:15px; padding:10px 20px; }
   #guessBtn:hover { background:#1d4ed8; }
   #guessBtn:disabled { background:#94a3b8; cursor:not-allowed; }
-  #applyAdvisorBtn { background:#f59e0b; color:white; border:none; font-size:14px; padding:8px 16px; display:none; min-width:180px; }
+  #applyAdvisorBtn { background:#64748b; color:white; border:none; font-size:14px; padding:8px 16px; display:inline-block; min-width:180px; }
   #applyAdvisorBtn:hover { background:#d97706; }
   #applyAdvisorBtn:disabled { background:#94a3b8; cursor:wait; }
   #applyAdvisorBtn.loading { background:#64748b; }
@@ -58,7 +58,7 @@
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
-    1️⃣ The AI Advisor proactively requests a trained Mastermind RL model's next guess and explains the rationale.<br>
+    1️⃣ The AI Advisor proactively gives the next guess and explains the rationale.<br>
     2️⃣ Click <b>"Apply AI suggestion"</b> to load the AI's prediction and submit it immediately.<br>
     3️⃣ You can also build and submit your own guess manually.<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position. (Does not correlate to the position in the code)<br>
@@ -73,7 +73,7 @@
   <div class="palette" id="colorPalette"></div>
   <div class="controls">
     <button id="guessBtn" type="button" disabled>✅ Submit Guess</button>
-    <button id="applyAdvisorBtn" type="button">📥 Apply AI suggestion</button>
+    <button id="applyAdvisorBtn" type="button" class="loading" disabled>⏳ AI is thinking...</button>
   </div>
 </div>
 
@@ -219,9 +219,10 @@ function setAdvisorButtonState(state) {
     btn.disabled = false;
     btn.textContent = "📥 Apply AI suggestion";
   } else {
-    btn.style.display = "none";
+    btn.style.display = gameOver ? "none" : "inline-block";
     btn.disabled = true;
-    btn.textContent = "📥 Apply AI suggestion";
+    btn.classList.add("loading");
+    btn.textContent = "⏳ AI is thinking...";
   }
 }
 
@@ -394,6 +395,7 @@ function submitGuess() {
 function handleRoundWin() {
   gameOver = true;
   document.getElementById("guessBtn").disabled = true;
+  setAdvisorButtonState("hidden");
   addMsg("🎉 Code cracked in Round " + currentRound + " after " + stepCount + " attempt(s)!", "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
@@ -411,6 +413,7 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   document.getElementById("guessBtn").disabled = true;
+  setAdvisorButtonState("hidden");
   addMsg("❌ Round " + currentRound + " failed. The code was: " + secret.join(", "), "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
