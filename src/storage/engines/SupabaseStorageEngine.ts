@@ -345,8 +345,8 @@ export class SupabaseStorageEngine extends StorageEngine {
 
     const defaultModes = {
       dataCollectionEnabled: true,
-      studyNavigatorEnabled: true,
-      analyticsInterfacePubliclyAccessible: true,
+      studyNavigatorEnabled: false,
+      analyticsInterfacePubliclyAccessible: false,
     };
     await this.supabase
       .from('revisit')

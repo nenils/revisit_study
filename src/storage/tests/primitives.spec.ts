@@ -152,16 +152,16 @@ describe.each([
   test('_getModes returns correct modes and _setMode updates correctly', async () => {
     const modes = await storageEngine.getModes(studyId);
     expect(modes).toBeDefined();
-    expect(modes.analyticsInterfacePubliclyAccessible).toBe(true);
+    expect(modes.analyticsInterfacePubliclyAccessible).toBe(false);
     expect(modes.dataCollectionEnabled).toBe(true);
-    expect(modes.studyNavigatorEnabled).toBe(true);
+    expect(modes.studyNavigatorEnabled).toBe(false);
 
     await storageEngine.setMode(studyId, 'dataCollectionEnabled', false);
     const updatedModes = await storageEngine.getModes(studyId);
     expect(updatedModes).toBeDefined();
-    expect(updatedModes.analyticsInterfacePubliclyAccessible).toBe(true);
+    expect(updatedModes.analyticsInterfacePubliclyAccessible).toBe(false);
     expect(updatedModes.dataCollectionEnabled).toBe(false);
-    expect(updatedModes.studyNavigatorEnabled).toBe(true);
+    expect(updatedModes.studyNavigatorEnabled).toBe(false);
   });
 
   // cannot test _getAudioUrl in local storage environment

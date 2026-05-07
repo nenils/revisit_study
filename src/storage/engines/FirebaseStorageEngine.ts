@@ -341,8 +341,8 @@ export class FirebaseStorageEngine extends CloudStorageEngine {
     // Else set to default values
     const defaultModes = {
       dataCollectionEnabled: true,
-      studyNavigatorEnabled: true,
-      analyticsInterfacePubliclyAccessible: true,
+      studyNavigatorEnabled: false,
+      analyticsInterfacePubliclyAccessible: false,
     };
     await setDoc(revisitModesDoc, defaultModes);
     return defaultModes;
