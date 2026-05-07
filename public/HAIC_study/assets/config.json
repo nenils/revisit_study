@@ -980,7 +980,7 @@
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
-      "description": "Prior game experience and experience with large language models.",
+      "description": "Prior game experience and experience with AI models.",
       "responseDividers": true,
       "response": [
         {
@@ -1003,7 +1003,7 @@
         },
         {
           "id": "game-llm-llm-experience-frequency",
-          "prompt": "How often do you use LLM-based tools such as ChatGPT, Claude, Gemini, or Copilot?",
+          "prompt": "How often do you use AI tools such as ChatGPT, Claude, Gemini, or Copilot?",
           "required": true,
           "type": "likert",
           "leftLabel": "Never",
@@ -1012,12 +1012,12 @@
         },
         {
           "id": "llm-experience-purpose",
-          "prompt": "For what purpose do you most often use LLM-based tools?",
+          "prompt": "For what purpose do you most often use AI tools?",
           "required": true,
           "type": "dropdown",
           "placeholder": "Select one option",
           "options": [
-            "I do not use LLM-based tools",
+            "I do not use AI tools",
             "Learning or explanations",
             "Writing or editing",
             "Programming or data analysis",

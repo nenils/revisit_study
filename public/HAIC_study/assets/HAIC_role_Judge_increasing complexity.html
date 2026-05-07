@@ -9,7 +9,7 @@
   body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:#f7f9fb; color:#111; padding:18px; }
   .game { text-align: center; max-width: 760px; margin: 0 auto 18px; }
   .instructions { background:#eef6ff; border:1px solid #cfe6ff; padding:12px; border-radius:8px; margin-bottom:10px; font-size:14px; text-align:left; }
-  .round-banner { background:#0f172a; color:white; padding:10px 16px; border-radius:8px; margin-bottom:10px; font-size:16px; font-weight:700; text-align:center; }
+  .round-banner { display:none; }
   .board { display:flex; flex-direction:column; align-items:center; margin-top:12px; }
   .row { display:flex; align-items:center; margin:8px 0; }
   .peg { width:44px; height:44px; border:2px solid #333; border-radius:50%; margin:6px; background:white; cursor:pointer; transition: background 0.15s; }
@@ -27,6 +27,7 @@
   #sendToJudgeBtn { background:#059669; color:white; border:none; font-size:15px; padding:10px 20px; }
   #sendToJudgeBtn:hover { background:#047857; }
   #sendToJudgeBtn:disabled { background:#94a3b8; cursor:not-allowed; }
+  #sendToJudgeBtn.loading { background:#64748b; cursor:wait; min-width:160px; }
 
   .chat { margin:20px auto 0 auto; max-width:760px; height:380px;
           border-radius:10px; overflow:hidden;
@@ -56,13 +57,12 @@
   <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
+    0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
     1️⃣ Select a <b>color</b> from the palette and click <b>pegs</b> to build your guess.<br>
     2️⃣ You have two choices:<br>
     &nbsp;&nbsp;&nbsp;• <b>"Submit Directly"</b> — submit your guess as-is to the game.<br>
-    &nbsp;&nbsp;&nbsp;• <b>"Send to AI"</b> — the AI reviews your guess, may adapt it, and proposes a revised version.<br>
-    3️⃣ Use the AI review as advice, then adjust your own guess manually if needed.<br>
-    4️⃣ Chat with the AI to discuss strategy.<br>
-    5️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
+    &nbsp;&nbsp;&nbsp;• <b>"Send to AI"</b> — the AI reviews your guess and gives feedback.<br>
+    3️⃣ Use the AI review as advice, then decide and submit your own guess manually.<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     <span id="colorListDisplay"><b>Available colors:</b> Blue</span>
   </div>
@@ -103,6 +103,7 @@ var stepCount = 0;
 var totalAttemptCount = 0;
 var selectedColor = null;
 var gameOver = false;
+var judgeThinking = false;
 var conversationMessages = [];
 
 var guessHistory = {};
@@ -291,7 +292,22 @@ function updateButtons() {
     if (!pegs[i].dataset.color) { allFilled = false; break; }
   }
   document.getElementById("guessBtn").disabled = !allFilled || gameOver;
-  document.getElementById("sendToJudgeBtn").disabled = !allFilled || gameOver;
+  document.getElementById("sendToJudgeBtn").disabled = !allFilled || gameOver || judgeThinking;
+}
+
+function setJudgeThinking(isThinking) {
+  judgeThinking = isThinking;
+  var btn = document.getElementById("sendToJudgeBtn");
+  if (!btn) return;
+  if (judgeThinking) {
+    btn.classList.add("loading");
+    btn.disabled = true;
+    btn.textContent = "⏳ AI is thinking...";
+  } else {
+    btn.classList.remove("loading");
+    btn.textContent = "⚖️ Send to AI";
+    updateButtons();
+  }
 }
 
 function getCurrentGuessFromBoard() {
@@ -398,7 +414,7 @@ function showCompletionCode(message) {
   panel.className = "completion-code-panel";
   panel.innerHTML =
     "<h2>Important: Study Code</h2>" +
-    "<p>Please copy this code into the study question below.</p>" +
+    "<p>Please enter this code in the password question in the left pane of the questionnaire.</p>" +
     "<div class=\"completion-code-value\">" + code + "</div>" +
     "<p>You need this code to complete the study.</p>";
   var button = document.createElement("button");
@@ -408,7 +424,7 @@ function showCompletionCode(message) {
   panel.appendChild(button);
   overlay.appendChild(panel);
   document.body.appendChild(overlay);
-  alert("IMPORTANT STUDY CODE: " + code + "\n\nPlease enter this code in the study question below.");
+  alert("IMPORTANT STUDY CODE: " + code + "\n\nPlease enter this code in the password question in the left pane of the questionnaire.");
 }
 
 function finishGame(message) {
@@ -573,6 +589,7 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
     if (xhr.readyState !== 4) return;
     if (xhr.status !== 200) {
       addMsg("⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
+      setJudgeThinking(false);
       return;
     }
     try {
@@ -580,11 +597,13 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
       var reply = (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content) || "⚠️ No response.";
       addMsg(reply, "bot");
       conversationMessages.push({ role: "assistant", content: reply });
+      setJudgeThinking(false);
 
       chatHistory.push({ round: currentRound, attempt: stepCount, role: "ai", message: reply, timestamp: new Date().toISOString() });
       logProv('judgeResponseReceived', 'system', { round: currentRound, attempt: stepCount, responseLength: reply.length, timestamp: new Date().toISOString() });
     } catch (err) {
       addMsg("⚠️ Error parsing response: " + err.message, "bot");
+      setJudgeThinking(false);
     }
   };
   xhr.send(JSON.stringify(payload));
@@ -608,9 +627,12 @@ document.addEventListener("DOMContentLoaded", function() {
     if (gameOver) return;
     var guess = getCurrentGuessFromBoard();
     if (guess.indexOf(null) !== -1) { alert("Fill all 4 pegs before sending to the AI!"); return; }
-    addMsg("📤 Sending your guess [" + guess.join(", ") + "] to the AI for review...", "system");
+    var requestText = "Please review my guess: [" + guess.join(", ") + "].";
+    addMsg(requestText, "user");
+    chatHistory.push({ round: currentRound, attempt: stepCount, role: "user", message: requestText, timestamp: new Date().toISOString() });
+    setJudgeThinking(true);
     logProv('sentToJudge', 'click', { guess: guess, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
-    sendToJudge(null, guess);
+    sendToJudge(requestText, guess);
   });
 
   document.getElementById("sendBtn").addEventListener("click", function() {

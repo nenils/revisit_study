@@ -9,7 +9,7 @@
   body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:#f7f9fb; color:#111; padding:18px; }
   .game { text-align: center; max-width: 760px; margin: 0 auto 18px; }
   .instructions { background:#eef6ff; border:1px solid #cfe6ff; padding:12px; border-radius:8px; margin-bottom:10px; font-size:14px; text-align:left; }
-  .round-banner { background:#0f172a; color:white; padding:10px 16px; border-radius:8px; margin-bottom:10px; font-size:16px; font-weight:700; text-align:center; }
+  .round-banner { display:none; }
   .board { display:flex; flex-direction:column; align-items:center; margin-top:12px; }
   .row { display:flex; align-items:center; margin:8px 0; }
   .peg { width:44px; height:44px; border:2px solid #333; border-radius:50%; margin:6px; background:white; cursor:pointer; transition: background 0.15s; }
@@ -57,11 +57,10 @@
   <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
+    0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
     1️⃣ The AI Advisor proactively requests a trained Mastermind RL model's next guess and explains the rationale.<br>
     2️⃣ Click <b>"Apply AI suggestion"</b> to load the AI's prediction and submit it immediately.<br>
-    3️⃣ You can also build and submit your own guess manually.<br>
-    4️⃣ Chat with the advisor for strategy discussion.<br>
-    5️⃣ After cracking the code, difficulty increases (more colors become available).<br><br>
+    3️⃣ You can also build and submit your own guess manually.<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     <span id="colorListDisplay"><b>Available colors:</b> Blue</span>
   </div>
@@ -440,7 +439,7 @@ function showCompletionCode(message) {
   panel.className = "completion-code-panel";
   panel.innerHTML =
     "<h2>Important: Study Code</h2>" +
-    "<p>Please copy this code into the study question below.</p>" +
+    "<p>Please enter this code in the password question in the left pane of the questionnaire.</p>" +
     "<div class=\"completion-code-value\">" + code + "</div>" +
     "<p>You need this code to complete the study.</p>";
   var button = document.createElement("button");
@@ -450,7 +449,7 @@ function showCompletionCode(message) {
   panel.appendChild(button);
   overlay.appendChild(panel);
   document.body.appendChild(overlay);
-  alert("IMPORTANT STUDY CODE: " + code + "\n\nPlease enter this code in the study question below.");
+  alert("IMPORTANT STUDY CODE: " + code + "\n\nPlease enter this code in the password question in the left pane of the questionnaire.");
 }
 
 function finishGame(message) {
