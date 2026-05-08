@@ -525,6 +525,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
   return "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
     "STUDY DESIGN REQUIREMENT:\n" +
     "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
+    
     "YOUR ROLE:\n" +
     "- Review the Human's proposed guess and give concise strategic feedback.\n" +
     "- Point out strengths, possible weaknesses, and what the feedback history implies.\n" +
@@ -533,15 +534,18 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Do not reveal the RL diagnostic guess, copy it, or present it as your recommendation.\n" +
     "- Keep the Human responsible for deciding and entering the final guess.\n" +
     "- Respond in 1-2 short sentences.\n\n" +
+    
     "CONSTRAINTS:\n" +
     "- Only use colors from: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors CAN repeat.\n" +
     "- Do NOT reveal the secret code (you don't know it).\n\n" +
+    
     "OUTPUT RULES:\n" +
     "- Do NOT output a full 4-color guess.\n" +
     "- Do NOT use labels such as FINAL GUESS, PREDICTION, or RECOMMENDED GUESS.\n" +
     "- Do NOT list four colors in sequence as an alternative answer.\n" +
     "- End with a feedback-oriented sentence that leaves the final decision to the Human.\n\n" +
+    
     "CURRENT STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
@@ -571,13 +575,7 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
   }
 
   var payload = {
-    model: "anthropic/claude-opus-4.7",
-    max_tokens: 80,
-    temperature: 0.3,
-    top_p: 0.85,
-    frequency_penalty: 0.4,
-    presence_penalty: 0.1,
-    stop: ["\n\n"],
+    model: "meta-llama/llama-3.1-70b-instruct",
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
 
