@@ -719,7 +719,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Trust: Integrity\nPlease indicate how honest and principled you perceived the AI system to be."
+      "instruction": "\nPlease indicate how honest and principled you perceived the AI system to be."
     },
     "control-trust-competence": {
       "type": "questionnaire",
@@ -1031,7 +1031,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Game And LLM Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and LLM-based tools."
+      "instruction": "## Game and AI Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools."
     },
     "manipulation-check": {
       "type": "questionnaire",
