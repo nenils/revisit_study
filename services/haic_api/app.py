@@ -50,6 +50,12 @@ class RLState(BaseModel):
 
 class ChatPayload(BaseModel):
     model: str | None = None
+    max_tokens: int | None = None
+    temperature: float | None = None
+    top_p: float | None = None
+    frequency_penalty: float | None = None
+    presence_penalty: float | None = None
+    stop: list[str] | None = None
     messages: list[dict[str, Any]]
 
 
