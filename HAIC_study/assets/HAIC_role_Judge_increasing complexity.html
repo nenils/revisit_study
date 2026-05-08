@@ -524,16 +524,15 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
 
   return "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
     "STUDY DESIGN REQUIREMENT:\n" +
-    "- The Human has HIGH cognitive responsibility and must remain the task solver.\n" +
     "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
     "YOUR ROLE:\n" +
     "- Review the Human's proposed guess and give concise strategic feedback.\n" +
     "- Point out strengths, possible weaknesses, and what the feedback history implies.\n" +
     "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" +
-    "- If an RL diagnostic is available, use it only as a private benchmark for better feedback quality.\n" +
+    "- The model for a trained guess is available, use it only as a private benchmark for better feedback quality.\n" +
     "- Do not reveal the RL diagnostic guess, copy it, or present it as your recommendation.\n" +
     "- Keep the Human responsible for deciding and entering the final guess.\n" +
-    "- Respond in 2-3 short sentences.\n\n" +
+    "- Respond in 1-2 short sentences.\n\n" +
     "CONSTRAINTS:\n" +
     "- Only use colors from: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors CAN repeat.\n" +
@@ -549,7 +548,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Attempts this round: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
     (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "") +
-    (rlSuggestion ? "\n- Private RL diagnostic guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
+    (rlSuggestion ? "\n- Model guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
 }
 
 function sendToJudge(userMsg, humanGuess) {
@@ -572,7 +571,13 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
   }
 
   var payload = {
-    model: "meta-llama/llama-3.1-70b-instruct",
+    model: "anthropic/claude-opus-4.7",
+    max_tokens: 80,
+    temperature: 0.3,
+    top_p: 0.85,
+    frequency_penalty: 0.4,
+    presence_penalty: 0.1,
+    stop: ["\n\n"],
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
 

@@ -568,22 +568,29 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
   }
 
   return "You are an ADVISOR in a Judge-Advisor decision system for the game Mastermind.\n\n" +
+    "STUDY DESIGN REQUIREMENT:\n" +
+    "- Your autonomy is HIGH: you provide a solution and feedback. You can solve the task and give advice to the Human.\n\n" +
     "YOUR ROLE:\n" +
-    "- You receive the next guess from a trained Mastermind reinforcement learning model.\n" +
-    "- You explain the RL model's suggested guess so the participant can decide whether to use it.\n" +
+    "- You receive the next guess from a trained model.\n" +
+    "- You explain the suggested guess so the participant can decide whether to use it.\n" +
+    "- Do not confuse the Human with too specific wording of the RL model.\n" +
     "- If the Human gives you feedback or disagreements, you REFINE your prediction accordingly.\n" +
-    "- You explain your reasoning concisely (2-3 sentences).\n" +
+    "- You explain your reasoning concisely (1 sentence).\n" +
     "- Always end your response with exactly: PREDICTION: [Color1, Color2, Color3, Color4]\n\n" +
     "CONSTRAINTS:\n" +
     "- Only use colors from: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors CAN repeat.\n" +
-    "- Do NOT reveal the secret code (you don't know it).\n" +
-    "- Be helpful — explain your logic so the human can evaluate your prediction.\n\n" +
+    "- Do NOT reveal the secret code (you don't know it).\n\n" +
+    "OUTPUT RULES:\n" +
+    "- Give a full 4-color guess.\n" +
+    "- Label your answer clearly: PREDICTION or RECOMMENDED GUESS.\n" +
+    "- If applicable, list one alternative guess after your main prediction.\n" +
+    "- End with a solution-oriented sentence that leaves the final decision to the Human.\n\n" +
     "GAME STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
     "- Attempts this round: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
-    (rlSuggestion ? "- RL model suggestion: [" + rlSuggestion.guess.join(", ") + "]\n" : "- RL model suggestion: unavailable; infer the best suggestion from history.\n") +
+    (rlSuggestion ? "- Model suggestion: [" + rlSuggestion.guess.join(", ") + "]\n" : "- Model suggestion: unavailable; infer the best suggestion from history.\n") +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.");
 }
 
@@ -617,7 +624,11 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
   }
 
   var payload = {
-    model: "meta-llama/llama-3.1-70b-instruct",
+    model: "anthropic/claude-opus-4.7",
+    max_tokens: 120,
+    temperature: 0.2,
+    top_p: 0.85,
+    stop: ["\n\n"],
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
 
