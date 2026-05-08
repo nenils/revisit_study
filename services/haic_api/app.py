@@ -20,11 +20,18 @@ OPENROUTER_BASE_URL = os.getenv(
 STUDY_PUBLIC_URL = os.getenv("STUDY_PUBLIC_URL", "http://localhost:8080")
 RL_MODEL_PATH = os.getenv("RL_MODEL_PATH", "").strip()
 RL_MODEL = MastermindRLModel(RL_MODEL_PATH or None)
+ALLOWED_STUDY_ORIGINS = {
+    STUDY_PUBLIC_URL,
+    "http://iivm6.cit.tum.de",
+    "https://iivm6.cit.tum.de",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+}
 
 app = FastAPI(title="HAIC Study API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[STUDY_PUBLIC_URL, "http://localhost:8080", "http://127.0.0.1:8080"],
+    allow_origins=sorted(ALLOWED_STUDY_ORIGINS),
     allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["*"],
 )
