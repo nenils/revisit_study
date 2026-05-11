@@ -48,3 +48,6 @@ build/
 google-cloud-sdk/.env
 
 google-cloud-sdk/
+
+# Local TLS certificate material for VM deployment. Never commit private keys.
+certs/
