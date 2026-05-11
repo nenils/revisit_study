@@ -1120,7 +1120,17 @@
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
           "numItems": 7
+        },
+        {
+          "id": "attention-check",
+          "prompt": "Please select 'Strongly Agree' for this item.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
         }
+
       ]
     },
     "cognitive-load-extraneous": {
