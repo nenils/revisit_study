@@ -21,7 +21,8 @@
     "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
-    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=YOUR_PROLIFIC_COMPLETION_CODE)."
+    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=YOUR_PROLIFIC_COMPLETION_CODE).",
+    "numSequences": 150
   },
   "baseComponents": {
     "mind_human_only": {
@@ -1208,13 +1209,17 @@
     },
     "game-tutorial-video": {
       "type": "video",
-      "path": "public/HAIC_study/assets/mastermind_tutorial.mp4",
+      "path": "HAIC_study/assets/mastermind_tutorial.mp4",
       "description": "Tutorial video explaining how to play Mastermind before the game starts.",
       "instruction": "Please watch the tutorial video before starting the game.",
       "instructionLocation": "aboveStimulus",
       "forceCompletion": true,
       "withTimeline": true,
-      "response": []
+      "response": [],
+      "style": {
+        "width": "min(720px, 92vw)",
+        "margin": "0 auto"
+      }
     }
   },
   "sequence": {
@@ -1223,13 +1228,14 @@
       "introduction",
       "game-tutorial-video",
       {
-        "order": "random",
+        "order": "latinSquare",
         "numSamples": 1,
         "components": [
           "mastermind_human_only",
           "mastermind_judge",
           "mastermind_advisor"
-        ]
+        ],
+        "id": "balanced-game-condition"
       },
       "manipulation-check",
       "cognitive-load-intrinsic",
