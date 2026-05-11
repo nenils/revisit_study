@@ -1130,7 +1130,6 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-
       ]
     },
     "cognitive-load-extraneous": {
@@ -1206,12 +1205,23 @@
           "numItems": 7
         }
       ]
+    },
+    "game-tutorial-video": {
+      "type": "video",
+      "path": "public/HAIC_study/assets/mastermind_tutorial.mp4",
+      "description": "Tutorial video explaining how to play Mastermind before the game starts.",
+      "instruction": "Please watch the tutorial video before starting the game.",
+      "instructionLocation": "aboveStimulus",
+      "forceCompletion": true,
+      "withTimeline": true,
+      "response": []
     }
   },
   "sequence": {
     "order": "fixed",
     "components": [
       "introduction",
+      "game-tutorial-video",
       {
         "order": "random",
         "numSamples": 1,

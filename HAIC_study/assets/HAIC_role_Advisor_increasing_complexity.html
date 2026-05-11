@@ -28,6 +28,10 @@
   #applyAdvisorBtn:hover { background:#d97706; }
   #applyAdvisorBtn:disabled { background:#94a3b8; cursor:wait; }
   #applyAdvisorBtn.loading { background:#64748b; }
+  #showAdvisorGuessBtn { background:#0f766e; color:white; border:none; font-size:14px; padding:8px 16px; display:inline-block; min-width:150px; }
+  #showAdvisorGuessBtn:hover { background:#115e59; }
+  #showAdvisorGuessBtn:disabled { background:#94a3b8; cursor:not-allowed; }
+  .advisor-guess-display { display:none; margin:12px auto 0; max-width:520px; padding:10px 12px; border:1px solid #99f6e4; background:#f0fdfa; color:#134e4a; border-radius:8px; font-weight:700; }
 
   .chat { margin:20px auto 0 auto; max-width:760px; height:380px;
           border-radius:10px; overflow:hidden;
@@ -59,7 +63,7 @@
     <b>How it works:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
     1️⃣ The AI Advisor proactively gives the next guess and explains the rationale.<br>
-    2️⃣ Click <b>"Apply AI suggestion"</b> to load the AI's prediction and submit it immediately.<br>
+    2️⃣ Click <b>"Show AI guess"</b> to reveal the AI's prediction or <b>"Apply AI suggestion"</b> to submit it immediately.<br>
     3️⃣ You can also build and submit your own guess manually.<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position. (Does not correlate to the position in the code)<br>
     The order of the peg is independent from the order of colors in the code.
@@ -71,8 +75,10 @@
 
   <div class="board" id="board"></div>
   <div class="palette" id="colorPalette"></div>
+  <div class="advisor-guess-display" id="advisorGuessDisplay"></div>
   <div class="controls">
     <button id="guessBtn" type="button" disabled>✅ Submit Guess</button>
+    <button id="showAdvisorGuessBtn" type="button" disabled>Show AI guess</button>
     <button id="applyAdvisorBtn" type="button" class="loading" disabled>⏳ AI is thinking...</button>
   </div>
 </div>
@@ -207,23 +213,46 @@ function addMsg(text, cls) {
 
 function setAdvisorButtonState(state) {
   var btn = document.getElementById("applyAdvisorBtn");
-  if (!btn) return;
+  var showBtn = document.getElementById("showAdvisorGuessBtn");
+  if (!btn || !showBtn) return;
   btn.classList.remove("loading");
   if (state === "loading") {
     btn.style.display = "inline-block";
     btn.disabled = true;
     btn.classList.add("loading");
     btn.textContent = "⏳ AI is thinking...";
+    showBtn.style.display = "inline-block";
+    showBtn.disabled = true;
   } else if (state === "ready") {
     btn.style.display = "inline-block";
     btn.disabled = false;
     btn.textContent = "📥 Apply AI suggestion";
+    showBtn.style.display = "inline-block";
+    showBtn.disabled = false;
   } else {
     btn.style.display = gameOver ? "none" : "inline-block";
     btn.disabled = true;
     btn.classList.add("loading");
     btn.textContent = "⏳ AI is thinking...";
+    showBtn.style.display = gameOver ? "none" : "inline-block";
+    showBtn.disabled = true;
   }
+}
+
+function hideAdvisorGuessDisplay() {
+  var display = document.getElementById("advisorGuessDisplay");
+  if (!display) return;
+  display.style.display = "none";
+  display.textContent = "";
+}
+
+function showAdvisorGuessDisplay() {
+  if (!currentAdvisorGuess) return;
+  var display = document.getElementById("advisorGuessDisplay");
+  if (!display) return;
+  display.textContent = "AI guess: [" + currentAdvisorGuess.join(", ") + "]";
+  display.style.display = "block";
+  logProv('advisorGuessDisplayed', 'click', { guess: currentAdvisorGuess, round: currentRound, attempt: stepCount + 1, timestamp: new Date().toISOString() });
 }
 
 /* === Round Management === */
@@ -274,6 +303,7 @@ function startRound() {
   gameOver = false;
   currentAdvisorGuess = null;
   conversationMessages = [];
+  hideAdvisorGuessDisplay();
 
   logProv('roundStarted', 'system', { round: currentRound, availableColors: availableColors, secretCode: secret, timestamp: new Date().toISOString() });
   updateUI();
@@ -379,6 +409,7 @@ function submitGuess() {
   updateUI();
   setAdvisorButtonState("hidden");
   currentAdvisorGuess = null;
+  hideAdvisorGuessDisplay();
 
   var fbMsg = "[GAME FEEDBACK] Attempt " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
   conversationMessages.push({ role: "user", content: fbMsg });
@@ -599,6 +630,7 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
 
 function requestAdvisorPrediction(reason, isInitialRequest) {
   currentAdvisorGuess = null;
+  hideAdvisorGuessDisplay();
   var requestToken = ++advisorRequestToken;
   setAdvisorButtonState("loading");
   requestRLSuggestion(reason, function(rlSuggestion) {
@@ -610,6 +642,7 @@ function requestAdvisorPrediction(reason, isInitialRequest) {
 function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
   if (!requestToken) {
     currentAdvisorGuess = null;
+    hideAdvisorGuessDisplay();
     requestToken = ++advisorRequestToken;
     setAdvisorButtonState("loading");
   }
@@ -675,6 +708,7 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
         setAdvisorButtonState("ready");
         addMsg("🤖 AI suggests: [" + parsed.join(", ") + "]\nClick 'Apply AI suggestion' to load and submit it, or keep your own guess.", "system");
       } else {
+        hideAdvisorGuessDisplay();
         setAdvisorButtonState("hidden");
       }
     } catch (err) {
@@ -702,6 +736,11 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("applyAdvisorBtn").addEventListener("click", function() {
     if (gameOver) return;
     applyAdvisorGuessToRow();
+  });
+
+  document.getElementById("showAdvisorGuessBtn").addEventListener("click", function() {
+    if (gameOver) return;
+    showAdvisorGuessDisplay();
   });
 
   document.getElementById("sendBtn").addEventListener("click", function() {
