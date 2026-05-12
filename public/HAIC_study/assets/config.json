@@ -436,21 +436,19 @@
         },
         {
           "id": "game-llm-llm-experience-frequency",
-          "prompt": "How often do you use AI tools such as ChatGPT, Claude, Gemini, or Copilot?",
+          "prompt": "How often do you use AI tools such as ChatGPT, Claude, Gemini, or Copilot?\n\n1 = Never\n2 = Less than once a month\n3 = About once a month\n4 = A few times a month\n5 = About once a week\n6 = Several times a week\n7 = Daily or almost daily",
           "required": true,
           "type": "likert",
           "leftLabel": "Never",
-          "rightLabel": "Daily",
+          "rightLabel": "Daily or almost daily",
           "numItems": 7
         },
         {
-          "id": "dropdown multiple",
+          "id": "ai-tool-use-purpose",
           "prompt": "For what purpose do you most often use AI tools?",
           "required": true,
           "type": "dropdown",
           "placeholder": "Select one option",
-          "minSelections": 0,
-          "maxSelections": 8,
           "options": [
             "I do not use AI tools",
             "Learning or explanations",
@@ -461,6 +459,12 @@
             "Other / not listed",
             "Prefer not to say"
           ]
+        },
+        {
+          "id": "ai-tool-use-purpose-other",
+          "prompt": "If you selected Other / not listed, please specify your main purpose for using AI tools.",
+          "required": false,
+          "type": "shortText"
         }
       ],
       "instructionLocation": "aboveStimulus",

@@ -104,7 +104,7 @@ def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "rlModelLoaded": RL_MODEL.is_loaded,
-        "rlModelPath": RL_MODEL_PATH or None,
+        "rlModelPath": str(RL_MODEL.model_path),
         "rlModelLoadError": RL_MODEL.load_error,
     }
 

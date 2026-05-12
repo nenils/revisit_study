@@ -251,8 +251,121 @@ def train(num_episodes=10000, max_steps_per_episode=10, print_every=50):
             avg = np.mean(rewards_history[-print_every:]) if len(rewards_history) >= print_every else np.mean(rewards_history)
             elapsed = time.time() - start_time
             print(f"Episode {ep}/{num_episodes}  AvgReward({print_every})={avg:.2f}  eps~{eps_end + (eps_start-eps_end)*math.exp(-1.0*steps_done/eps_decay):.3f}  elapsed={int(elapsed)}s")
+    
     print("Training finished.")
+    
+    # Save the trained model
+    torch.save({
+        'policy_net_state_dict': policy_net.state_dict(),
+        'target_net_state_dict': target_net.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'hyperparameters': {
+            'input_dim': input_dim,
+            'output_dim': output_dim,
+            'hidden': hidden,
+            'lr': optimizer.param_groups[0]['lr'],
+            'gamma': gamma,
+            'eps_start': eps_start,
+            'eps_end': eps_end,
+            'eps_decay': eps_decay
+        },
+        'training_info': {
+            'episodes': num_episodes,
+            'final_avg_reward': np.mean(rewards_history[-100:]) if len(rewards_history) >= 100 else np.mean(rewards_history),
+            'steps_done': steps_done
+        }
+    }, 'mastermind_dqn_model.pth')
+    print("Model saved as 'mastermind_dqn_model.pth'")
+    
     return policy_net, env
+
+def load_trained_model(model_path='mastermind_dqn_model.pth'):
+    """
+    Load a previously trained model from file.
+    Returns the loaded policy network and a new environment.
+    """
+    import os
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file '{model_path}' not found. Train a model first.")
+    
+    # Load the saved data with weights_only=False for compatibility
+    checkpoint = torch.load(model_path, map_location=device, weights_only=False)
+    
+    # Extract hyperparameters
+    hyperparams = checkpoint['hyperparameters']
+    
+    # Create the model with saved hyperparameters
+    policy_net = DQN(
+        input_dim=hyperparams['input_dim'],
+        output_dim=hyperparams['output_dim'],
+        hidden=hyperparams['hidden']
+    ).to(device)
+    
+    # Load the trained weights
+    policy_net.load_state_dict(checkpoint['policy_net_state_dict'])
+    policy_net.eval()  # Set to evaluation mode
+    
+    # Create environment
+    env = MastermindEnv(max_steps=10)
+    
+    # Print model info
+    training_info = checkpoint['training_info']
+    print(f"Loaded model trained for {training_info['episodes']} episodes")
+    print(f"Final training performance: {training_info['final_avg_reward']:.2f} avg reward")
+    
+    return policy_net, env
+
+def play_with_trained_model(model_path='mastermind_dqn_model.pth', n_games=10):
+    """
+    Load a trained model and play multiple games, showing the gameplay.
+    """
+    policy_net, env = load_trained_model(model_path)
+    
+    solved = 0
+    total_steps = 0
+    
+    for game_num in range(1, n_games + 1):
+        print(f"\n=== Game {game_num} ===")
+        s = env.reset()
+        print(f"Secret code: {env.secret}")
+        
+        done = False
+        steps = 0
+        while not done and steps < env.max_steps:
+            with torch.no_grad():
+                ss = torch.from_numpy(s).unsqueeze(0).to(device)
+                q = policy_net(ss)
+                
+                # Apply action masking
+                valid_actions = np.where(s[:N_ACTIONS] > 0)[0]
+                if len(valid_actions) > 0:
+                    q_masked = q.clone()
+                    invalid_mask = torch.ones(N_ACTIONS, dtype=torch.bool)
+                    invalid_mask[valid_actions] = False
+                    q_masked[0, invalid_mask] = float('-inf')
+                    action = int(q_masked.argmax().cpu().numpy())
+                else:
+                    action = 0
+                    
+            guess = ALL_CODES[action]
+            s, reward, done, info = env.step(action)
+            steps += 1
+            
+            black, white = info['feedback']
+            print(f"  Step {steps}: Guess {guess} -> {black} black, {white} white")
+            
+            if black == POSITIONS:
+                print(f"  🎉 Solved in {steps} steps!")
+                solved += 1
+                total_steps += steps
+                break
+        else:
+            print(f"  ❌ Failed to solve in {env.max_steps} steps")
+    
+    avg_steps = total_steps / solved if solved > 0 else float('inf')
+    print(f"\n=== Summary ===")
+    print(f"Solved: {solved}/{n_games} ({100*solved/n_games:.1f}%)")
+    print(f"Average steps (for solved): {avg_steps:.2f}")
 
 # -------------------------
 # Evaluation
@@ -324,6 +437,35 @@ def evaluate(policy_net, env, n_games=200):
 # Main
 # -------------------------
 if __name__ == "__main__":
-    # Adjust these values if you want a longer/shorter training run
-    policy, env = train(num_episodes=2000, max_steps_per_episode=10, print_every=200)
-    evaluate(policy, env, n_games=200)
+    import os
+    model_file = 'mastermind_dqn_model.pth'
+    
+    # Check if a trained model already exists
+    if os.path.exists(model_file):
+        print(f"Found existing model: {model_file}")
+        print("Choose an option:")
+        print("1. Load existing model and play games")
+        print("2. Load existing model and evaluate")
+        print("3. Train a new model (overwrites existing)")
+        
+        choice = input("Enter choice (1-3): ").strip()
+        
+        if choice == "1":
+            print("\n=== Playing with trained model ===")
+            play_with_trained_model(model_file, n_games=5)
+        elif choice == "2":
+            print("\n=== Evaluating trained model ===")
+            policy, env = load_trained_model(model_file)
+            evaluate(policy, env, n_games=200)
+        elif choice == "3":
+            print("\n=== Training new model ===")
+            policy, env = train(num_episodes=5000, max_steps_per_episode=10, print_every=200)
+            evaluate(policy, env, n_games=200)
+        else:
+            print("Invalid choice. Loading existing model for evaluation.")
+            policy, env = load_trained_model(model_file)
+            evaluate(policy, env, n_games=200)
+    else:
+        print("No existing model found. Training new model...")
+        policy, env = train(num_episodes=5000, max_steps_per_episode=10, print_every=200)
+        evaluate(policy, env, n_games=200)

@@ -1,29 +1,37 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from itertools import product
 from pathlib import Path
 from typing import Any
 
 
-class MastermindRLModel:
-    """Adapter for the trained Mastermind RL model used by the Advisor condition.
+COLOR_ORDER = ["Blue", "Green", "Red", "Yellow", "Orange", "Purple"]
+POSITIONS = 4
+ALL_CODES = list(product(range(len(COLOR_ORDER)), repeat=POSITIONS))
+N_ACTIONS = len(ALL_CODES)
 
-    Put the trained artifact in services/haic_api/models/ and set RL_MODEL_PATH.
-    If no artifact is configured, the adapter uses a deterministic dummy policy
-    that keeps only guesses consistent with previous Mastermind feedback.
+
+class MastermindRLModel:
+    """Adapter for the BillXan/Mastermind_RL DQN checkpoint.
+
+    The trained checkpoint is expected at services/haic_api/models/mastermind_dqn_model.pth
+    unless RL_MODEL_PATH overrides it. If loading or inference fails, the adapter
+    falls back to a deterministic consistency filter so the study remains usable.
     """
 
     def __init__(self, model_path: str | None = None):
-        self.model_path = Path(model_path).expanduser() if model_path else None
+        default_path = Path(__file__).parent / "models" / "mastermind_dqn_model.pth"
+        self.model_path = Path(model_path).expanduser() if model_path else default_path
         self.model: Any = None
         self.load_error: str | None = None
+        self.training_info: dict[str, Any] | None = None
 
-        if self.model_path:
-            try:
-                self.model = self._load_model(self.model_path)
-            except Exception as exc:
-                self.load_error = str(exc)
+        try:
+            self.model = self._load_model(self.model_path)
+        except Exception as exc:
+            self.load_error = str(exc)
 
     @property
     def is_loaded(self) -> bool:
@@ -32,12 +40,13 @@ class MastermindRLModel:
     def predict(self, state: Any) -> dict[str, Any]:
         if self.model is not None:
             try:
-                guess = self._predict_with_loaded_model(state)
+                guess = self._predict_with_dqn(state)
                 return {
                     "guess": guess,
-                    "model": "trained-mastermind-rl",
+                    "model": "BillXan/Mastermind_RL DQN",
                     "usingFallback": False,
                     "modelPath": str(self.model_path),
+                    "trainingInfo": self.training_info,
                 }
             except Exception as exc:
                 self.load_error = str(exc)
@@ -46,9 +55,9 @@ class MastermindRLModel:
             "guess": self._dummy_consistency_filter(state),
             "model": "dummy-consistency-filter",
             "usingFallback": True,
-            "modelPath": str(self.model_path) if self.model_path else None,
+            "modelPath": str(self.model_path),
             "loadError": self.load_error,
-            "note": "Place the trained model in services/haic_api/models/ and set RL_MODEL_PATH in .env.docker.",
+            "note": "Using fallback because the BillXan/Mastermind_RL checkpoint could not be loaded or queried.",
         }
 
     def _load_model(self, model_path: Path) -> Any:
@@ -58,46 +67,72 @@ class MastermindRLModel:
         if model_path.suffix.lower() == ".json":
             return json.loads(model_path.read_text(encoding="utf-8"))
 
-        if model_path.suffix.lower() in {".pt", ".pth"}:
-            import torch
+        if model_path.suffix.lower() not in {".pt", ".pth"}:
+            raise ValueError("Unsupported RL model artifact. Use .json, .pt, or .pth.")
 
-            return torch.load(model_path, map_location="cpu")
+        import torch
+        import torch.nn as nn
 
-        raise ValueError("Unsupported RL model artifact. Use .json, .pt, or .pth.")
+        checkpoint = torch.load(model_path, map_location="cpu", weights_only=False)
+        if not isinstance(checkpoint, dict) or "policy_net_state_dict" not in checkpoint:
+            raise ValueError("Expected a BillXan/Mastermind_RL checkpoint with policy_net_state_dict.")
 
-    def _predict_with_loaded_model(self, state: Any) -> list[str]:
+        hyperparams = checkpoint.get("hyperparameters", {})
+        input_dim = int(hyperparams.get("input_dim", N_ACTIONS + 4))
+        output_dim = int(hyperparams.get("output_dim", N_ACTIONS))
+        hidden = int(hyperparams.get("hidden", 512))
+
+        class DQN(nn.Module):
+            def __init__(self, input_dim: int, output_dim: int, hidden: int = 512):
+                super().__init__()
+                self.net = nn.Sequential(
+                    nn.Linear(input_dim, hidden),
+                    nn.LayerNorm(hidden),
+                    nn.ReLU(),
+                    nn.Dropout(0.2),
+                    nn.Linear(hidden, hidden // 2),
+                    nn.LayerNorm(hidden // 2),
+                    nn.ReLU(),
+                    nn.Dropout(0.2),
+                    nn.Linear(hidden // 2, hidden // 4),
+                    nn.ReLU(),
+                    nn.Linear(hidden // 4, output_dim),
+                )
+
+            def forward(self, x: Any) -> Any:
+                return self.net(x)
+
+        model = DQN(input_dim=input_dim, output_dim=output_dim, hidden=hidden)
+        model.load_state_dict(checkpoint["policy_net_state_dict"])
+        model.eval()
+        self.training_info = checkpoint.get("training_info")
+        return model
+
+    def _predict_with_dqn(self, state: Any) -> list[str]:
+        import numpy as np
+        import torch
+
         state_dict = _state_to_dict(state)
+        state_vec = _state_vector(state_dict)
+        valid_actions = np.where(state_vec[:N_ACTIONS] > 0)[0]
+        if len(valid_actions) == 0:
+            return self._dummy_consistency_filter(state_dict)
 
-        if isinstance(self.model, dict):
-            return self._predict_from_json_policy(state_dict)
+        with torch.no_grad():
+            state_tensor = torch.from_numpy(state_vec).unsqueeze(0)
+            q_values = self.model(state_tensor)
+            q_masked = q_values.clone()
+            invalid_mask = torch.ones(N_ACTIONS, dtype=torch.bool)
+            invalid_mask[valid_actions] = False
+            q_masked[0, invalid_mask] = float("-inf")
+            action = int(q_masked.argmax().cpu().numpy())
 
-        if hasattr(self.model, "predict"):
-            return _normalize_guess(self.model.predict(state_dict), state_dict["availableColors"], state_dict["codeLength"])
-
-        if callable(self.model):
-            return _normalize_guess(self.model(state_dict), state_dict["availableColors"], state_dict["codeLength"])
-
-        raise TypeError("Loaded RL model must be a JSON policy, callable, or expose predict(state).")
-
-    def _predict_from_json_policy(self, state: dict[str, Any]) -> list[str]:
-        colors = state["availableColors"]
-        code_length = state["codeLength"]
-
-        opening = self.model.get("openingGuess") or self.model.get("defaultGuess")
-        if opening and not state["guessHistory"]:
-            return _normalize_guess(opening, colors, code_length)
-
-        policy = self.model.get("policy", {})
-        key = _state_key(state)
-        if key in policy:
-            return _normalize_guess(policy[key], colors, code_length)
-
-        return self._dummy_consistency_filter(state)
+        return _code_to_colors(ALL_CODES[action], state_dict["availableColors"])
 
     def _dummy_consistency_filter(self, state: Any) -> list[str]:
         state_dict = _state_to_dict(state)
         colors = state_dict["availableColors"] or ["Blue"]
-        code_length = state_dict["codeLength"] or 4
+        code_length = state_dict["codeLength"] or POSITIONS
         candidates = [list(candidate) for candidate in product(colors, repeat=code_length)]
 
         for attempt, guess in state_dict["guessHistory"].items():
@@ -122,28 +157,11 @@ class MastermindRLModel:
 
 
 def score_feedback(secret: list[str], guess: list[str]) -> dict[str, int]:
-    black = 0
-    white = 0
-    secret_work = secret[:]
-    guess_work = guess[:]
-
-    for idx, color in enumerate(guess_work):
-        if color == secret_work[idx]:
-            black += 1
-            secret_work[idx] = None
-            guess_work[idx] = None
-
-    for idx, color in enumerate(guess_work):
-        if color is None:
-            continue
-        try:
-            match_idx = secret_work.index(color)
-        except ValueError:
-            continue
-        white += 1
-        secret_work[match_idx] = None
-
-    return {"black": black, "white": white}
+    black = sum(secret_color == guess_color for secret_color, guess_color in zip(secret, guess))
+    secret_counts = Counter(secret)
+    guess_counts = Counter(guess)
+    common = sum(min(secret_counts[color], guess_counts[color]) for color in secret_counts)
+    return {"black": black, "white": common - black}
 
 
 def _state_to_dict(state: Any) -> dict[str, Any]:
@@ -152,10 +170,15 @@ def _state_to_dict(state: Any) -> dict[str, Any]:
     elif not isinstance(state, dict):
         state = dict(state)
 
+    available_colors = [
+        color for color in list(state.get("availableColors") or ["Blue"])
+        if color in COLOR_ORDER
+    ] or ["Blue"]
+
     return {
         "round": int(state.get("round", 1)),
-        "codeLength": int(state.get("codeLength", 4)),
-        "availableColors": list(state.get("availableColors") or ["Blue"]),
+        "codeLength": int(state.get("codeLength", POSITIONS)),
+        "availableColors": available_colors,
         "maxAttemptsPerRound": int(state.get("maxAttemptsPerRound", 10)),
         "attempt": int(state.get("attempt", 1)),
         "guessHistory": {str(k): list(v) for k, v in dict(state.get("guessHistory") or {}).items()},
@@ -163,31 +186,66 @@ def _state_to_dict(state: Any) -> dict[str, Any]:
     }
 
 
-def _normalize_guess(raw_guess: Any, colors: list[str], code_length: int) -> list[str]:
-    if isinstance(raw_guess, str):
-        raw_guess = raw_guess.split(",")
+def _state_vector(state: dict[str, Any]) -> Any:
+    import numpy as np
 
-    if not isinstance(raw_guess, list):
-        raise ValueError("RL model returned a guess that is not a list.")
+    possible_vec = np.zeros(N_ACTIONS, dtype=np.float32)
+    history = _numeric_history(state)
+    available_indices = {COLOR_ORDER.index(color) for color in state["availableColors"]}
 
-    normalized: list[str] = []
-    for raw_color in raw_guess:
-        color = str(raw_color).strip()
-        match = next((candidate for candidate in colors if candidate.lower() == color.lower()), None)
-        if not match:
-            raise ValueError(f"RL model returned invalid color: {color}")
-        normalized.append(match)
+    possible_codes = []
+    for idx, code in enumerate(ALL_CODES):
+        if not all(color in available_indices for color in code):
+            continue
+        if consistent_with_history(code, history):
+            possible_vec[idx] = 1.0
+            possible_codes.append(code)
 
-    if len(normalized) != code_length:
-        raise ValueError(f"RL model returned {len(normalized)} colors, expected {code_length}.")
+    last_black, last_white = (0, 0) if not history else history[-1][1]
+    additional_features = np.array(
+        [
+            len(possible_codes) / N_ACTIONS,
+            len(history) / max(1, state["maxAttemptsPerRound"]),
+            last_black / POSITIONS,
+            last_white / POSITIONS,
+        ],
+        dtype=np.float32,
+    )
+    return np.concatenate([possible_vec, additional_features])
 
-    return normalized
+
+def _numeric_history(state: dict[str, Any]) -> list[tuple[tuple[int, ...], tuple[int, int]]]:
+    history: list[tuple[tuple[int, ...], tuple[int, int]]] = []
+    for attempt in sorted(state["guessHistory"], key=lambda item: int(item)):
+        guess = state["guessHistory"][attempt]
+        feedback = state["feedbackHistory"].get(str(attempt))
+        if not feedback:
+            continue
+        try:
+            numeric_guess = tuple(COLOR_ORDER.index(color) for color in guess)
+        except ValueError:
+            continue
+        history.append((numeric_guess, (int(feedback.get("black", 0)), int(feedback.get("white", 0)))))
+    return history
 
 
-def _state_key(state: dict[str, Any]) -> str:
-    compact = {
-        "colors": state["availableColors"],
-        "guessHistory": state["guessHistory"],
-        "feedbackHistory": state["feedbackHistory"],
-    }
-    return json.dumps(compact, sort_keys=True, separators=(",", ":"))
+def consistent_with_history(code: tuple[int, ...], history: list[tuple[tuple[int, ...], tuple[int, int]]]) -> bool:
+    for guess, expected_feedback in history:
+        if numeric_feedback(code, guess) != expected_feedback:
+            return False
+    return True
+
+
+def numeric_feedback(code: tuple[int, ...], guess: tuple[int, ...]) -> tuple[int, int]:
+    black = sum(code_color == guess_color for code_color, guess_color in zip(code, guess))
+    code_counts = Counter(code)
+    guess_counts = Counter(guess)
+    common = sum(min(code_counts[color], guess_counts[color]) for color in code_counts)
+    return black, common - black
+
+
+def _code_to_colors(code: tuple[int, ...], available_colors: list[str]) -> list[str]:
+    colors = [COLOR_ORDER[color] for color in code]
+    if not all(color in available_colors for color in colors):
+        raise ValueError(f"RL model selected unavailable color in guess: {colors}")
+    return colors
