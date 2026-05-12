@@ -12,7 +12,7 @@ services:
         VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
     ports:
-      - "0.0.0.0:${STUDY_HTTP_PORT:-80}:80"
+      - "0.0.0.0:${STUDY_HTTP_PORT:-8080}:80"
     depends_on:
       - haic-api
     restart: unless-stopped
