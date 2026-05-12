@@ -244,6 +244,7 @@ export function ComponentController() {
   const instruction = currentConfig?.instruction || '';
   const instructionLocation = currentConfig.instructionLocation ?? studyConfig.uiConfig.instructionLocation ?? 'sidebar';
   const instructionInSideBar = instructionLocation === 'sidebar';
+  const responseBlockStyle = currentConfig.type === 'questionnaire' ? currentConfig.style : undefined;
 
   if (studyConfig.uiConfig.recordScreen && isAnalysis && analysisCanPlayScreenRecording) return <ScreenRecordingReplay key={`${currentStep}-stimulus`} />;
 
@@ -255,6 +256,7 @@ export function ComponentController() {
         status={status}
         config={currentConfig}
         location="aboveStimulus"
+        style={responseBlockStyle}
       />
       <Box
         id={currentComponent}
@@ -285,6 +287,7 @@ export function ComponentController() {
         status={status}
         config={currentConfig}
         location="belowStimulus"
+        style={responseBlockStyle}
       />
     </>
   );

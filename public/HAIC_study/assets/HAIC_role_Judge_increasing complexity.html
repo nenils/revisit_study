@@ -450,7 +450,21 @@ function finishGame(message) {
   answers[taskID + "_keyTrackingData"] = JSON.stringify(keyTrackingData);
   answers[taskID + "_finalPassword"] = getStudyCode(message);
   try { if (typeof Revisit !== 'undefined' && Revisit.getProvenance) { answers[taskID + "_provenance"] = Revisit.getProvenance(); } } catch (e) {}
-  answers[getReactiveAnswerId()] = ["Game completed; detailed tracking data saved."];
+  var trackingPayload = {
+    totalAttempts: totalAttemptCount,
+    roundsCompleted: currentRound,
+    roundHistory: roundHistory,
+    guessHistory: guessHistory,
+    feedbackHistory: feedbackHistory,
+    mouseTrackingData: mouseTrackingData,
+    clickTrackingData: clickTrackingData,
+    keyTrackingData: keyTrackingData,
+    finalPassword: getStudyCode(message)
+  };
+  answers[getReactiveAnswerId()] = [
+    "Game completed; detailed tracking data saved.",
+    "TRACKING_JSON: " + JSON.stringify(trackingPayload)
+  ];
   Revisit.postAnswers(answers);
 }
 
