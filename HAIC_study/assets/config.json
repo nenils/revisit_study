@@ -88,6 +88,94 @@
           "required": true,
           "type": "shortText",
           "location": "sidebar"
+        },
+        {
+          "id": "mastermind_human_only_reactive",
+          "prompt": "Game completion and tracking payload",
+          "required": false,
+          "type": "reactive",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_totalAttempts",
+          "prompt": "Total attempts in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundsCompleted",
+          "prompt": "Rounds completed in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundHistory",
+          "prompt": "Round history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_guessHistory",
+          "prompt": "Guess history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_feedbackHistory",
+          "prompt": "Feedback history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_mouseTrackingData",
+          "prompt": "Mouse tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_clickTrackingData",
+          "prompt": "Click tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_keyTrackingData",
+          "prompt": "Keyboard tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_finalPassword",
+          "prompt": "Displayed Mastermind completion password",
+          "required": false,
+          "type": "shortText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_provenance",
+          "prompt": "ReVISit provenance JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
         }
       ],
       "style": {
@@ -108,6 +196,94 @@
           "required": true,
           "type": "shortText",
           "location": "sidebar"
+        },
+        {
+          "id": "mastermind_judge_reactive",
+          "prompt": "Game completion and tracking payload",
+          "required": false,
+          "type": "reactive",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_totalAttempts",
+          "prompt": "Total attempts in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundsCompleted",
+          "prompt": "Rounds completed in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundHistory",
+          "prompt": "Round history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_guessHistory",
+          "prompt": "Guess history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_feedbackHistory",
+          "prompt": "Feedback history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_mouseTrackingData",
+          "prompt": "Mouse tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_clickTrackingData",
+          "prompt": "Click tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_keyTrackingData",
+          "prompt": "Keyboard tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_finalPassword",
+          "prompt": "Displayed Mastermind completion password",
+          "required": false,
+          "type": "shortText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_provenance",
+          "prompt": "ReVISit provenance JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
         }
       ],
       "style": {
@@ -128,6 +304,94 @@
           "required": true,
           "type": "shortText",
           "location": "sidebar"
+        },
+        {
+          "id": "mastermind_advisor_reactive",
+          "prompt": "Game completion and tracking payload",
+          "required": false,
+          "type": "reactive",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_totalAttempts",
+          "prompt": "Total attempts in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundsCompleted",
+          "prompt": "Rounds completed in the Mastermind game",
+          "required": false,
+          "type": "numerical",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_roundHistory",
+          "prompt": "Round history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_guessHistory",
+          "prompt": "Guess history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_feedbackHistory",
+          "prompt": "Feedback history JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_mouseTrackingData",
+          "prompt": "Mouse tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_clickTrackingData",
+          "prompt": "Click tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_keyTrackingData",
+          "prompt": "Keyboard tracking JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_finalPassword",
+          "prompt": "Displayed Mastermind completion password",
+          "required": false,
+          "type": "shortText",
+          "location": "belowStimulus",
+          "hidden": true
+        },
+        {
+          "id": "mastermindGame_provenance",
+          "prompt": "ReVISit provenance JSON",
+          "required": false,
+          "type": "longText",
+          "location": "belowStimulus",
+          "hidden": true
         }
       ],
       "style": {
@@ -135,287 +399,6 @@
       },
       "withSidebar": true,
       "sidebarWidth": 320
-    },
-    "TOAST": {
-      "type": "questionnaire",
-      "description": "Evaluate the usability and performance of the system.",
-      "responseDividers": true,
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "toast-1",
-          "prompt": "I understand what the system should do.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-2",
-          "prompt": "The system helps me achieve my goals.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-3",
-          "prompt": "I understand the limitations of the system.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-4",
-          "prompt": "I understand the capabilities of the system.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-5",
-          "prompt": "The system performs consistently.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-6",
-          "prompt": "The system performs the way it should.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-7",
-          "prompt": "I feel comfortable relying on the information provided by the system.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-8",
-          "prompt": "I understand how the system executes tasks.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "toast-9",
-          "prompt": "I am rarely surprised by how the system responds.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        }
-      ]
-    },
-    "NASA_TLX": {
-      "type": "questionnaire",
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "Mental Demand",
-          "prompt": "How mentally demanding was the task?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Low"
-            },
-            {
-              "value": 25,
-              "label": "Low"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "High"
-            },
-            {
-              "value": 100,
-              "label": "Very High"
-            }
-          ]
-        },
-        {
-          "id": "Physical Demand",
-          "prompt": "How physically demanding was the task?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Low"
-            },
-            {
-              "value": 25,
-              "label": "Low"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "High"
-            },
-            {
-              "value": 100,
-              "label": "Very High"
-            }
-          ]
-        },
-        {
-          "id": "Temporal Demand",
-          "prompt": "How hurried or rushed was the pace of the task?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Low"
-            },
-            {
-              "value": 25,
-              "label": "Low"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "High"
-            },
-            {
-              "value": 100,
-              "label": "Very High"
-            }
-          ]
-        },
-        {
-          "id": "Performance",
-          "prompt": "How successful were you in accomplishing what you were asked to do?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Perfect"
-            },
-            {
-              "value": 25,
-              "label": "Good"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "Bad"
-            },
-            {
-              "value": 100,
-              "label": "Failure"
-            }
-          ]
-        },
-        {
-          "id": "Effort",
-          "prompt": "How hard did you have to work to accomplish your level of performance?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Low"
-            },
-            {
-              "value": 25,
-              "label": "Low"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "High"
-            },
-            {
-              "value": 100,
-              "label": "Very High"
-            }
-          ]
-        },
-        {
-          "id": "Frustration",
-          "prompt": "How insecure, discouraged, irritated, stressed, and annoyed were you?",
-          "location": "aboveStimulus",
-          "required": true,
-          "type": "slider",
-          "startingValue": 50,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Low"
-            },
-            {
-              "value": 25,
-              "label": "Low"
-            },
-            {
-              "value": 50,
-              "label": "Medium"
-            },
-            {
-              "value": 75,
-              "label": "High"
-            },
-            {
-              "value": 100,
-              "label": "Very High"
-            }
-          ]
-        }
-      ]
     },
     "demographics": {
       "type": "questionnaire",
@@ -628,7 +611,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Demographics\nPlease select the option that best describes you for each item."
+      "instruction": "## Demographics\nPlease select the option that best describes you for each item.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "control-trust-willingness": {
       "type": "questionnaire",
@@ -674,312 +662,63 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Perception of AI\nPlease indicate how willing you would be to depend on the AI system in task-solving situations."
-    },
-    "control-trust-integrity": {
-      "type": "questionnaire",
-      "description": "Control variables: McKnight trusting beliefs — integrity.",
-      "responseDividers": true,
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "trust-integrity-1",
-          "prompt": "The AI system is truthful in its dealings with me.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-integrity-2",
-          "prompt": "I would characterize the AI system as honest.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-integrity-3",
-          "prompt": "The AI system would keep its commitments.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-integrity-4",
-          "prompt": "The AI system is sincere and genuine.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        }
-      ],
-      "instructionLocation": "aboveStimulus",
-      "instruction": "\nPlease indicate how honest and principled you perceived the AI system to be."
-    },
-    "control-trust-competence": {
-      "type": "questionnaire",
-      "description": "Control variables: McKnight trusting beliefs — competence.",
-      "responseDividers": true,
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "trust-competence-1",
-          "prompt": "The AI system is competent and effective in providing Mastermind advice.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-competence-2",
-          "prompt": "The AI system performs its role of giving Mastermind advice very well.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-competence-3",
-          "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-competence-4",
-          "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        }
-      ],
-      "instructionLocation": "aboveStimulus",
-      "instruction": "## Competence\nPlease indicate how capable and knowledgeable you perceived the AI system to be."
-    },
-    "control-trust": {
-      "type": "questionnaire",
-      "description": "Trust in the AI system: McKnight trusting beliefs.",
-      "responseDividers": true,
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "trust-all-benevolence-1",
-          "prompt": "I believe that the AI system would act in my best interest.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-benevolence-2",
-          "prompt": "If I required help, the AI system would do its best to help me.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-benevolence-3",
-          "prompt": "The AI system is interested in my well-being, not just its own.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-integrity-1",
-          "prompt": "The AI system is truthful in its dealings with me.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-integrity-2",
-          "prompt": "I would characterize the AI system as honest.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-integrity-3",
-          "prompt": "The AI system would keep its commitments.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-integrity-4",
-          "prompt": "The AI system is sincere and genuine.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-competence-1",
-          "prompt": "The AI system is competent and effective in providing Mastermind advice.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-competence-2",
-          "prompt": "The AI system performs its role of giving Mastermind advice very well.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-competence-3",
-          "prompt": "Overall, the AI system is a capable and proficient Mastermind advice provider.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "trust-all-competence-4",
-          "prompt": "In general, the AI system is very knowledgeable about Mastermind.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        }
-      ],
-      "instructionLocation": "aboveStimulus",
-      "instruction": "## Perception of AI\nPlease indicate your beliefs about the AI system after completing the task."
-    },
-    "control-game-experience": {
-      "type": "questionnaire",
-      "description": "Control variables: prior game experience.",
-      "responseDividers": true,
-      "responseOrder": "random",
-      "response": [
-        {
-          "id": "prior-mastermind-experience",
-          "prompt": "How much prior experience do you have with Mastermind?",
-          "required": true,
-          "type": "dropdown",
-          "placeholder": "Select one option",
-          "options": [
-            "No prior experience",
-            "I know the rules but have rarely or never played",
-            "I have played a few times",
-            "I have played several times",
-            "I play Mastermind or similar code-breaking games regularly",
-            "Prefer not to say"
-          ]
-        },
-        {
-          "id": "prior-codebreaking-experience",
-          "prompt": "How much prior experience do you have with similar code-breaking or deduction games?",
-          "required": true,
-          "type": "dropdown",
-          "placeholder": "Select one option",
-          "options": [
-            "No prior experience",
-            "Very little experience",
-            "Some experience",
-            "Considerable experience",
-            "Extensive experience",
-            "Prefer not to say"
-          ]
-        }
-      ],
-      "instructionLocation": "aboveStimulus",
-      "instruction": "## Game Experience\nPlease answer a few questions about your prior experience with Mastermind and related games."
+      "instruction": "## Perception of AI\nPlease indicate how willing you would be to depend on the AI system in task-solving situations.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "control-mails-short": {
       "type": "questionnaire",
-      "description": "Control variables: Meta Artificial Intelligence Literacy Scale — Short Version (MAILS).",
+      "description": "Control variables: subjective AI knowledge scale adapted from Flynn and Goldsmith (1999).",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
         {
-          "id": "mails-1-detect-ai",
-          "prompt": "I can tell if I am dealing with an application based on artificial intelligence.",
+          "id": "ai-knowledge-expert-colleagues",
+          "prompt": "Among my colleagues, I am one of the experts on AI.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 7
+          "numItems": 5
         },
         {
-          "id": "mails-3-up-to-date",
-          "prompt": "Although there are often new AI applications, I manage to always be up to date.",
+          "id": "ai-knowledge-knowledgeable",
+          "prompt": "I do feel very knowledgeable about AI.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 7
+          "numItems": 5
         },
         {
-          "id": "mails-5-up-to-date",
-          "prompt": " I can weigh the consequences of using AI for society.",
+          "id": "ai-knowledge-compared-others",
+          "prompt": "Compared to most other people, I know much about AI.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 7
+          "numItems": 5
         },
         {
-          "id": "mails-7-apply-ai",
-          "prompt": "I can use artificial intelligence meaningfully to achieve my goals.",
+          "id": "ai-knowledge-know-pretty-much",
+          "prompt": "I know pretty much about AI.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "mails-8-ai-problem-solving",
-          "prompt": "I can usually solve strenuous and complicated tasks when working with artificial intelligence well.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
-        },
-        {
-          "id": "mails-10-understand-ai",
-          "prompt": "I can assess what advantages and disadvantages the use of an artificial intelligence entails.",
-          "required": true,
-          "type": "likert",
-          "leftLabel": "Strongly Disagree",
-          "rightLabel": "Strongly Agree",
-          "numItems": 7
+          "numItems": 5
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## AI Competence\nPlease indicate how you generally assess your ability to understand and work with AI systems."
+      "instruction": "## AI Knowledge\nThink about whether you know or do not know much about AI.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
@@ -1032,7 +771,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Game and AI Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools."
+      "instruction": "## Game and AI Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "manipulation-check": {
       "type": "questionnaire",
@@ -1069,7 +813,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Task Experience\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the game."
+      "instruction": "## Task Experience\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the game.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "Ownership": {
       "type": "questionnaire",
@@ -1094,7 +843,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Ownership\nPlease indicate how much you felt you contributed to solving the task."
+      "instruction": "## Ownership\nPlease indicate how much you felt you contributed to solving the task.",
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-intrinsic": {
       "type": "questionnaire",
@@ -1131,7 +885,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-extraneous": {
       "type": "questionnaire",
@@ -1168,7 +927,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-germane": {
       "type": "questionnaire",
@@ -1205,7 +969,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "min(980px, 100%)",
+        "maxWidth": "980px",
+        "margin": "0 auto"
+      }
     },
     "game-tutorial-video": {
       "type": "video",
