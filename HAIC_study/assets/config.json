@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
   "studyMetadata": {
-    "title": "Study on Mastermind",
+    "title": "Mastermind Study",
     "version": "v-2",
     "authors": [
       "Nils Ness"
@@ -317,7 +317,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 9\nPlease select the option that best describes you for each item."
+      "instruction": "## Page 9\nPlease select the option that best describes you."
     },
     "control-trust-willingness": {
       "type": "questionnaire",
@@ -363,7 +363,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 6\nPlease indicate how willing you would be to depend on the AI in task-solving situations."
+      "instruction": "## Page 6\n Please select the option describes your perception."
     },
     "control-mails-short": {
       "type": "questionnaire",
@@ -409,7 +409,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 7\nThink about whether you know or do not know much about AI."
+      "instruction": "## Page 7\n Please select the option describes your perception."
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
@@ -449,6 +449,8 @@
           "required": true,
           "type": "dropdown",
           "placeholder": "Select one option",
+          "minSelections": 0,
+          "maxSelections": 8,
           "options": [
             "I do not use AI tools",
             "Learning or explanations",
@@ -462,7 +464,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 8\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools."
+      "instruction": "## Page 8\n Please select the option describes your perception."
     },
     "manipulation-check": {
       "type": "questionnaire",
@@ -499,7 +501,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 1\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the task."
+      "instruction": "## Page 1\n Please select the option describes your perception."
     },
     "Ownership": {
       "type": "questionnaire",
@@ -524,13 +526,13 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 5\nPlease indicate how much you felt you contributed to solving the task."
+      "instruction": "## Page 5\n Please select the option describes your perception."
     },
     "cognitive-load-intrinsic": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: intrinsic cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 2\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
+      "instruction": "## Page 2\n Please select the option describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -567,7 +569,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: extraneous cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 3\nPlease indicate how much effort was needed to find, recognize, and link information.",
+      "instruction": "## Page 3\n Please select the option describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -604,7 +606,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 4\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
+      "instruction": "## Page 4\n Please select the option describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
