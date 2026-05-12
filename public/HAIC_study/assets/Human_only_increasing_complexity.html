@@ -40,20 +40,20 @@
 
 <div class="game">
   <h2>🎯 Mastermind</h2>
-  <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
+  <div class="round-banner" id="roundBanner">Round 1/6 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How to play:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
     1️⃣ Select a <b>color</b> from the palette below the board.<br>
     2️⃣ Click a <b>peg</b> in the current row to place it.<br>
     3️⃣ Fill all 4 pegs, then click <b>"Submit Guess"</b>.<br><br>
-    ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position. (Does not correlate to the position in the code)<br>
+    ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     The order of the peg is independent from the order of colors in the code.
   </div>
 
-  <p><strong>Round:</strong> <span id="roundCounter">1</span> |
-     <strong>Attempts this round:</strong> <span id="stepCounter">0</span> / 10 |
-     <strong>Total attempts:</strong> <span id="totalAttempts">0</span></p>
+  <p><strong>Round:</strong> <span id="roundCounter">1</span>/6 |
+     <strong>Guess No.:</strong> <span id="stepCounter">0</span> / 10 |
+     <strong>Total Guess No.:</strong> <span id="totalAttempts">0</span></p>
 
   <div class="board" id="board"></div>
   <div class="palette" id="colorPalette"></div>
@@ -163,6 +163,7 @@ function logProv(action, trigger, data) {
 }
 
 function showStatus(text, type) {
+  if (type === "info") return;
   var area = document.getElementById("statusArea");
   var msg = el("div", { "class": "status-msg " + type, text: text });
   area.appendChild(msg);
@@ -180,7 +181,7 @@ function updateUI() {
   document.getElementById("totalAttempts").textContent = totalAttemptCount;
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
-    "Round " + currentRound + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
+    "Round " + currentRound + "/" + ALL_COLORS.length + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
   var colorListDisplay = document.getElementById("colorListDisplay");
   if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
@@ -220,7 +221,7 @@ function startRound() {
   renderPalette();
   addRow();
   updateGuessBtn();
-  showStatus("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". Pick colors and fill the pegs!", "info");
+  showStatus("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Pick colors and fill the pegs!", "info");
 }
 
 function addRow() {
@@ -301,7 +302,7 @@ function submitGuess() {
 function handleRoundWin() {
   gameOver = true;
   updateGuessBtn();
-  showStatus("🎉 Code cracked in Round " + currentRound + " after " + stepCount + " attempt(s)!", "success");
+  showStatus("🎉 Code cracked in Round " + currentRound + "/" + ALL_COLORS.length + " after " + stepCount + " guess(es)!", "success");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
@@ -310,7 +311,7 @@ function handleRoundWin() {
     finishGame("🏆 You completed all rounds! The Password is: YOUwin!");
   } else {
     currentRound++;
-    showStatus("⬆️ Difficulty increases! Starting Round " + currentRound + "...", "info");
+    showStatus("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + ALL_COLORS.length + "...", "info");
     setTimeout(function() { startRound(); }, 800);
   }
 }
@@ -318,10 +319,10 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   updateGuessBtn();
-  showStatus("❌ Round " + currentRound + " failed. The code was: " + secret.join(", "), "error");
+  showStatus("❌ Round " + currentRound + "/" + ALL_COLORS.length + " failed. The code was: " + secret.join(", "), "error");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
-  finishGame("Game over! Max attempts reached in Round " + currentRound + ". The Password is: YOUgo!");
+  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + ALL_COLORS.length + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {

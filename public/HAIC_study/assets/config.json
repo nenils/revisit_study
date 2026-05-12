@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/main/src/parser/StudyConfigSchema.json",
   "studyMetadata": {
-    "title": "Study on Interactions with the Mastermind Game",
+    "title": "Study on Mastermind",
     "version": "v-2",
     "authors": [
       "Nils Ness"
@@ -30,7 +30,7 @@
       "response": [
         {
           "id": "mastermind_human_only_reactive",
-          "prompt": "Play the Game!",
+          "prompt": "Start the task!",
           "required": true,
           "location": "belowStimulus",
           "type": "reactive"
@@ -44,7 +44,7 @@
       "response": [
         {
           "id": "mastermind_judge_reactive",
-          "prompt": "Play the Game!",
+          "prompt": "Start the task!",
           "required": true,
           "location": "belowStimulus",
           "type": "reactive"
@@ -58,7 +58,7 @@
       "response": [
         {
           "id": "mastermind_advisor_reactive",
-          "prompt": "Play the Game!",
+          "prompt": "Start the task!",
           "required": true,
           "location": "belowStimulus",
           "type": "reactive"
@@ -84,98 +84,10 @@
       "response": [
         {
           "id": "played-game",
-          "prompt": "What was the password displayed after finishing the Game?",
+          "prompt": "What was the password displayed after finishing the task?",
           "required": true,
           "type": "shortText",
           "location": "sidebar"
-        },
-        {
-          "id": "mastermind_human_only_reactive",
-          "prompt": "Game completion and tracking payload",
-          "required": false,
-          "type": "reactive",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_totalAttempts",
-          "prompt": "Total attempts in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundsCompleted",
-          "prompt": "Rounds completed in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundHistory",
-          "prompt": "Round history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_guessHistory",
-          "prompt": "Guess history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_feedbackHistory",
-          "prompt": "Feedback history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_mouseTrackingData",
-          "prompt": "Mouse tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_clickTrackingData",
-          "prompt": "Click tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_keyTrackingData",
-          "prompt": "Keyboard tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_finalPassword",
-          "prompt": "Displayed Mastermind completion password",
-          "required": false,
-          "type": "shortText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_provenance",
-          "prompt": "ReVISit provenance JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
         }
       ],
       "style": {
@@ -192,98 +104,10 @@
       "response": [
         {
           "id": "played-game",
-          "prompt": "What was the password displayed after finishing the Game?",
+          "prompt": "What was the password displayed after finishing the task?",
           "required": true,
           "type": "shortText",
           "location": "sidebar"
-        },
-        {
-          "id": "mastermind_judge_reactive",
-          "prompt": "Game completion and tracking payload",
-          "required": false,
-          "type": "reactive",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_totalAttempts",
-          "prompt": "Total attempts in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundsCompleted",
-          "prompt": "Rounds completed in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundHistory",
-          "prompt": "Round history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_guessHistory",
-          "prompt": "Guess history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_feedbackHistory",
-          "prompt": "Feedback history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_mouseTrackingData",
-          "prompt": "Mouse tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_clickTrackingData",
-          "prompt": "Click tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_keyTrackingData",
-          "prompt": "Keyboard tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_finalPassword",
-          "prompt": "Displayed Mastermind completion password",
-          "required": false,
-          "type": "shortText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_provenance",
-          "prompt": "ReVISit provenance JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
         }
       ],
       "style": {
@@ -300,98 +124,10 @@
       "response": [
         {
           "id": "played-game",
-          "prompt": "What was the password displayed after finishing the Game?",
+          "prompt": "What was the password displayed after finishing the task?",
           "required": true,
           "type": "shortText",
           "location": "sidebar"
-        },
-        {
-          "id": "mastermind_advisor_reactive",
-          "prompt": "Game completion and tracking payload",
-          "required": false,
-          "type": "reactive",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_totalAttempts",
-          "prompt": "Total attempts in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundsCompleted",
-          "prompt": "Rounds completed in the Mastermind game",
-          "required": false,
-          "type": "numerical",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_roundHistory",
-          "prompt": "Round history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_guessHistory",
-          "prompt": "Guess history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_feedbackHistory",
-          "prompt": "Feedback history JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_mouseTrackingData",
-          "prompt": "Mouse tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_clickTrackingData",
-          "prompt": "Click tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_keyTrackingData",
-          "prompt": "Keyboard tracking JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_finalPassword",
-          "prompt": "Displayed Mastermind completion password",
-          "required": false,
-          "type": "shortText",
-          "location": "belowStimulus",
-          "hidden": true
-        },
-        {
-          "id": "mastermindGame_provenance",
-          "prompt": "ReVISit provenance JSON",
-          "required": false,
-          "type": "longText",
-          "location": "belowStimulus",
-          "hidden": true
         }
       ],
       "style": {
@@ -493,46 +229,12 @@
           "prompt": "Gender",
           "required": true,
           "type": "dropdown",
-          "placeholder": "Select your gender",
+          "placeholder": "Select the gender you identify with most",
           "options": [
             "Woman",
             "Man",
             "Non-binary",
             "Another gender identity",
-            "Prefer not to say"
-          ]
-        },
-        {
-          "id": "demographics-country-residence",
-          "prompt": "Country of residence",
-          "required": true,
-          "type": "dropdown",
-          "placeholder": "Select your country of residence",
-          "options": [
-            "Germany",
-            "Austria",
-            "Switzerland",
-            "United States",
-            "United Kingdom",
-            "France",
-            "Italy",
-            "Spain",
-            "Netherlands",
-            "Belgium",
-            "Poland",
-            "Czechia",
-            "Denmark",
-            "Sweden",
-            "Norway",
-            "Finland",
-            "India",
-            "China",
-            "Japan",
-            "South Korea",
-            "Brazil",
-            "Canada",
-            "Australia",
-            "Other / not listed",
             "Prefer not to say"
           ]
         },
@@ -562,13 +264,13 @@
           "placeholder": "Select your highest level of education",
           "options": [
             "Less than high school",
-            "High school diploma or equivalent",
-            "Some college, no degree",
-            "Associate degree (e.g., AA, AS)",
-            "Bachelor's degree (e.g., BA, BS)",
-            "Master's degree (e.g., MA, MS)",
-            "Doctoral degree (e.g., PhD, EdD)",
-            "Professional degree (e.g., MD, JD)",
+            "High school Graduate",
+            "College Graduate",
+            "Associate degree",
+            "Bachelor's degree",
+            "Master's degree",
+            "Doctoral degree",
+            "Other / not listed",
             "Prefer not to say"
           ]
         },
@@ -579,16 +281,20 @@
           "type": "dropdown",
           "placeholder": "Select your current job sector",
           "options": [
-            "Technology",
-            "Education",
+            "Business, consultancy, or management",
+            "Accountancy, banking, or finance",
+            "Charity and voluntary work",
+            "Creative arts or design",
+            "Energy and utilities",
+            "Engineering or manufacturing",
+            "Environment or agriculture",
             "Healthcare",
-            "Finance",
-            "Government",
-            "Manufacturing",
-            "Retail",
-            "Hospitality",
-            "Arts and Entertainment",
-            "Other / not listed",
+            "Hospitality or events",
+            "Computing or IT",
+            "Law",
+            "Law enforcement and security",
+            "Leisure, sport, or tourism",
+            "Other: free text",
             "Prefer not to say"
           ]
         },
@@ -599,24 +305,19 @@
           "type": "dropdown",
           "placeholder": "Select your household income range",
           "options": [
-            "Less than EUR 20,000",
-            "EUR 20,000 to EUR 39,999",
-            "EUR 40,000 to EUR 59,999",
-            "EUR 60,000 to EUR 79,999",
-            "EUR 80,000 to EUR 99,999",
-            "EUR 100,000 to EUR 149,999",
-            "EUR 150,000 or more",
+            "Less than $ 20,000",
+            "$ 20,000 to $ 39,999",
+            "$ 40,000 to $ 59,999",
+            "$ 60,000 to $ 79,999",
+            "$ 80,000 to $ 99,999",
+            "$ 100,000 to $ 149,999",
+            "$ 150,000 or more",
             "Prefer not to say"
           ]
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Demographics\nPlease select the option that best describes you for each item.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 9\nPlease select the option that best describes you for each item."
     },
     "control-trust-willingness": {
       "type": "questionnaire",
@@ -662,12 +363,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Perception of AI\nPlease indicate how willing you would be to depend on the AI system in task-solving situations.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 6\nPlease indicate how willing you would be to depend on the AI in task-solving situations."
     },
     "control-mails-short": {
       "type": "questionnaire",
@@ -682,7 +378,7 @@
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 5
+          "numItems": 7
         },
         {
           "id": "ai-knowledge-knowledgeable",
@@ -691,7 +387,7 @@
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 5
+          "numItems": 7
         },
         {
           "id": "ai-knowledge-compared-others",
@@ -700,7 +396,7 @@
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 5
+          "numItems": 7
         },
         {
           "id": "ai-knowledge-know-pretty-much",
@@ -709,20 +405,15 @@
           "type": "likert",
           "leftLabel": "Strongly Disagree",
           "rightLabel": "Strongly Agree",
-          "numItems": 5
+          "numItems": 7
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## AI Knowledge\nThink about whether you know or do not know much about AI.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 7\nThink about whether you know or do not know much about AI."
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
-      "description": "Prior game experience and experience with AI models.",
+      "description": "Prior task experience and experience with AI models.",
       "responseDividers": true,
       "response": [
         {
@@ -753,7 +444,7 @@
           "numItems": 7
         },
         {
-          "id": "llm-experience-purpose",
+          "id": "dropdown multiple",
           "prompt": "For what purpose do you most often use AI tools?",
           "required": true,
           "type": "dropdown",
@@ -771,12 +462,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Game and AI Experience\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 8\nPlease answer a few questions about your prior experience with Mastermind, similar games, and AI-based tools."
     },
     "manipulation-check": {
       "type": "questionnaire",
@@ -786,7 +472,7 @@
       "response": [
         {
           "id": "mc-initiative-self",
-          "prompt": "In most rounds, I generated the initial content of a guess.",
+          "prompt": "In most rounds, I generated the initial guess.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -804,7 +490,7 @@
         },
         {
           "id": "mc-responsibility-self",
-          "prompt": "I felt responsible for the outcomes of the guesses.",
+          "prompt": "I mainly contributed to the the guesses.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -813,12 +499,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Task Experience\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the game.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 1\nPlease answer these questions about who initiated, selected, and felt responsible for the guesses during the task."
     },
     "Ownership": {
       "type": "questionnaire",
@@ -843,18 +524,13 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Ownership\nPlease indicate how much you felt you contributed to solving the task.",
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      "instruction": "## Page 5\nPlease indicate how much you felt you contributed to solving the task."
     },
     "cognitive-load-intrinsic": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: intrinsic cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Task Complexity\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
+      "instruction": "## Page 2\nPlease indicate how demanding the structure and complexity of the Mastermind task felt.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -885,18 +561,13 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ],
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      ]
     },
     "cognitive-load-extraneous": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: extraneous cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Interface And Information Search\nPlease indicate how much effort was needed to find, recognize, and link information.",
+      "instruction": "## Page 3\nPlease indicate how much effort was needed to find, recognize, and link information.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -911,7 +582,7 @@
         },
         {
           "id": "cl-ecl-2",
-          "prompt": "The design of this task was very inconvenient for playing the game.",
+          "prompt": "The design of this task was very inconvenient for solving the code.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
@@ -927,18 +598,13 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ],
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      ]
     },
     "cognitive-load-germane": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Understanding And Strategy\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
+      "instruction": "## Page 4\nPlease indicate how much effort you invested in understanding the task and building a strategy.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -953,7 +619,7 @@
         },
         {
           "id": "cl-gcl-2",
-          "prompt": "My point while dealing with the task was to understand everything correctly.",
+          "prompt": "My point while solving the task was to understand everything correctly.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
@@ -969,18 +635,13 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ],
-      "style": {
-        "width": "min(980px, 100%)",
-        "maxWidth": "980px",
-        "margin": "0 auto"
-      }
+      ]
     },
     "game-tutorial-video": {
       "type": "video",
       "path": "HAIC_study/assets/mastermind_tutorial.mp4",
       "description": "Tutorial video explaining how to play Mastermind before the game starts.",
-      "instruction": "Please watch the tutorial video before starting the game.",
+      "instruction": "Please watch the tutorial video before starting the task.",
       "instructionLocation": "aboveStimulus",
       "forceCompletion": true,
       "withTimeline": true,

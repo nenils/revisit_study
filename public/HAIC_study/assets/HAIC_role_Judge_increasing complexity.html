@@ -54,7 +54,7 @@
 
 <div class="game">
   <h2>🎯 Mastermind</h2>
-  <div class="round-banner" id="roundBanner">Round 1 — 1 Color Available</div>
+  <div class="round-banner" id="roundBanner">Round 1/6 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
@@ -63,13 +63,13 @@
     &nbsp;&nbsp;&nbsp;• <b>"Submit Directly"</b> — submit your guess as-is to the game.<br>
     &nbsp;&nbsp;&nbsp;• <b>"Send to AI"</b> — the AI reviews your guess and gives feedback.<br>
     3️⃣ Use the AI review as advice, then decide and submit your own guess manually.<br><br>
-    ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position. (Does not correlate to the position in the code)<br>
+    ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
     The order of the peg is independent from the order of colors in the code.
   </div>
 
-  <p><strong>Round:</strong> <span id="roundCounter">1</span> |
-     <strong>Attempts this round:</strong> <span id="stepCounter">0</span> / 10 |
-     <strong>Total attempts:</strong> <span id="totalAttempts">0</span></p>
+  <p><strong>Round:</strong> <span id="roundCounter">1</span>/6 |
+     <strong>Guess No.:</strong> <span id="stepCounter">0</span> / 10 |
+     <strong>Total Guess No.:</strong> <span id="totalAttempts">0</span></p>
 
   <div class="board" id="board"></div>
   <div class="palette" id="colorPalette"></div>
@@ -217,7 +217,7 @@ function updateUI() {
   document.getElementById("totalAttempts").textContent = totalAttemptCount;
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
-    "Round " + currentRound + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
+    "Round " + currentRound + "/" + ALL_COLORS.length + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
   var colorListDisplay = document.getElementById("colorListDisplay");
   if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
@@ -260,7 +260,7 @@ function startRound() {
   addRow();
   updateButtons();
 
-  addMsg("🔔 Round " + currentRound + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
+  addMsg("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
 }
 
 function addRow() {
@@ -355,7 +355,7 @@ function submitGuess(source) {
   currentRow.classList.add("locked");
   updateUI();
 
-  var fbMsg = "[GAME FEEDBACK] Attempt " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
+  var fbMsg = "[GAME FEEDBACK] Guess No. " + stepCount + ": Guess=[" + guess.join(", ") + "] → " + fb.black + " black, " + fb.white + " white.";
   conversationMessages.push({ role: "user", content: fbMsg });
 
   if (fb.black === CODE_LENGTH) { handleRoundWin(); return; }
@@ -370,7 +370,7 @@ function submitGuess(source) {
 function handleRoundWin() {
   gameOver = true;
   updateButtons();
-  addMsg("🎉 Code cracked in Round " + currentRound + " after " + stepCount + " attempt(s)!", "system");
+  addMsg("🎉 Code cracked in Round " + currentRound + "/" + ALL_COLORS.length + " after " + stepCount + " guess(es)!", "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
@@ -379,7 +379,7 @@ function handleRoundWin() {
     finishGame("🏆 You completed all rounds! The Password is: YOUwin!");
   } else {
     currentRound++;
-    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "...", "system");
+    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + ALL_COLORS.length + "...", "system");
     setTimeout(function() { startRound(); }, 800);
   }
 }
@@ -387,10 +387,10 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   updateButtons();
-  addMsg("❌ Round " + currentRound + " failed. The code was: " + secret.join(", "), "system");
+  addMsg("❌ Round " + currentRound + "/" + ALL_COLORS.length + " failed. The code was: " + secret.join(", "), "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
-  finishGame("Game over! Max attempts reached in Round " + currentRound + ". The Password is: YOUgo!");
+  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + ALL_COLORS.length + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {
@@ -533,7 +533,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
   for (var i = 1; i <= stepCount; i++) {
     var g = guessHistory[i] || [];
     var f = feedbackHistory[i] || { black: 0, white: 0 };
-    historyStr += "  Attempt " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
+    historyStr += "  Guess No. " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
   }
 
   return "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
@@ -562,7 +562,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "CURRENT STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
-    "- Attempts this round: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
+    "- Guess No.: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
     (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "") +
     (rlSuggestion ? "\n- Model guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
