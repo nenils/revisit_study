@@ -1,10 +1,10 @@
-# Game-based Study  
+# Mastermind Study  
 
-Welcome! In this study, you’ll play the code breaking game **Mastermind**.  
+Welcome! In this study.  
 
-Mastermind is a fun code-breaking game where the goal is to guess a hidden sequence of colors. Each time you make a guess, you’ll get feedback to help you get closer to cracking the code. 
+**Mastermind** is a code-breaking game where the goal is to guess a hidden sequence of colors. Each time you make a guess, you’ll get feedback to help you get closer to cracking the code. 
 
-If you manage to guess the correct code with **five or fewer attempts**, you will receive a **bonus payment** 🏆  
+If you manage to guess the correct code with **five or fewer attempts in the last round**, you will receive a **bonus payment.**
 
 After the game, we’ll ask you a few short questions about your experience, including how challenging you found the task. The whole study takes about 10 minutes. There are no right or wrong answers—we’re simply interested in your honest impressions.  
 
