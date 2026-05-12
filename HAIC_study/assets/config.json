@@ -278,8 +278,7 @@
           "id": "demographics-job-sector",
           "prompt": "Current job sector",
           "required": true,
-          "type": "dropdown",
-          "placeholder": "Select your current job sector",
+          "type": "checkbox",
           "options": [
             "Business, consultancy, or management",
             "Accountancy, banking, or finance",
@@ -296,7 +295,8 @@
             "Leisure, sport, or tourism",
             "Other: free text",
             "Prefer not to say"
-          ]
+          ],
+          "withOther": true
         },
         {
           "id": "demographics-household-income",
