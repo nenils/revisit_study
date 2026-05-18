@@ -6,7 +6,12 @@ Welcome! In this study.
 
 If you manage to guess the correct code with **five or fewer attempts in the last round**, you will receive a **bonus payment.**
 
-After the game, we’ll ask you a few short questions about your experience, including how challenging you found the task. The whole study takes about 10 minutes. There are no right or wrong answers—we’re simply interested in your honest impressions.  
+The Study is structured into **three sections:** 
+1. Introductory video tutorial to the Game Mastermind
+2. Six rounds of the Game Mastermind to play for you.
+3. A few short questions about your experiences during the Game
+
+The whole study takes about **15 minutes**. There are no right or wrong answers—we’re simply interested in your honest impressions.  
 
 By clicking "Next," you acknowledge that you have read the information about how your data will be collected during the study.  
 
