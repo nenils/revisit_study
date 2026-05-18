@@ -293,7 +293,6 @@
             "Law",
             "Law enforcement and security",
             "Leisure, sport, or tourism",
-            "Other: free text",
             "Prefer not to say"
           ],
           "withOther": true
@@ -649,7 +648,7 @@
       "type": "video",
       "path": "HAIC_study/assets/mastermind_tutorial.mp4",
       "description": "Tutorial video explaining how to play Mastermind before the game starts.",
-      "instruction": "Please watch the tutorial video before starting the task.",
+      "instruction": "Please watch the tutorial video before starting the task.The Games goal is to guess the four color code. Each of the six upcoming rounds one color gets added to the palette. The feedback is provided for each submitted guess with white and black pegs.",
       "instructionLocation": "aboveStimulus",
       "forceCompletion": true,
       "withTimeline": true,
