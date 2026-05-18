@@ -633,6 +633,8 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
     "- Current round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
     "- Only use currently available colors: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
+    "- If only one color is available, the correct valid suggestion must repeat that color in all positions.\n" +
+    "- Never suggest variation beyond the currently available colors.\n" +
     "- Do NOT reveal the secret code (you don't know it).\n" +
 
     "OUTPUT RULES:\n" +
