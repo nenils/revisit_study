@@ -635,6 +635,8 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
     "- If only one color is available, the correct valid suggestion must repeat that color in all positions.\n" +
     "- Never suggest variation beyond the currently available colors.\n" +
+    "- Interpret feedback correctly: a black peg means correct color in the correct position; a white peg means correct color in the wrong position.\n" +
+    "- The order of the feedback pegs is independent from the order of colors in the code.\n" +
     "- Do NOT reveal the secret code (you don't know it).\n" +
 
     "OUTPUT RULES:\n" +
