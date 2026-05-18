@@ -559,6 +559,8 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
     "- If only one color is available, do not criticize a guess for being uniform or lacking variation; repeated use of that color is required.\n" +
     "- Never suggest variation beyond the currently available colors.\n" +
+    "- Interpret feedback correctly: a black peg means correct color in the correct position; a white peg means correct color in the wrong position.\n" +
+    "- The order of the feedback pegs is independent from the order of colors in the code.\n" +
     "- Do NOT reveal the secret code.\n\n" +
 
     "OUTPUT RULES:\n" +
