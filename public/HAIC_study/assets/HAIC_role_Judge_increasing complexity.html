@@ -557,6 +557,8 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Current round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
     "- Only use currently available colors: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
+    "- If only one color is available, do not criticize a guess for being uniform or lacking variation; repeated use of that color is required.\n" +
+    "- Never suggest variation beyond the currently available colors.\n" +
     "- Do NOT reveal the secret code.\n\n" +
 
     "OUTPUT RULES:\n" +
