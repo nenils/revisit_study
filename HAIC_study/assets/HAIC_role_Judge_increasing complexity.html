@@ -206,6 +206,11 @@ function addMsg(text, cls) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function clearVisibleChat() {
+  var chatBox = document.getElementById("chatMessages");
+  if (chatBox) chatBox.innerHTML = "";
+}
+
 /* === Round Management === */
 function getAvailableColors(round) {
   return ALL_COLORS.slice(0, Math.min(round, ALL_COLORS.length));
@@ -243,6 +248,7 @@ function renderPalette() {
 /* === Game Logic === */
 function startRound() {
   document.getElementById("board").innerHTML = "";
+  clearVisibleChat();
   availableColors = getAvailableColors(currentRound);
   secret = [];
   for (var i = 0; i < CODE_LENGTH; i++) {
@@ -536,30 +542,35 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     historyStr += "  Guess No. " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
   }
 
-  return 
+  return (
+    "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
+
     "STUDY DESIGN REQUIREMENT:\n" +
     "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
-    
+
     "YOUR ROLE:\n" +
     "- Review the Human's proposed guess and give feedback.\n" +
-    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" + 
-    "- Keep the Human responsible for deciding and entering the final guess.\n" 
-    
+    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" +
+    "- Keep the Human responsible for deciding and entering the final guess.\n\n" +
+
     "CONSTRAINTS:\n" +
-    "- Only use colors available in the first round from: " + availableColors.join(", ") + "\n" +
+    "- Current round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
+    "- Only use currently available colors: " + availableColors.join(", ") + "\n" +
+    "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
     "- Do NOT reveal the secret code.\n\n" +
-    
+
     "OUTPUT RULES:\n" +
     "- Do NOT output a full 4-color guess.\n" +
-     "- Respond in 1 short sentence.\n\n"
-    
+    "- Respond in 1 short sentence.\n\n" +
+
     "CURRENT STATE:\n" +
-    "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
+    "- Round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
     "- Guess No.: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
     (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "") +
-    (rlSuggestion ? "\n- Model guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
+    (rlSuggestion ? "\n- Model guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "")
+  );
 }
 
 
