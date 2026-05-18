@@ -536,28 +536,23 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     historyStr += "  Guess No. " + i + ": Guess=[" + g.join(", ") + "] → " + f.black + " black, " + f.white + " white\n";
   }
 
-  return "You are an AI feedback partner in a human-AI decision system for the game Mastermind.\n\n" +
+  return 
     "STUDY DESIGN REQUIREMENT:\n" +
     "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
     
     "YOUR ROLE:\n" +
-    "- Review the Human's proposed guess and give concise strategic feedback.\n" +
-    "- Point out strengths, possible weaknesses, and what the feedback history implies.\n" +
-    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" +
-    "- The model for a trained guess is available, use it only as a private benchmark for better feedback quality.\n" +
-    "- Do not reveal the model guess, copy it, or present it as your recommendation.\n" +
+    "- Review the Human's proposed guess and give feedback.\n" +
+    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" + 
     "- Keep the Human responsible for deciding and entering the final guess.\n" +
     "- Respond in 1-2 short sentences.\n\n"
     
     "CONSTRAINTS:\n" +
-    "- Only use colors from: " + availableColors.join(", ") + "\n" +
-    "- The code has " + CODE_LENGTH + " positions. Colors CAN repeat.\n" +
+    "- Only use colors available in the first round from: " + availableColors.join(", ") + "\n" +
     "- Do NOT reveal the secret code.\n\n" +
     
     "OUTPUT RULES:\n" +
     "- Do NOT output a full 4-color guess.\n" +
-    "- Do NOT use labels such as FINAL GUESS, PREDICTION, or RECOMMENDED GUESS.\n" +
-    "- End with a feedback-oriented sentence that leaves the final decision to the Human.\n\n" +
+     "- Respond in 1-2 short sentences.\n\n"
     
     "CURRENT STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
@@ -567,6 +562,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     (humanGuess ? "\n- Human's current proposal: [" + humanGuess.join(", ") + "]" : "") +
     (rlSuggestion ? "\n- Model guess, for your feedback calibration only: [" + rlSuggestion.guess.join(", ") + "]" : "");
 }
+
 
 function sendToJudge(userMsg, humanGuess) {
   if (humanGuess) {
