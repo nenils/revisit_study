@@ -543,8 +543,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "YOUR ROLE:\n" +
     "- Review the Human's proposed guess and give feedback.\n" +
     "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" + 
-    "- Keep the Human responsible for deciding and entering the final guess.\n" +
-    "- Respond in 1-2 short sentences.\n\n"
+    "- Keep the Human responsible for deciding and entering the final guess.\n" 
     
     "CONSTRAINTS:\n" +
     "- Only use colors available in the first round from: " + availableColors.join(", ") + "\n" +
@@ -552,7 +551,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     
     "OUTPUT RULES:\n" +
     "- Do NOT output a full 4-color guess.\n" +
-     "- Respond in 1-2 short sentences.\n\n"
+     "- Respond in 1 short sentence.\n\n"
     
     "CURRENT STATE:\n" +
     "- Round: " + currentRound + " (" + availableColors.length + " colors available)\n" +
