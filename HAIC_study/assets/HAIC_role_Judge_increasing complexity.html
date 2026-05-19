@@ -74,7 +74,7 @@
   <div class="board" id="board"></div>
   <div class="palette" id="colorPalette"></div>
   <div class="controls">
-    <button id="guessBtn" type="button" disabled>✅ Submit Directly</button>
+    <button id="guessBtn" type="button" disabled>✅ Submit Guess</button>
     <button id="sendToJudgeBtn" type="button" disabled>⚖️ Send to AI</button>
   </div>
 </div>
@@ -266,7 +266,7 @@ function startRound() {
   addRow();
   updateButtons();
 
-  addMsg("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
+  addMsg("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Guess or Send to AI!", "system");
 }
 
 function addRow() {

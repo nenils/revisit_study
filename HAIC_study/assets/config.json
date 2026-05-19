@@ -408,7 +408,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 7\n Please select the option describes your perception."
+      "instruction": "## Page 7\n Please select the option that describes your perception."
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
@@ -468,7 +468,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 8\n Please select the option describes your perception."
+      "instruction": "## Page 8\n Please select the option that describes your previous experience with AI."
     },
     "manipulation-check": {
       "type": "questionnaire",
@@ -505,7 +505,7 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 1\n Please select the option describes your perception."
+      "instruction": "## Page 1\n Please select the option that describes your perception."
     },
     "Ownership": {
       "type": "questionnaire",
@@ -530,13 +530,13 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 5\n Please select the option describes your perception."
+      "instruction": "## Page 5\n Please select the option that describes your perception."
     },
     "cognitive-load-intrinsic": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: intrinsic cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 2\n Please select the option describes your perception.",
+      "instruction": "## Page 2\n Please select the option that describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -573,7 +573,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: extraneous cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 3\n Please select the option describes your perception.",
+      "instruction": "## Page 3\n Please select the option that describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -610,7 +610,7 @@
       "type": "questionnaire",
       "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 4\n Please select the option describes your perception.",
+      "instruction": "## Page 4\n Please select the option that describes your perception.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
@@ -648,7 +648,7 @@
       "path": "HAIC_study/assets/mastermind_tutorial.mp4",
       "description": "Tutorial video explaining how to play Mastermind before the game starts.",
       "instruction": "Please watch the tutorial video before starting the task.\n\nThe game's goal is to guess the four-color code.\n\nIn each of the six upcoming rounds, one color gets added to the palette.\n\nFeedback is provided for each submitted guess with white and black pegs.",
-      "instructionLocation": "aboveStimulus",
+      "instructionLocation": "sidebar",
       "forceCompletion": true,
       "withTimeline": true,
       "response": [],
