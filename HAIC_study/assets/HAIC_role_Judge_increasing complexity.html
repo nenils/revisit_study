@@ -54,7 +54,7 @@
 
 <div class="game">
   <h2>🎯 Mastermind</h2>
-  <div class="round-banner" id="roundBanner">Round 1/5 — 2 Colors Available</div>
+  <div class="round-banner" id="roundBanner">Round 1/5 — 1 Color Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
@@ -67,14 +67,14 @@
     The order of the peg is independent from the order of colors in the code.
   </div>
 
-  <p><strong>Round:</strong> <span id="roundCounter">1</span>/5 |
+  <p><strong>Round:</strong> <span id="roundCounter">1</span>/6 |
      <strong>Guess No.:</strong> <span id="stepCounter">0</span> / 10 |
      <strong>Total Guess No.:</strong> <span id="totalAttempts">0</span></p>
 
   <div class="board" id="board"></div>
   <div class="palette" id="colorPalette"></div>
   <div class="controls">
-    <button id="guessBtn" type="button" disabled>✅ Submit Guess</button>
+    <button id="guessBtn" type="button" disabled>✅ Submit Directly</button>
     <button id="sendToJudgeBtn" type="button" disabled>⚖️ Send to AI</button>
   </div>
 </div>
@@ -91,8 +91,6 @@
 
 <script>
 var ALL_COLORS = ["Blue","Green","Red","Yellow","Orange","Purple"];
-var FIRST_COLOR_COUNT = 2;
-var TOTAL_ROUNDS = ALL_COLORS.length - FIRST_COLOR_COUNT + 1;
 var CODE_LENGTH = 4;
 var MAX_ATTEMPTS_PER_ROUND = 10;
 var colorCss = function(c) { return c.toLowerCase(); };
@@ -215,7 +213,7 @@ function clearVisibleChat() {
 
 /* === Round Management === */
 function getAvailableColors(round) {
-  return ALL_COLORS.slice(0, Math.min(FIRST_COLOR_COUNT + round - 1, ALL_COLORS.length));
+  return ALL_COLORS.slice(0, Math.min(round, ALL_COLORS.length));
 }
 
 function updateUI() {
@@ -224,7 +222,7 @@ function updateUI() {
   document.getElementById("totalAttempts").textContent = totalAttemptCount;
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
-    "Round " + currentRound + "/" + TOTAL_ROUNDS + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
+    "Round " + currentRound + "/" + ALL_COLORS.length + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
   var colorListDisplay = document.getElementById("colorListDisplay");
   if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
@@ -268,7 +266,7 @@ function startRound() {
   addRow();
   updateButtons();
 
-  addMsg("🔔 Round " + currentRound + "/" + TOTAL_ROUNDS + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Guess or Send to AI!", "system");
+  addMsg("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
 }
 
 function addRow() {
@@ -378,16 +376,16 @@ function submitGuess(source) {
 function handleRoundWin() {
   gameOver = true;
   updateButtons();
-  addMsg("🎉 Code cracked in Round " + currentRound + "/" + TOTAL_ROUNDS + " after " + stepCount + " guess(es)!", "system");
+  addMsg("🎉 Code cracked in Round " + currentRound + "/" + ALL_COLORS.length + " after " + stepCount + " guess(es)!", "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
 
-  if (wonRound >= TOTAL_ROUNDS) {
+  if (wonRound >= ALL_COLORS.length) {
     finishGame("🏆 You completed all rounds! The Password is: YOUwin!");
   } else {
     currentRound++;
-    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + TOTAL_ROUNDS + "...", "system");
+    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + ALL_COLORS.length + "...", "system");
     setTimeout(function() { startRound(); }, 800);
   }
 }
@@ -395,10 +393,10 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   updateButtons();
-  addMsg("❌ Round " + currentRound + "/" + TOTAL_ROUNDS + " failed. The code was: " + secret.join(", "), "system");
+  addMsg("❌ Round " + currentRound + "/" + ALL_COLORS.length + " failed. The code was: " + secret.join(", "), "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
-  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + TOTAL_ROUNDS + ". The Password is: YOUgo!");
+  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + ALL_COLORS.length + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {
@@ -551,15 +549,13 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Your autonomy is LOW: you provide feedback only. You must not solve the task for the Human.\n\n" +
 
     "YOUR ROLE:\n" +
-    "- Review the Human's proposed guess and give feedback.\n" +
-    "- You may mention positions or colors that deserve reconsideration, but do not provide a complete replacement guess.\n" +
+    "- Review the Human's proposed guess and give feedback. Do not force adaptions only if they are reasonable.\n" +
     "- Keep the Human responsible for deciding and entering the final guess.\n\n" +
 
     "CONSTRAINTS:\n" +
-    "- Current round: " + currentRound + " / " + TOTAL_ROUNDS + "\n" +
+    "- Current round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
     "- Only use currently available colors: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
-    "- With a limited color palette, do not criticize repeated colors by default; repeats may be logically required.\n" +
     "- Never suggest variation beyond the currently available colors.\n" +
     "- Interpret feedback correctly: a black peg means correct color in the correct position; a white peg means correct color in the wrong position.\n" +
     "- The order of the feedback pegs is independent from the order of colors in the code.\n" +
@@ -570,7 +566,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Respond in 1 short sentence.\n\n" +
 
     "CURRENT STATE:\n" +
-    "- Round: " + currentRound + " / " + TOTAL_ROUNDS + "\n" +
+    "- Round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
     "- Guess No.: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
