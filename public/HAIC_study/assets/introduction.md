@@ -1,3 +1,48 @@
+<style>
+  h1 {
+    margin: 0 0 1rem;
+    padding: 1.35rem 1.5rem;
+    color: #0f172a;
+    background: linear-gradient(135deg, #eef6ff 0%, #f8fbff 62%, #fff 100%);
+    border: 1px solid #d7e7f8;
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.07);
+  }
+
+  p {
+    max-width: 820px;
+    line-height: 1.62;
+  }
+
+  ol {
+    max-width: 820px;
+    margin: 0.75rem 0 1rem;
+    padding: 0.85rem 1rem 0.85rem 2.25rem;
+    background: #f8fafc;
+    border: 1px solid #dbe3ef;
+    border-radius: 10px;
+  }
+
+  li {
+    margin: 0.45rem 0;
+    line-height: 1.45;
+  }
+
+  strong {
+    color: #0f3b74;
+  }
+
+  hr {
+    margin: 1.5rem 0 1rem;
+    border: 0;
+    border-top: 1px solid #dbe3ef;
+  }
+
+  details {
+    max-width: 820px;
+  }
+</style>
+
 # Mastermind Study  
 
 Welcome! In this study.  
@@ -8,7 +53,7 @@ If you manage to guess the correct code with **five or fewer attempts in the las
 
 The Study is structured into **three sections:** 
 1. Introductory video tutorial to the Game Mastermind
-2. Six rounds of the Game Mastermind to play for you.
+2. Five rounds of the Game Mastermind to play. The game starts with two available colors, and one additional color is added in each following round.
 3. A few short questions about your experiences during the Game
 
 The whole study takes about **15 minutes**. There are no right or wrong answers—we’re simply interested in your honest impressions.  
