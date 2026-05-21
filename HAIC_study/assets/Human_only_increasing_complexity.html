@@ -40,7 +40,7 @@
 
 <div class="game">
   <h2>🎯 Mastermind</h2>
-  <div class="round-banner" id="roundBanner">Round 1/6 — 1 Color Available</div>
+  <div class="round-banner" id="roundBanner">Round 1/5 — 2 Colors Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How to play:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
@@ -51,7 +51,7 @@
     The order of the peg is independent from the order of colors in the code.
   </div>
 
-  <p><strong>Round:</strong> <span id="roundCounter">1</span>/6 |
+  <p><strong>Round:</strong> <span id="roundCounter">1</span>/5 |
      <strong>Guess No.:</strong> <span id="stepCounter">0</span> / 10 |
      <strong>Total Guess No.:</strong> <span id="totalAttempts">0</span></p>
 
@@ -66,6 +66,8 @@
 
 <script>
 var ALL_COLORS = ["Blue","Green","Red","Yellow","Orange","Purple"];
+var FIRST_COLOR_COUNT = 2;
+var TOTAL_ROUNDS = ALL_COLORS.length - FIRST_COLOR_COUNT + 1;
 var CODE_LENGTH = 4;
 var MAX_ATTEMPTS_PER_ROUND = 10;
 var colorCss = function(c) { return c.toLowerCase(); };
@@ -172,7 +174,7 @@ function showStatus(text, type) {
 
 /* === Round Management === */
 function getAvailableColors(round) {
-  return ALL_COLORS.slice(0, Math.min(round, ALL_COLORS.length));
+  return ALL_COLORS.slice(0, Math.min(FIRST_COLOR_COUNT + round - 1, ALL_COLORS.length));
 }
 
 function updateUI() {
@@ -181,7 +183,7 @@ function updateUI() {
   document.getElementById("totalAttempts").textContent = totalAttemptCount;
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
-    "Round " + currentRound + "/" + ALL_COLORS.length + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
+    "Round " + currentRound + "/" + TOTAL_ROUNDS + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
   var colorListDisplay = document.getElementById("colorListDisplay");
   if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
@@ -221,7 +223,7 @@ function startRound() {
   renderPalette();
   addRow();
   updateGuessBtn();
-  showStatus("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Pick colors and fill the pegs!", "info");
+  showStatus("🔔 Round " + currentRound + "/" + TOTAL_ROUNDS + " started! Colors: " + availableColors.join(", ") + ". Pick colors and fill the pegs!", "info");
 }
 
 function addRow() {
@@ -302,16 +304,16 @@ function submitGuess() {
 function handleRoundWin() {
   gameOver = true;
   updateGuessBtn();
-  showStatus("🎉 Code cracked in Round " + currentRound + "/" + ALL_COLORS.length + " after " + stepCount + " guess(es)!", "success");
+  showStatus("🎉 Code cracked in Round " + currentRound + "/" + TOTAL_ROUNDS + " after " + stepCount + " guess(es)!", "success");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
 
-  if (wonRound >= ALL_COLORS.length) {
+  if (wonRound >= TOTAL_ROUNDS) {
     finishGame("🏆 You completed all rounds! The Password is: YOUwin!");
   } else {
     currentRound++;
-    showStatus("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + ALL_COLORS.length + "...", "info");
+    showStatus("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + TOTAL_ROUNDS + "...", "info");
     setTimeout(function() { startRound(); }, 800);
   }
 }
@@ -319,10 +321,10 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   updateGuessBtn();
-  showStatus("❌ Round " + currentRound + "/" + ALL_COLORS.length + " failed. The code was: " + secret.join(", "), "error");
+  showStatus("❌ Round " + currentRound + "/" + TOTAL_ROUNDS + " failed. The code was: " + secret.join(", "), "error");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
-  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + ALL_COLORS.length + ". The Password is: YOUgo!");
+  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + TOTAL_ROUNDS + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {
