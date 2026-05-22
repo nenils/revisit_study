@@ -316,7 +316,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 9\nPlease select the option that best describes you."
+      "instruction": "## Page 9\nPlease select the option that best describes you.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "control-trust-willingness": {
       "type": "questionnaire",
@@ -362,7 +367,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 6\n Please select the option describes your perception."
+      "instruction": "## Page 6\n Please select the option describes your perception.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "control-mails-short": {
       "type": "questionnaire",
@@ -408,7 +418,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 7\n Please select the option that describes your perception."
+      "instruction": "## Page 7\n Please select the option that describes your perception.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "control-game-llm-experience": {
       "type": "questionnaire",
@@ -468,7 +483,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 8\n Please select the option that describes your previous experience with AI."
+      "instruction": "## Page 8\n Please select the option that describes your previous experience with AI.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "manipulation-check": {
       "type": "questionnaire",
@@ -505,7 +525,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 1\n Please select the option that describes your perception."
+      "instruction": "## Page 1\n Please select the option that describes your perception.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "Ownership": {
       "type": "questionnaire",
@@ -530,7 +555,12 @@
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 5\n Please select the option that describes your perception."
+      "instruction": "## Page 5\n Please select the option that describes your perception.",
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-intrinsic": {
       "type": "questionnaire",
@@ -567,7 +597,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-extraneous": {
       "type": "questionnaire",
@@ -604,7 +639,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "cognitive-load-germane": {
       "type": "questionnaire",
@@ -641,7 +681,12 @@
           "rightLabel": "Strongly Agree",
           "numItems": 7
         }
-      ]
+      ],
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
     },
     "game-tutorial-video": {
       "type": "video",
