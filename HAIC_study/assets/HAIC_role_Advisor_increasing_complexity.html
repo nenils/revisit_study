@@ -99,7 +99,15 @@ var FIRST_COLOR_COUNT = 2;
 var TOTAL_ROUNDS = ALL_COLORS.length - FIRST_COLOR_COUNT + 1;
 var CODE_LENGTH = 4;
 var MAX_ATTEMPTS_PER_ROUND = 10;
+var MAX_API_MESSAGES_PER_ROUND = 20;
 var colorCss = function(c) { return c.toLowerCase(); };
+var FIXED_ROUND_CODES = [
+  ["Blue", "Blue", "Green", "Blue"],
+  ["Red", "Blue", "Blue", "Red"],
+  ["Blue", "Yellow", "Blue", "Red"],
+  ["Yellow", "Red", "Red", "Green"],
+  ["Blue", "Orange", "Purple", "Blue"]
+];
 
 var currentRound = 1;
 var availableColors = [];
@@ -112,6 +120,7 @@ var gameOver = false;
 var currentAdvisorGuess = null;
 var advisorRequestToken = 0;
 var conversationMessages = [];
+var apiMessagesThisRound = 0;
 
 var guessHistory = {};
 var feedbackHistory = {};
@@ -213,6 +222,30 @@ function addMsg(text, cls) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function apiLimitMessage() {
+  return "The AI message limit for this round has been reached. Please continue with the game board; the AI chat will be available again in the next round.";
+}
+
+function canSendApiMessage() {
+  return apiMessagesThisRound < MAX_API_MESSAGES_PER_ROUND;
+}
+
+function registerApiMessage() {
+  apiMessagesThisRound++;
+  logProv('apiMessageSent', 'system', {
+    round: currentRound,
+    attempt: stepCount,
+    countThisRound: apiMessagesThisRound,
+    limitPerRound: MAX_API_MESSAGES_PER_ROUND,
+    timestamp: new Date().toISOString()
+  });
+}
+
+function getParticipantApiId() {
+  var params = new URLSearchParams(window.location.search);
+  return params.get("PROLIFIC_PID") || params.get("participantId") || params.get("id") || "anonymous";
+}
+
 function clearVisibleChat() {
   var chatBox = document.getElementById("chatMessages");
   if (chatBox) chatBox.innerHTML = "";
@@ -267,6 +300,10 @@ function getAvailableColors(round) {
   return ALL_COLORS.slice(0, Math.min(FIRST_COLOR_COUNT + round - 1, ALL_COLORS.length));
 }
 
+function getSecretForRound(round) {
+  return FIXED_ROUND_CODES[round - 1].slice();
+}
+
 function updateUI() {
   document.getElementById("roundCounter").textContent = currentRound;
   document.getElementById("stepCounter").textContent = stepCount;
@@ -301,16 +338,14 @@ function startRound() {
   document.getElementById("board").innerHTML = "";
   clearVisibleChat();
   availableColors = getAvailableColors(currentRound);
-  secret = [];
-  for (var i = 0; i < CODE_LENGTH; i++) {
-    secret.push(availableColors[Math.floor(Math.random() * availableColors.length)]);
-  }
+  secret = getSecretForRound(currentRound);
   stepCount = 0;
   guessHistory = {};
   feedbackHistory = {};
   gameOver = false;
   currentAdvisorGuess = null;
   conversationMessages = [];
+  apiMessagesThisRound = 0;
   hideAdvisorGuessDisplay();
 
   logProv('roundStarted', 'system', { round: currentRound, availableColors: availableColors, secretCode: secret, timestamp: new Date().toISOString() });
@@ -658,6 +693,13 @@ function buildAdvisorSystemPrompt(rlSuggestion) {
 
 
 function requestAdvisorPrediction(reason, isInitialRequest) {
+  if (!canSendApiMessage()) {
+    setAdvisorButtonState("hidden");
+    addMsg(apiLimitMessage(), "bot");
+    logProv('apiMessageBlocked', 'system', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+    return;
+  }
+
   currentAdvisorGuess = null;
   hideAdvisorGuessDisplay();
   var requestToken = ++advisorRequestToken;
@@ -669,6 +711,13 @@ function requestAdvisorPrediction(reason, isInitialRequest) {
 }
 
 function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
+  if (!canSendApiMessage()) {
+    if (requestToken === advisorRequestToken) setAdvisorButtonState("hidden");
+    addMsg(apiLimitMessage(), "bot");
+    logProv('apiMessageBlocked', 'system', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+    return;
+  }
+
   if (!requestToken) {
     currentAdvisorGuess = null;
     hideAdvisorGuessDisplay();
@@ -689,6 +738,8 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
   }
 
   var payload = {
+    participantId: getParticipantApiId(),
+    studyRound: currentRound,
     model: "meta-llama/llama-3.1-70b-instruct",
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
@@ -698,10 +749,11 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", LLM_PROXY_ENDPOINT, true);
   xhr.setRequestHeader("Content-Type", "application/json");
+  registerApiMessage();
   xhr.onreadystatechange = function() {
     if (xhr.readyState !== 4) return;
     if (xhr.status !== 200) {
-      addMsg("⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
+      addMsg(xhr.status === 429 ? apiLimitMessage() : "⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
       if (requestToken === advisorRequestToken) setAdvisorButtonState("hidden");
       return;
     }
@@ -775,6 +827,11 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("sendBtn").addEventListener("click", function() {
     var txt = document.getElementById("chatInput").value.trim();
     if (!txt) return;
+    if (!canSendApiMessage()) {
+      addMsg(apiLimitMessage(), "bot");
+      logProv('apiMessageBlocked', 'input', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+      return;
+    }
     addMsg(txt, "user");
     logProv('chatMessageSent', 'input', { message: txt, round: currentRound, attempt: stepCount, timestamp: new Date().toISOString() });
     chatHistory.push({ round: currentRound, attempt: stepCount, role: "user", message: txt, timestamp: new Date().toISOString() });
