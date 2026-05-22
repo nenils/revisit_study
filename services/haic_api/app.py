@@ -20,6 +20,8 @@ OPENROUTER_BASE_URL = os.getenv(
 STUDY_PUBLIC_URL = os.getenv("STUDY_PUBLIC_URL", "http://localhost:8080")
 RL_MODEL_PATH = os.getenv("RL_MODEL_PATH", "").strip()
 RL_MODEL = MastermindRLModel(RL_MODEL_PATH or None)
+MAX_LLM_MESSAGES_PER_ROUND = int(os.getenv("MAX_LLM_MESSAGES_PER_ROUND", "20"))
+LLM_MESSAGE_COUNTS: dict[tuple[str, int], int] = {}
 ALLOWED_STUDY_ORIGINS = {
     STUDY_PUBLIC_URL,
     "http://iivm6.cit.tum.de",
@@ -49,6 +51,8 @@ class RLState(BaseModel):
 
 
 class ChatPayload(BaseModel):
+    participantId: str | None = None
+    studyRound: int | None = None
     model: str | None = None
     max_tokens: int | None = None
     temperature: float | None = None
@@ -116,10 +120,24 @@ def predict_rl(state: RLState) -> dict[str, Any]:
 
 @app.post("/api/llm/chat")
 def llm_chat(payload: ChatPayload) -> dict[str, Any]:
+    participant_id = (payload.participantId or "anonymous").strip()[:128] or "anonymous"
+    study_round = payload.studyRound or 0
+    counter_key = (participant_id, study_round)
+    current_count = LLM_MESSAGE_COUNTS.get(counter_key, 0)
+    if current_count >= MAX_LLM_MESSAGES_PER_ROUND:
+        raise HTTPException(
+            status_code=429,
+            detail=(
+                "The AI message limit for this round has been reached. "
+                "Please continue with the game board; the AI chat will be available again in the next round."
+            ),
+        )
+    LLM_MESSAGE_COUNTS[counter_key] = current_count + 1
+
     if not OPENROUTER_API_KEY:
         return dummy_llm_response(payload)
 
-    body = payload.model_dump()
+    body = payload.model_dump(exclude={"participantId", "studyRound"})
     body["model"] = body.get("model") or OPENROUTER_MODEL
     data = json.dumps(body).encode("utf-8")
     request = urllib.request.Request(

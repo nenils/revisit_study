@@ -54,7 +54,7 @@
 
 <div class="game">
   <h2>🎯 Mastermind</h2>
-  <div class="round-banner" id="roundBanner">Round 1/5 — 1 Color Available</div>
+  <div class="round-banner" id="roundBanner">Round 1/5 — 2 Colors Available</div>
   <div class="instructions" id="instructionsBox">
     <b>How it works:</b><br>
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
@@ -67,7 +67,7 @@
     The order of the peg is independent from the order of colors in the code.
   </div>
 
-  <p><strong>Round:</strong> <span id="roundCounter">1</span>/6 |
+  <p><strong>Round:</strong> <span id="roundCounter">1</span>/5 |
      <strong>Guess No.:</strong> <span id="stepCounter">0</span> / 10 |
      <strong>Total Guess No.:</strong> <span id="totalAttempts">0</span></p>
 
@@ -91,9 +91,19 @@
 
 <script>
 var ALL_COLORS = ["Blue","Green","Red","Yellow","Orange","Purple"];
+var FIRST_COLOR_COUNT = 2;
+var TOTAL_ROUNDS = ALL_COLORS.length - FIRST_COLOR_COUNT + 1;
 var CODE_LENGTH = 4;
 var MAX_ATTEMPTS_PER_ROUND = 10;
+var MAX_API_MESSAGES_PER_ROUND = 20;
 var colorCss = function(c) { return c.toLowerCase(); };
+var FIXED_ROUND_CODES = [
+  ["Blue", "Blue", "Green", "Blue"],
+  ["Red", "Blue", "Blue", "Red"],
+  ["Blue", "Yellow", "Blue", "Red"],
+  ["Yellow", "Red", "Red", "Green"],
+  ["Blue", "Orange", "Purple", "Blue"]
+];
 
 var currentRound = 1;
 var availableColors = [];
@@ -105,6 +115,7 @@ var selectedColor = null;
 var gameOver = false;
 var judgeThinking = false;
 var conversationMessages = [];
+var apiMessagesThisRound = 0;
 
 var guessHistory = {};
 var feedbackHistory = {};
@@ -206,6 +217,30 @@ function addMsg(text, cls) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+function apiLimitMessage() {
+  return "The AI message limit for this round has been reached. Please continue with the game board; the AI chat will be available again in the next round.";
+}
+
+function canSendApiMessage() {
+  return apiMessagesThisRound < MAX_API_MESSAGES_PER_ROUND;
+}
+
+function registerApiMessage() {
+  apiMessagesThisRound++;
+  logProv('apiMessageSent', 'system', {
+    round: currentRound,
+    attempt: stepCount,
+    countThisRound: apiMessagesThisRound,
+    limitPerRound: MAX_API_MESSAGES_PER_ROUND,
+    timestamp: new Date().toISOString()
+  });
+}
+
+function getParticipantApiId() {
+  var params = new URLSearchParams(window.location.search);
+  return params.get("PROLIFIC_PID") || params.get("participantId") || params.get("id") || "anonymous";
+}
+
 function clearVisibleChat() {
   var chatBox = document.getElementById("chatMessages");
   if (chatBox) chatBox.innerHTML = "";
@@ -213,7 +248,11 @@ function clearVisibleChat() {
 
 /* === Round Management === */
 function getAvailableColors(round) {
-  return ALL_COLORS.slice(0, Math.min(round, ALL_COLORS.length));
+  return ALL_COLORS.slice(0, Math.min(FIRST_COLOR_COUNT + round - 1, ALL_COLORS.length));
+}
+
+function getSecretForRound(round) {
+  return FIXED_ROUND_CODES[round - 1].slice();
 }
 
 function updateUI() {
@@ -222,7 +261,7 @@ function updateUI() {
   document.getElementById("totalAttempts").textContent = totalAttemptCount;
   var names = availableColors.join(", ");
   document.getElementById("roundBanner").textContent =
-    "Round " + currentRound + "/" + ALL_COLORS.length + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
+    "Round " + currentRound + "/" + TOTAL_ROUNDS + " — " + availableColors.length + " Color" + (availableColors.length > 1 ? "s" : "") + " Available";
   var colorListDisplay = document.getElementById("colorListDisplay");
   if (colorListDisplay) colorListDisplay.innerHTML = "<b>Available colors:</b> " + names;
 }
@@ -250,15 +289,13 @@ function startRound() {
   document.getElementById("board").innerHTML = "";
   clearVisibleChat();
   availableColors = getAvailableColors(currentRound);
-  secret = [];
-  for (var i = 0; i < CODE_LENGTH; i++) {
-    secret.push(availableColors[Math.floor(Math.random() * availableColors.length)]);
-  }
+  secret = getSecretForRound(currentRound);
   stepCount = 0;
   guessHistory = {};
   feedbackHistory = {};
   gameOver = false;
   conversationMessages = [];
+  apiMessagesThisRound = 0;
 
   logProv('roundStarted', 'system', { round: currentRound, availableColors: availableColors, secretCode: secret, timestamp: new Date().toISOString() });
   updateUI();
@@ -266,7 +303,7 @@ function startRound() {
   addRow();
   updateButtons();
 
-  addMsg("🔔 Round " + currentRound + "/" + ALL_COLORS.length + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
+  addMsg("🔔 Round " + currentRound + "/" + TOTAL_ROUNDS + " started! Colors: " + availableColors.join(", ") + ". Build your guess on the board, then Submit Directly or Send to AI!", "system");
 }
 
 function addRow() {
@@ -376,16 +413,16 @@ function submitGuess(source) {
 function handleRoundWin() {
   gameOver = true;
   updateButtons();
-  addMsg("🎉 Code cracked in Round " + currentRound + "/" + ALL_COLORS.length + " after " + stepCount + " guess(es)!", "system");
+  addMsg("🎉 Code cracked in Round " + currentRound + "/" + TOTAL_ROUNDS + " after " + stepCount + " guess(es)!", "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: true, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundWon', 'system', { round: currentRound, attempts: stepCount, timestamp: new Date().toISOString() });
   var wonRound = currentRound;
 
-  if (wonRound >= ALL_COLORS.length) {
+  if (wonRound >= TOTAL_ROUNDS) {
     finishGame("🏆 You completed all rounds! The Password is: YOUwin!");
   } else {
     currentRound++;
-    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + ALL_COLORS.length + "...", "system");
+    addMsg("⬆️ Difficulty increases! Starting Round " + currentRound + "/" + TOTAL_ROUNDS + "...", "system");
     setTimeout(function() { startRound(); }, 800);
   }
 }
@@ -393,10 +430,10 @@ function handleRoundWin() {
 function handleRoundLoss() {
   gameOver = true;
   updateButtons();
-  addMsg("❌ Round " + currentRound + "/" + ALL_COLORS.length + " failed. The code was: " + secret.join(", "), "system");
+  addMsg("❌ Round " + currentRound + "/" + TOTAL_ROUNDS + " failed. The code was: " + secret.join(", "), "system");
   roundHistory.push({ round: currentRound, colorsAvailable: availableColors.length, attempts: stepCount, won: false, secret: secret.slice(), guessHistory: cloneForStorage(guessHistory), feedbackHistory: cloneForStorage(feedbackHistory) });
   logProv('roundLost', 'system', { round: currentRound, attempts: stepCount, secret: secret, timestamp: new Date().toISOString() });
-  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + ALL_COLORS.length + ". The Password is: YOUgo!");
+  finishGame("Game over! Max guesses reached in Round " + currentRound + "/" + TOTAL_ROUNDS + ". The Password is: YOUgo!");
 }
 
 function getStudyCode(message) {
@@ -553,7 +590,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Keep the Human responsible for deciding and entering the final guess.\n\n" +
 
     "CONSTRAINTS:\n" +
-    "- Current round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
+    "- Current round: " + currentRound + " / " + TOTAL_ROUNDS + "\n" +
     "- Only use currently available colors: " + availableColors.join(", ") + "\n" +
     "- The code has " + CODE_LENGTH + " positions. Colors can repeat.\n" +
     "- Never suggest variation beyond the currently available colors.\n" +
@@ -566,7 +603,7 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
     "- Respond in 1 short sentence.\n\n" +
 
     "CURRENT STATE:\n" +
-    "- Round: " + currentRound + " / " + ALL_COLORS.length + "\n" +
+    "- Round: " + currentRound + " / " + TOTAL_ROUNDS + "\n" +
     "- Available colors: " + availableColors.join(", ") + "\n" +
     "- Guess No.: " + stepCount + " / " + MAX_ATTEMPTS_PER_ROUND + "\n" +
     (historyStr ? "- History:\n" + historyStr : "- No guesses yet this round.\n") +
@@ -577,6 +614,13 @@ function buildJudgeSystemPrompt(humanGuess, rlSuggestion) {
 
 
 function sendToJudge(userMsg, humanGuess) {
+  if (!canSendApiMessage()) {
+    addMsg(apiLimitMessage(), "bot");
+    setJudgeThinking(false);
+    logProv('apiMessageBlocked', 'system', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+    return;
+  }
+
   if (humanGuess) {
     requestRLSuggestion("feedback on human proposal", function(rlSuggestion) {
       sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion);
@@ -596,6 +640,8 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
   }
 
   var payload = {
+    participantId: getParticipantApiId(),
+    studyRound: currentRound,
     model: "meta-llama/llama-3.1-70b-instruct",
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
@@ -610,10 +656,11 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", LLM_PROXY_ENDPOINT, true);
   xhr.setRequestHeader("Content-Type", "application/json");
+  registerApiMessage();
   xhr.onreadystatechange = function() {
     if (xhr.readyState !== 4) return;
     if (xhr.status !== 200) {
-      addMsg("⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
+      addMsg(xhr.status === 429 ? apiLimitMessage() : "⚠️ LLM proxy error " + xhr.status + ": " + xhr.responseText, "bot");
       setJudgeThinking(false);
       return;
     }
@@ -650,6 +697,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.getElementById("sendToJudgeBtn").addEventListener("click", function() {
     if (gameOver) return;
+    if (!canSendApiMessage()) {
+      addMsg(apiLimitMessage(), "bot");
+      logProv('apiMessageBlocked', 'click', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+      return;
+    }
     var guess = getCurrentGuessFromBoard();
     if (guess.indexOf(null) !== -1) { alert("Fill all 4 pegs before sending to the AI!"); return; }
     var requestText = "Please review my guess: [" + guess.join(", ") + "].";
@@ -663,6 +715,11 @@ document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("sendBtn").addEventListener("click", function() {
     var txt = document.getElementById("chatInput").value.trim();
     if (!txt) return;
+    if (!canSendApiMessage()) {
+      addMsg(apiLimitMessage(), "bot");
+      logProv('apiMessageBlocked', 'input', { round: currentRound, attempt: stepCount, limitPerRound: MAX_API_MESSAGES_PER_ROUND, timestamp: new Date().toISOString() });
+      return;
+    }
     addMsg(txt, "user");
     logProv('chatMessageSent', 'input', { message: txt, round: currentRound, attempt: stepCount, timestamp: new Date().toISOString() });
     chatHistory.push({ round: currentRound, attempt: stepCount, role: "user", message: txt, timestamp: new Date().toISOString() });

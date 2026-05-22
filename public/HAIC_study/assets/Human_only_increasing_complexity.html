@@ -71,6 +71,13 @@ var TOTAL_ROUNDS = ALL_COLORS.length - FIRST_COLOR_COUNT + 1;
 var CODE_LENGTH = 4;
 var MAX_ATTEMPTS_PER_ROUND = 10;
 var colorCss = function(c) { return c.toLowerCase(); };
+var FIXED_ROUND_CODES = [
+  ["Blue", "Blue", "Green", "Blue"],
+  ["Red", "Blue", "Blue", "Red"],
+  ["Blue", "Yellow", "Blue", "Red"],
+  ["Yellow", "Red", "Red", "Green"],
+  ["Blue", "Orange", "Purple", "Blue"]
+];
 
 var currentRound = 1;
 var availableColors = [];
@@ -177,6 +184,10 @@ function getAvailableColors(round) {
   return ALL_COLORS.slice(0, Math.min(FIRST_COLOR_COUNT + round - 1, ALL_COLORS.length));
 }
 
+function getSecretForRound(round) {
+  return FIXED_ROUND_CODES[round - 1].slice();
+}
+
 function updateUI() {
   document.getElementById("roundCounter").textContent = currentRound;
   document.getElementById("stepCounter").textContent = stepCount;
@@ -210,10 +221,7 @@ function startRound() {
   document.getElementById("board").innerHTML = "";
   document.getElementById("statusArea").innerHTML = "";
   availableColors = getAvailableColors(currentRound);
-  secret = [];
-  for (var i = 0; i < CODE_LENGTH; i++) {
-    secret.push(availableColors[Math.floor(Math.random() * availableColors.length)]);
-  }
+  secret = getSecretForRound(currentRound);
   stepCount = 0;
   guessHistory = {};
   feedbackHistory = {};
