@@ -21,7 +21,7 @@
     "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
-    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=C1WQRRAE). \n\n Completion code: ** C1WQRRAE **",
+    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](/api/prolific/complete).",
     "numSequences": 150
   },
   "baseComponents": {
