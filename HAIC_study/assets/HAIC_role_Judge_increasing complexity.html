@@ -649,7 +649,7 @@ function sendToJudgeWithFeedback(userMsg, humanGuess, rlSuggestion) {
   var payload = {
     participantId: getParticipantApiId(),
     studyRound: currentRound,
-    model: "anthropic/claude-opus-4.7",
+    model: "anthropic/claude-sonnet-4",
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
 
