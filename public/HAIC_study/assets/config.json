@@ -21,7 +21,7 @@
     "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
-    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=YOUR_PROLIFIC_COMPLETION_CODE).",
+    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](https://app.prolific.com/submissions/complete?cc=C1WQRRAE). \n\n Completion code: ** C1WQRRAE **",
     "numSequences": 150
   },
   "baseComponents": {
@@ -590,7 +590,7 @@
         },
         {
           "id": "attention-check",
-          "prompt": "Please select 'Strongly Agree' for this item.",
+          "prompt": "Please select 7 (Stronlgy Agree) for this item.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
@@ -623,7 +623,7 @@
         },
         {
           "id": "cl-ecl-2",
-          "prompt": "The design of this task was very inconvenient for solving the code.",
+          "prompt": "The design of this task was very inconvenient for solving the task.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
