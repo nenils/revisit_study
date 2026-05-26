@@ -6,6 +6,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
 from rl_model import MastermindRLModel
@@ -18,6 +19,7 @@ OPENROUTER_BASE_URL = os.getenv(
     "https://openrouter.ai/api/v1/chat/completions",
 )
 STUDY_PUBLIC_URL = os.getenv("STUDY_PUBLIC_URL", "http://localhost:8080")
+PROLIFIC_COMPLETION_CODE = os.getenv("PROLIFIC_COMPLETION_CODE", "").strip()
 RL_MODEL_PATH = os.getenv("RL_MODEL_PATH", "").strip()
 RL_MODEL = MastermindRLModel(RL_MODEL_PATH or None)
 MAX_LLM_MESSAGES_PER_ROUND = int(os.getenv("MAX_LLM_MESSAGES_PER_ROUND", "20"))
@@ -113,6 +115,20 @@ def health() -> dict[str, Any]:
     }
 
 
+@app.get("/api/prolific/complete")
+def complete_prolific() -> RedirectResponse:
+    if not PROLIFIC_COMPLETION_CODE:
+        raise HTTPException(
+            status_code=503,
+            detail="Prolific completion code is not configured on the server.",
+        )
+
+    return RedirectResponse(
+        url=f"https://app.prolific.com/submissions/complete?cc={PROLIFIC_COMPLETION_CODE}",
+        status_code=302,
+    )
+
+
 @app.post("/api/rl/predict")
 def predict_rl(state: RLState) -> dict[str, Any]:
     return RL_MODEL.predict(state)
@@ -137,7 +153,7 @@ def llm_chat(payload: ChatPayload) -> dict[str, Any]:
     if not OPENROUTER_API_KEY:
         return dummy_llm_response(payload)
 
-    body = payload.model_dump(exclude={"participantId", "studyRound"})
+    body = payload.model_dump(exclude={"participantId", "studyRound"}, exclude_none=True)
     body["model"] = body.get("model") or OPENROUTER_MODEL
     data = json.dumps(body).encode("utf-8")
     request = urllib.request.Request(
