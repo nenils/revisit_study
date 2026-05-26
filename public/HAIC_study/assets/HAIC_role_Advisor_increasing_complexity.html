@@ -747,7 +747,7 @@ function sendToAdvisor(userMsg, isInitialRequest, rlSuggestion, requestToken) {
   var payload = {
     participantId: getParticipantApiId(),
     studyRound: currentRound,
-    model: "anthropic/claude-opus-4.7-fast",
+    model: "anthropic/claude-opus-4.7",
     messages: [{ role: "system", content: sysPrompt }].concat(conversationMessages)
   };
 
