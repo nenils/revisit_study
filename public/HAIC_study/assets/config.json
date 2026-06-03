@@ -25,20 +25,6 @@
     "numSequences": 150
   },
   "baseComponents": {
-    "mind_human_only": {
-      "type": "website",
-      "response": [
-        {
-          "id": "mastermind_human_only_reactive",
-          "prompt": "Start the task!",
-          "required": true,
-          "location": "belowStimulus",
-          "type": "reactive"
-        }
-      ],
-      "path": "HAIC_study/assets/Human_only_increasing_complexity.html",
-      "instructionLocation": "aboveStimulus"
-    },
     "mind_judge": {
       "type": "website",
       "response": [
@@ -792,7 +778,6 @@
         "order": "latinSquare",
         "numSamples": 1,
         "components": [
-          "mastermind_human_only",
           "mastermind_judge",
           "mastermind_advisor"
         ],
