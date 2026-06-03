@@ -68,7 +68,7 @@
     <summary>How it works</summary>
     <div class="instructions-body">
     0️⃣ The goal of the game is to guess the secret code of colors with the fewest guesses possible.<br>
-    1️⃣ The AI Advisor proactively gives the next guess and explains the rationale.<br>
+    1️⃣ The AI proactively gives the next guess and explains the rationale.<br>
     2️⃣ Click <b>"Show AI guess"</b> to reveal the AI's prediction or <b>"Apply AI suggestion"</b> to submit it immediately.<br>
     3️⃣ You can also build and submit your own guess manually.<br><br>
     ⚫ black peg = correct color &amp; position &nbsp; ⚪ white peg = correct color, wrong position.<br>
@@ -91,7 +91,7 @@
 </div>
 
 <div class="chat">
-  <div class="chat-header">🤖 Advisor Chat — Ask for help or discuss strategy</div>
+  <div class="chat-header">🤖 AI Chat — Ask for help or discuss strategy</div>
   <div class="chat-messages" id="chatMessages"></div>
   <div class="chat-input">
     <input id="chatInput" placeholder="Ask the advisor for help, e.g. 'Why did you pick Green for position 2?'"
@@ -362,7 +362,7 @@ function startRound() {
   updateGuessBtn();
   setAdvisorButtonState("hidden");
 
-  addMsg("🔔 Round " + currentRound + "/" + TOTAL_ROUNDS + " started! Colors: " + availableColors.join(", ") + ". The Advisor will propose the next guess.", "system");
+  addMsg("🔔 Round " + currentRound + "/" + TOTAL_ROUNDS + " started! Colors: " + availableColors.join(", ") + ". The AI will propose the next guess.", "system");
   requestAdvisorPrediction("round start", true);
 }
 
@@ -469,7 +469,7 @@ function submitGuess() {
 
   addRow();
   updateGuessBtn();
-  addMsg("Feedback: ⚫×" + fb.black + "  ⚪×" + fb.white + ". The Advisor will propose the next guess.", "system");
+  addMsg("Feedback: ⚫×" + fb.black + "  ⚪×" + fb.white + ". The AI will propose the next guess.", "system");
   requestAdvisorPrediction("next attempt after feedback", true);
 }
 

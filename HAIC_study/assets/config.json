@@ -646,6 +646,86 @@
         "margin": "0 auto"
       }
     },
+    "common-method-bias": {
+      "type": "questionnaire",
+      "description": "Common method bias detection with the color blue!",
+      "instructionLocation": "aboveStimulus",
+      "instruction": "## Page 3\n Please select the option that describes your perception.",
+      "responseDividers": true,
+      "responseOrder": "random",
+      "response": [
+        {
+          "id": "cmb-blue-1",
+          "prompt": "Blue is a beautiful color.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-2",
+          "prompt": "Blue is a lovely color.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-3",
+          "prompt": "Blue is a pleasant color.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-4",
+          "prompt": "The color blue is wonderful.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-5",
+          "prompt": "Blue is a nice color.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-6",
+          "prompt": "I think blue is a pretty color.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "cmb-blue-7",
+          "prompt": "I like the color blue.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        }
+
+       
+      ],
+      "style": {
+        "width": "75%",
+        "maxWidth": "960px",
+        "margin": "0 auto"
+      }
+    },
     "cognitive-load-germane": {
       "type": "questionnaire",
       "description": "Cognitive load assessment: germane cognitive load based on Klepsch et al. (2017).",
@@ -722,6 +802,7 @@
       "cognitive-load-intrinsic",
       "cognitive-load-extraneous",
       "cognitive-load-germane",
+      "common-method-bias",
       "Ownership",
       "control-trust-willingness",
       "control-mails-short",
