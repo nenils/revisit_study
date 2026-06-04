@@ -52,6 +52,20 @@
       ],
       "path": "HAIC_study/assets/HAIC_role_Advisor_increasing_complexity.html",
       "instructionLocation": "aboveStimulus"
+    },
+    "mind_collab": {
+      "type": "website",
+      "response": [
+        {
+          "id": "mastermind_collab_reactive",
+          "prompt": "Start the task!",
+          "required": true,
+          "location": "belowStimulus",
+          "type": "reactive"
+        }
+      ],
+      "path": "HAIC_study/assets/HAIC_role_collab_increasing_complexity.html",
+      "instructionLocation": "aboveStimulus"
     }
   },
   "components": {
@@ -62,9 +76,9 @@
       "nextButtonEnableTime": 15000,
       "nextButtonText": "Next"
     },
-    "mastermind_human_only": {
+    "mastermind_collab": {
       "type": "website",
-      "path": "HAIC_study/assets/Human_only_increasing_complexity.html",
+      "path": "HAIC_study/assets/HAIC_role_collab_increasing_complexity.html",
       "instructionLocation": "aboveStimulus",
       "description": "Play Mastermind on your own with increasing difficulty (2→6 colors).",
       "response": [
@@ -520,28 +534,75 @@
     },
     "Ownership": {
       "type": "questionnaire",
+      "description": "Psychological ownership of the Mastermind task-solving process and outcome.",
+      "responseDividers": true,
       "response": [
         {
-          "id": "ownership",
-          "prompt": "To what extent do you feel you contributed to solving the task?",
+          "id": "ownership-task-solving-process",
+          "prompt": "This was my task-solving process.",
           "required": true,
-          "type": "slider",
-          "startingValue": 0,
-          "tlxStyle": true,
-          "options": [
-            {
-              "value": 0,
-              "label": "Very Little"
-            },
-            {
-              "value": 100,
-              "label": "Very Much"
-            }
-          ]
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-outcome-shaped-by-decisions",
+          "prompt": "I sense that the game outcome was shaped by my decisions.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-how-task-was-solved",
+          "prompt": "I feel a very high degree of personal ownership for how the Mastermind task was solved.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-decisions",
+          "prompt": "I sense that these were my decisions during the game.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-game-outcome",
+          "prompt": "This was my game outcome.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-guesses-and-decisions",
+          "prompt": "I felt that I had ownership over the guesses and decisions made during the task.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
+        },
+        {
+          "id": "ownership-outcome-mine-reversed",
+          "prompt": "It is hard for me to think about the game outcome as mine.",
+          "required": true,
+          "type": "likert",
+          "leftLabel": "Strongly Disagree",
+          "rightLabel": "Strongly Agree",
+          "numItems": 7
         }
       ],
       "instructionLocation": "aboveStimulus",
-      "instruction": "## Page 5\n Please select the option that describes your perception.",
+      "instruction": "## Page 5\nThink about the Mastermind task you just completed, your guesses, decisions, and the interaction with the AI system. Indicate the degree to which you personally agree or disagree with the following statements.",
       "style": {
         "width": "75%",
         "maxWidth": "960px",
@@ -779,7 +840,8 @@
         "numSamples": 1,
         "components": [
           "mastermind_judge",
-          "mastermind_advisor"
+          "mastermind_advisor",
+          "mastermind_collab"
         ],
         "id": "balanced-game-condition"
       },
