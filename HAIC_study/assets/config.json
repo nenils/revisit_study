@@ -78,7 +78,7 @@
     },
     "mastermind_collab": {
       "type": "website",
-      "path": "HAIC_study/assets/HAIC_role_collab_increasing_complexity.html",
+      "path": "HAIC_study/assets/HAIC_role_collab_increasing complexity.html",
       "instructionLocation": "aboveStimulus",
       "description": "Play Mastermind on your own with increasing difficulty (2→6 colors).",
       "response": [
