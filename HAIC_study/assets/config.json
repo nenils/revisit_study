@@ -52,20 +52,6 @@
       ],
       "path": "HAIC_study/assets/HAIC_role_Advisor_increasing_complexity.html",
       "instructionLocation": "aboveStimulus"
-    },
-    "mind_collab": {
-      "type": "website",
-      "response": [
-        {
-          "id": "mastermind_collab_reactive",
-          "prompt": "Start the task!",
-          "required": true,
-          "location": "belowStimulus",
-          "type": "reactive"
-        }
-      ],
-      "path": "HAIC_study/assets/HAIC_role_collab_increasing complexity.html",
-      "instructionLocation": "aboveStimulus"
     }
   },
   "components": {
@@ -76,26 +62,7 @@
       "nextButtonEnableTime": 15000,
       "nextButtonText": "Next"
     },
-    "mastermind_collab": {
-      "type": "website",
-      "path": "HAIC_study/assets/HAIC_role_collab_increasing complexity.html",
-      "instructionLocation": "aboveStimulus",
-      "description": "Play Mastermind on your own with increasing difficulty (2→6 colors).",
-      "response": [
-        {
-          "id": "played-game",
-          "prompt": "What was the password displayed after finishing the task?",
-          "required": true,
-          "type": "shortText",
-          "location": "sidebar"
-        }
-      ],
-      "style": {
-        "minHeight": "760px"
-      },
-      "withSidebar": true,
-      "sidebarWidth": 320
-    },
+  
     "mastermind_judge": {
       "type": "website",
       "path": "HAIC_study/assets/HAIC_role_Judge_increasing complexity.html",
@@ -840,8 +807,7 @@
         "numSamples": 1,
         "components": [
           "mastermind_judge",
-          "mastermind_advisor",
-          "mastermind_collab"
+          "mastermind_advisor"
         ],
         "id": "balanced-game-condition"
       },
