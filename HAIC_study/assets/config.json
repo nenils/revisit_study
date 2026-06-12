@@ -777,7 +777,7 @@
         },
         {
           "id": "cl-gcl-3",
-          "prompt": "The task consisted of elements supporting my comprehension of the task.",
+          "prompt": "The task consisted of elements supporting my comprehension.",
           "required": true,
           "type": "likert",
           "leftLabel": "Strongly Disagree",
