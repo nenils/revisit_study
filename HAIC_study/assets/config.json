@@ -492,7 +492,7 @@
         },
         {
           "id": "cr4",
-          "prompt": "I think it is my duty to evaluate the guess.",
+          "prompt": "I feel obliged to process the information to solve the task.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -820,7 +820,7 @@
         ],
         "id": "balanced-game-condition"
       },
-      "manipulation-check",
+      "cognitive_responsibility",
       "cognitive-load-intrinsic",
       "cognitive-load-extraneous",
       "cognitive-load-germane",
