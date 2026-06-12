@@ -21,7 +21,7 @@
     "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
-    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific using this completion link: [Complete submission on Prolific](/api/prolific/complete).",
+    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific. ** C1WQRRAE **",
     "numSequences": 150
   },
   "baseComponents": {
@@ -457,15 +457,15 @@
         "margin": "0 auto"
       }
     },
-    "manipulation-check": {
+    "cognitive_responsibility": {
       "type": "questionnaire",
       "description": "Please answer the following questions about your experience during the task.",
       "responseDividers": true,
       "responseOrder": "random",
       "response": [
         {
-          "id": "mc-initiative-self",
-          "prompt": "In most rounds, I generated the initial guess.",
+          "id": "cr1",
+          "prompt": "Thinking through the task was mainly my responsibility.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -473,8 +473,8 @@
           "numItems": 7
         },
         {
-          "id": "mc-selection-self",
-          "prompt": "I determined which guess was ultimately submitted.",
+          "id": "cr2",
+          "prompt": "Combining the available information into a decision was part of my role.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
@@ -482,8 +482,17 @@
           "numItems": 7
         },
         {
-          "id": "mc-responsibility-self",
-          "prompt": "I mainly contributed to the the guesses.",
+          "id": "cr3",
+          "prompt": "I think I have a responsibility to think about the solution.",
+          "type": "likert",
+          "required": true,
+          "leftLabel": "Strongly disagree",
+          "rightLabel": "Strongly agree",
+          "numItems": 7
+        },
+        {
+          "id": "cr4",
+          "prompt": "I think it is my duty to evaluate the guess.",
           "type": "likert",
           "required": true,
           "leftLabel": "Strongly disagree",
