@@ -45,6 +45,7 @@
 
 # Mastermind Study  
 
+
 Welcome! In this study.  
 
 **Mastermind** is a code-breaking game where the goal is to guess a hidden sequence of colors. Each time you make a guess, you’ll get feedback to help you get closer to cracking the code. 
@@ -58,7 +59,7 @@ The Study is structured into **three sections:**
 
 The whole study takes about **15 minutes**. There are no right or wrong answers—we’re simply interested in your honest impressions.  
 
-By clicking "Next," you acknowledge that you have read the information about how your data will be collected during the study.  
+By clicking "Next", you acknowledge that you have read the information about how your data will be collected during the study.  
 
 ---
 
