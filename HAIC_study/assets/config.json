@@ -21,7 +21,7 @@
     "withSidebar": true,
     "enumerateQuestions": true,
     "urlParticipantIdParam": "PROLIFIC_PID",
-    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific. ** C1WQRRAE **",
+    "studyEndMsg": "Thank you for completing the study. Your responses have been saved. Please return to Prolific. Copy this Code: ** C1WQRRAE **",
     "numSequences": 150
   },
   "baseComponents": {
